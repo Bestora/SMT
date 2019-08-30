@@ -18,6 +18,8 @@ Currently the tool offers the following features:
 * Extensive dependency ratio of services
 * Monitoring with email and Pushnotification
 * License management / administration
+* Passwortmanagement
+* Standy / Support / Call Service Management with reports
 * Hardware management with inventory and scanner support
 * DNS check and services, with network & port scanner
 * Knowledge base with filter function
