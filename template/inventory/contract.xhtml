@@ -1,0 +1,11 @@
+<tal:block metal:define-macro="standard">
+
+  <span tal:condition="not:det_act | NULL">
+    <tal:block metal:use-macro="inventory/contract/liste.xhtml/standard"/>
+  </span>
+
+    <span tal:condition="det_act | NULL">
+    <tal:block metal:use-macro="inventory/contract/${det_act}.xhtml/standard"/>
+  </span>
+
+</tal:block>

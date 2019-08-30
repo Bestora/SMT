@@ -1,0 +1,309 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box box-primary">
+
+        <div class="box-header">
+            <h3 class="box-title">${text/structure_details_details | NULL}: ${server_detail/bezeichnung | NULL}</h3>
+            <span style="float:right;">
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-play-circle"
+           aria-hidden="true" tal:condition="php:server_detail['monitor'] == 0 | NULL"
+           title="${text/text_monitor_ein | NULL}"
+           href="${getPath}/${controller}/monitor/on/${server_detail/id | NULL}"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-off" aria-hidden="true"
+           tal:condition="php:server_detail['monitor'] == 1 | NULL" title="${text/text_monitor_aus | NULL}"
+           href="${getPath}/${controller}/monitor/off/${server_detail/id | NULL}"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-repeat" aria-hidden="true"
+           title="System kopieren / klonen" href="${getPath}/${controller}/duplicate/${server_detail/id | NULL}"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-pencil" aria-hidden="true"
+           tal:condition="php:_SESSION['rechte'] != 'usr' | NULL" title="${text/vmware_detail_edit | NULL}"
+           href="${getPath}/${controller}/edit/${server_detail/id | NULL}"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-wrench" aria-hidden="true"
+           tal:condition="php:server_detail['wartung'] == 0 | NULL"
+           title="${text/inventory_detail_system_maintenance | NULL}"
+           href="${getPath}/${controller}/wartung/on/${server_detail/id | NULL}"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-alert" aria-hidden="true"
+           tal:condition="php:server_detail['wartung'] == 1 | NULL" title="${text/inventory_server_mt_off | NULL}"
+           href="${getPath}/${controller}/wartung/off/${server_detail/id | NULL}"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-bookmark" aria-hidden="true"
+           tal:condition="add_favorite | NULL" title="${text/inventory_server_fav_save | NULL}"
+           href="${getPath}${getURL}/favorite"/>
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-floppy-remove"
+           aria-hidden="true" tal:condition="del_favorite | NULL" title="${text/inventory_server_fav_del | NULL}"
+           href="${getPath}${getURL}/favorite"/>
+      </span>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+
+                <tr style="height:40px;">
+                    <td style="width:25%;">${text/titel_priority | NULL}</td>
+                    <td style="width:75%">
+                        <span tal:condition="php:server_detail['prio'] == '3' || NULL">${text/structure_form_critical | NULL}</span>
+                        <span tal:condition="php:server_detail['prio'] == '2' || NULL">${text/structure_form_important | NULL}</span>
+                        <span tal:condition="php:server_detail['prio'] == '1' || NULL">${text/structure_form_standard | NULL}</span>
+                        <span tal:condition="php:server_detail['prio'] == '0' || NULL">${text/structure_form_unimportant | NULL}</span>
+                    </td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td style="width:25%;">${text/inventory_hardware_designation | NULL}</td>
+                    <td style="width:75%">${server_detail/bezeichnung | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/inventarnummer | NULL">
+                    <td>${text/inventory_hardware_inventorynumber | NULL}</td>
+                    <td>${server_detail/inventarnummer | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_host | NULL}</td>
+                    <td>${server_detail/hostname | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/aliase | NULL">
+                    <td>${text/structure_details_aliase | NULL}</td>
+                    <td>${server_detail/aliase | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_ip | NULL}</td>
+                    <td>
+                        <a href="#"
+                           onclick="startDetailPortScan('${server_detail/ipadressen | NULL}', '${config/fast_port_scanner}');"
+                           data-toggle="modal" data-target="#portscan" title="Portscanner">${server_detail/ipadressen | NULL}</a>
+                    </td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/standort | NULL">
+                    <td>${text/structure_details_location | NULL}</td>
+                    <td>${server_detail/standort | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/betriebssystem | NULL">
+                    <td>${text/structure_details_os | NULL}</td>
+                    <td>${server_detail/betriebssystem | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/technischedaten | NULL">
+                    <td>${text/structure_details_hardware | NULL}</td>
+                    <td>${server_detail/technischedaten | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/verwendungszweck | NULL">
+                    <td>${text/structure_details_use | NULL}</td>
+                    <td>${server_detail/verwendungszweck | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="server_detail/detail | NULL"
+                    tal:repeat="details server_detail/detail">
+                    <td>${details/form_name | NULL}</td>
+                    <td>${structure details/form_value | NULL}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Passw&ouml;rter zum System</h3>
+            <span style="float:right">
+            <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true"
+               tal:condition="aSession/admin | NULL" data-toggle="modal" data-target="#newPassword"/>
+        </span>
+        </div>
+
+        <div class="box-body" tal:condition="server_detail/password | NULL">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;" tal:repeat="pass server_detail/password">
+                    <td style="width: 33%">Verwendung: ${pass/verwendung}</td>
+                    <td style="width: 33%">Username: ${pass/username}</td>
+                    <td style="width: 33%">
+                        <span id="password_${pass/id | NULL}" style="display:none;color:#4cae4c"
+                              value="${pass/password | NULL}">${pass/passwort | NULL}</span>
+                        <span id="password_${pass/id | NULL}_kopiert">Passwort verdeckt</span>
+                        <span id="password_${pass/id | NULL}_hinweis" style="display:none;color:#4cae4c">Passwort in die Zwischenablage kopiert</span>
+                        <span style="float:right">
+                  <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-copy"
+                     aria-hidden="true" title="${text/copy_to_clipboard | NULL}"
+                     onclick="copyToClipboard('password_${pass/id | NULL}'); hide('password_${pass/id | NULL}_kopiert'); show('password_${pass/id | NULL}_hinweis');"/>
+                  <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                     aria-hidden="true" title="Passwort bearbeiten" data-toggle="modal" data-target="#${pass/id}"/>
+                  <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                     aria-hidden="true" title="${text/structur_system_del | NULL}"
+                     href="${getPath}/inventory/password/delete/${pass/id | NULL}"
+                     onclick="return confirm('${text/inventory_hardware_delete | NULL}');"/>
+                </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-warning" tal:condition="server_detail/beschreibung | NULL">
+        <div class="box-header with-border">
+            <h3 class="box-title">${text/inventory_hardware_description | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            ${structure server_detail/beschreibung | NULL}
+        </div>
+    </div>
+
+
+    <div class="box box-primary" style="margin-top:20px;" tal:condition="server_detail/dns | NULL">
+        <div class="box-header with-border">
+            <h3 class="box-title">${text/structure_system_dns_info | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body">
+            <span tal:condition="server_detail/dns/meldung | NULL"><b class="text-red"><i
+                    class="fa fa-thumbs-o-down"></i></b> ${structure server_detail/dns/meldung | NULL}<br/></span>
+            <span tal:condition="not:server_detail/dns/meldung | NULL"><b class="text-green"><i
+                    class="fa fa-thumbs-o-up"></i></b> Alle Einträge korrekt<br/></span>
+        </div>
+    </div>
+
+
+    <div class="box box-warning" style="margin-top:20px;">
+        <div class="box-header">
+            <h3 class="box-title">${text/structure_list_system_configuration | NULL}</h3>
+            <span style="float:right">
+        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true"
+           tal:condition="aSession/admin | NULL" title="${text/structure_service_new | NULL}"
+           href="${getPath}/monitor/service/new/${server_detail/id | NULL}"/>
+      </span>
+        </div>
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr tal:condition="server_detail/services | NULL" tal:repeat="liste server_detail/services">
+                    <td style="width:25px;">
+                        <img tal:condition="php:liste['active'] == 'yes' | NULL" border="0"
+                             style="width:20px;height:20px;" src="${getPath}/assets/dist/img/${liste/status}.png"/>
+                    </td>
+                    <td style="width:40%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
+                    </td>
+                    <td style="width:10%;">${liste/type | NULL}</td>
+                    <td style="width:10%;">${liste/port | NULL}</td>
+                    <td style="width:15%;">${liste/last_online | NULL}</td>
+                    <td style="width:10%;">
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-eye-open"
+                              aria-hidden="true" title="${text/structure_activ_monitoring | NULL}"
+                              tal:condition="php:liste['active'] == 'yes' | NULL"/>
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-envelope"
+                              aria-hidden="true" title="${text/structure_email_message_on | NULL}"
+                              tal:condition="php:liste['email'] == 'yes' | NULL"/>
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-phone"
+                              aria-hidden="true" title="${text/structure_push_message_on | NULL}"
+                              tal:condition="php:liste['pushover'] == 'yes' | NULL"/>
+                    </td>
+                    <td style="width:15%; text-align:right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-refresh"
+                           aria-hidden="true" href="${getPath}/monitor/refresh/${liste/server_id}"/>
+                        <span tal:condition="aSession/admin | NULL">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                   aria-hidden="true" title="${text/vmware_detail_edit | NULL}"
+                   href="${getPath}/monitor/service/edit/${liste/server_id | NULL}"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                   aria-hidden="true" title="${text/structure_del_service | NULL}"
+                   href="${getPath}/monitor/service/delete/${liste/server_id | NULL}"
+                   onclick="return confirm('${text/inventory_hardware_delete | NULL}');"/>
+              </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box box-primary" style="margin-top:20px;" tal:condition="server_detail/relations | NULL">
+        <div class="box-header">
+            <h3 class="box-title">${text/structure_list_depende_system | NULL}</h3>
+            <span style="float:right">
+          <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true"
+             tal:condition="aSession/admin | NULL" title="${text/structure_form_new_dep | NULL}"
+             href="${getPath}/monitor/service/new/${server_detail/id | NULL}#relation"/>
+        </span>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr tal:repeat="liste server_detail/relations">
+                    <td style="width:25px;">
+                        <img tal:condition="php:liste['active'] == 'yes' | NULL" border="0"
+                             style="width:20px;height:20px;"
+                             src="${getPath}/assets/dist/img/${liste/status | NULL}.png"/>
+                    </td>
+                    <td style="width:40%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
+                    </td>
+                    <td style="width:10%;">${liste/type | NULL}</td>
+                    <td style="width:10%;">${liste/port | NULL}</td>
+                    <td style="width:15%;">${liste/last_online | NULL}</td>
+                    <td style="width:10%;">
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-eye-open"
+                              aria-hidden="true" title="${text/structure_activ_monitoring | NULL}"
+                              tal:condition="php:liste['active'] == 'yes' | NULL"/>
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-envelope"
+                              aria-hidden="true" title="${text/structure_email_message_on | NULL}"
+                              tal:condition="php:liste['email'] == 'yes' | NULL"/>
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-phone"
+                              aria-hidden="true" title="${text/structure_push_message_on | NULL}"
+                              tal:condition="php:liste['pushover'] == 'yes' | NULL"/>
+                    </td>
+                    <td style="width:15%; text-align:right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                           aria-hidden="true" tal:condition="aSession/admin | NULL"
+                           title="${text/structure_depende_del | NULL}"
+                           href="${getPath}/monitor/service/delete_relation/${server_detail/id}/${liste/server_id | NULL}"
+                           onclick="return confirm('${text/structure_list_delet | NULL}');"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box collapsed-box box-primary" tal:condition="server_detail/ports | NULL">
+        <div class="box-header with-border">
+            <h3 class="box-title">Offene und gefundene Ports</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <tbody>
+                <tr tal:repeat="port server_detail/ports" style="height: 35px;">
+                    <td>${port/port | NULL}</td>
+                    <td>${structure port/bezeichnung | NULL}</td>
+                    <td style="text-align: right;">${port/lastcheck | NULL}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <tal:block metal:use-macro="structure/password.xhtml/new"/>
+    <tal:block metal:use-macro="structure/password.xhtml/editdetail"/>
+
+</tal:block>
+

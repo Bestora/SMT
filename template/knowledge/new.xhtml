@@ -1,0 +1,43 @@
+<tal:block metal:define-macro="standard">
+
+    <form name="new" method="post" action="${getPath}/knowledge/save" multipart="" enctype="multipart/form-data">
+        <div class="box box-solid box-default">
+            <div class="box-body">
+                <table class="table">
+                    <thead tal:condition="not:showSearch | NULL">
+                    <tr>
+                        <th colspan="2">
+                            <div style="width:90%;float:left;">
+                                <input type="text" name="page_name" class="form-control"
+                                       placeholder="${text/template_inventory_site_menu | NULL}"/>
+                            </div>
+                            <div style="float:right;">
+                                <button type="submit" aria-label="Left Align"
+                                        title="${text/template_inventory_save_contributio | NULL}"
+                                        class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                                <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                                   class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                                   href="javascript:history.back();"/>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td colspan="2"><textarea name="page_content" class="textarea" id="editor" style="width: 100%; height: 640px; "></textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:65%;"><input type="text" name="keywords" class="form-control"
+                                                      placeholder="${text/template_inventory_search_help | NULL}"/></td>
+                        <td><input type="file" name="filesToUpload[]" id="filesToUpload" multiple="multiple"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+</tal:block>

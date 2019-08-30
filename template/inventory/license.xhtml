@@ -1,0 +1,11 @@
+<tal:block metal:define-macro="standard">
+
+  <span tal:condition="not:lic_act | NULL">
+    <tal:block metal:use-macro="inventory/license/liste.xhtml/standard"/>
+  </span>
+
+    <span tal:condition="lic_act | NULL">
+    <tal:block metal:use-macro="inventory/license/${lic_act}.xhtml/standard"/>
+  </span>
+
+</tal:block>

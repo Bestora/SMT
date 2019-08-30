@@ -1,0 +1,71 @@
+<tal:block metal:define-macro="standard">
+
+    <form name="edit" method="post" action="${getPath}/knowledge/save/${content_knowledge/id}"
+          enctype="multipart/form-data">
+        <div class="box box-solid box-default">
+            <div class="box-body">
+                <table class="table">
+                    <thead tal:condition="not:showSearch | NULL">
+                    <tr>
+                        <th colspan="2">
+                            <div style="width:90%;float:left;">
+                                <input type="text" name="page_name" class="form-control"
+                                       value="${content_knowledge/page_name | NULL}"
+                                       placeholder="${text/template_inventory_site_menu | NULL}"/>
+                            </div>
+                            <div style="float:right;">
+                                <button type="submit" aria-label="Left Align"
+                                        title="${text/template_inventory_save_contributio | NULL}"
+                                        class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                                <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                                   class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                                   href="javascript:history.back();"/>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td colspan="2"><textarea name="page_content" class="textarea" id="editor" style="width: 100%; height: 640px; ">${content_knowledge/page_content | NULL}</textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:65%;"><input type="text" name="keywords" class="form-control"
+                                                      value="${content_knowledge/keywords | NULL}"
+                                                      placeholder="${text/template_inventory_search_help | NULL}"/></td>
+                        <td><input type="file" name="filesToUpload[]" id="filesToUpload" multiple="multiple"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+    <section id="accordions" tal:condition="aSession/admin | NULL">
+        <div class="panel-group accordion" style="margin-top: 25px;">
+
+            <div tal:condition="knowledge_history | NULL" tal:repeat="history knowledge_history"
+                 class="panel panel-default open">
+
+                <div class="panel-heading panel-title">
+                    <button onClick="setContent('nicEditContent', '${history/content | NULL}');" aria-label="Left Align"
+                            class="btn btn-default glyphicon glyphicon-check" aria-hidden="true"
+                            id="reset_${history/id | NULL}" style="margin-right:25px;display:none;"/>
+                    <a onClick="show('reset_${history/id | NULL}');" class="accordion-toggle" data-toggle="collapse"
+                       data-parent=".accordion" href="#${history/id | NULL}">
+                        V ${history/version | NULL} - ${history/niceDatum | NULL}
+                    </a>
+                </div>
+
+                <div id="${history/id | NULL}" class="panel-collapse collapse">
+                    <div class="panel-body" tal:content="structure history/content | NULL"/>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</tal:block>

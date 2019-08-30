@@ -1,0 +1,84 @@
+<tal:block metal:define-macro="standard">
+  
+  <span tal:condition="not:detail | NULL">     
+    <div class="well">
+      <b>${text/monitor_overview_last_text | NULL}: ${psm_last_update/last_update | NULL} - ${text/monitior_overview_page_refresh | NULL}: <span
+              id="countdown">${page_reload}</span> ${text/monitior_overview_seconds | NULL}</b>
+      <a title="${text/monitor_reload_page | NULL}" href="${getPath}${getURL}"><img
+              src="${getPath}/assets/icons/reload.png"/></a>
+      <span style="float:right"><a target="_top" href="${getPath}"><b>${text/monitior_overview_server_management_tool | NULL}</b></a></span>
+    </div>
+    <span tal:condition="server_liste | NULL" tal:repeat="server server_liste">
+      <div class="${server/status | NULL}line" style="width:160px;">
+        <div class="entity" onclick="window.location.href = '${getPath}/${controller}/index/${server/id | NULL}'">
+          <h4 style="font-size:1.0em; font-weight:bold;">${server/hostname}</h4>
+          <p>${server/bezeichnung}</p>
+          <p>${text/monitior_overview_monitoring | NULL}: ${server/anzahl_monitor | NULL}</p>
+          ${server/ipadressen}
+        </div>
+      </div>
+    </span>      
+  </span>
+
+    <span tal:condition="detail | NULL">
+    <div class="well">
+      <a href="javascript:history.back()" class="btn btn-danger show-modal">zurück</a>
+      <b>${text/monitor_overview_last_text | NULL}: ${psm_last_update} - ${text/monitior_overview_page_refresh | NULL}: <span
+              id="countdown">${page_reload}</span> ${text/monitior_overview_seconds | NULL}</b>
+      <a title="${text/monitor_reload_page | NULL}" href="${getPath}${getURL}"><img
+              src="${getPath}/assets/icons/reload.png"/></a>
+      <span style="float:right"><a target="_top" href="${getPath}/${server_liste/serverart | NULL}/detail/${detail}">${text/monitor_overview_show_systemdetails | NULL}</a></span>
+    </div>
+    <div class="entity-container">
+      <span tal:condition="server_liste/services | NULL" tal:repeat="server server_liste/services">
+        <div class="${server/status | NULL}line" style="width:220px;">
+          <div class="entity">
+            <h4>${server/label | NULL}</h4>
+            <p>${text/monitor_overview_last_online | NULL}: ${server/last_online | NULL}</p>              
+            <p>${text/monitior_overview_last_check | NULL}: ${server/last_check | NULL}</p>        
+            <p>${text/monitor_overview_rtime | NULL}: ${server/rtime | NULL} ${text/monitior_overview_seconds | NULL}</p>
+          </div>
+        </div>        
+      </span>     
+    </div>
+
+    <span tal:condition="server_liste/relations | NULL">
+      <div class="well" style="margin-top: 50px;">
+        <b>${text/monitor_overview_configured_depende | NULL} </b>
+      </div>
+      <div class="entity-container">
+        <span tal:repeat="server server_liste/relations">
+          <div class="${server/status | NULL}line" style="width:220px;">
+            <div class="entity">
+              <p>${server/label | NULL}</p>
+              <p>${text/monitor_overview_last_online | NULL}: ${server/last_online | NULL}</p>              
+              <p>${text/monitior_overview_last_check | NULL}: ${server/last_check | NULL}</p>        
+              <p>${text/monitor_overview_rtime | NULL}: ${server/rtime | NULL} ${text/monitior_overview_seconds | NULL}</p>
+            </div>
+          </div>        
+        </span>   
+      </div>
+    </span>
+
+  </span>
+
+    <div class="well">
+        <span style="color:#53a000;font-weight:bold;">${text/monitor_overview_system_online | NULL}</span> &nbsp;&nbsp;
+        <span style="color:#a00000;font-weight:bold;">${text/monitor_overview_system_offline | NULL}</span> &nbsp;&nbsp;
+        <span style="color:#FAA732;font-weight:bold;">${text/monitor_overview_one_of_its_depende | NULL}</span> &nbsp;&nbsp;
+        <span style="color:blue;font-weight:bold;">${text/monitor_overview_system_maintenance | NULL}</span> &nbsp;&nbsp;
+        <span style="color:#999999;font-weight:bold;">${text/monitor_overview_unimportant_system | NULL}</span>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $(".fakeloader").fakeLoader({
+                timeToHide: 1200,
+                spinner: "spinner6"
+            });
+        });
+    </script>
+
+</tal:block>
+
+

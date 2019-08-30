@@ -1,0 +1,116 @@
+<tal:block metal:define-macro="standard">
+  
+  <span tal:condition="edit | NULL">
+    <form name="config" method="post" action="${getPath}/ticket/detail/save/${detail/ticket/0/id | NULL}" multipart=""
+          enctype="multipart/form-data">
+      <input type="hidden" name="tid" value="${detail/ticket/0/id | NULL}"/>
+      <tal:block metal:use-macro="ticket/form.xhtml/standard"/>
+    </form>
+  </span>
+
+    <div class="box" tal:condition="not:edit | NULL">
+        <div class="box-header with-border">
+            <h3 class="box-title">#${detail/ticket/0/id | NULL} ${detail/ticket/0/hinweis_titel | NULL}</h3>
+
+            <div class="box-tools pull-right">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-pencil"
+                   aria-hidden="true" href="${getPath}/ticket/detail/edit/${detail/ticket/0/id | NULL}"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                   aria-hidden="true" href="${getPath}/ticket/detail/delete/${detail/ticket/0/id | NULL}"
+                   onclick="return confirm('${text/inventory_hardware_delete | NULL}');"/>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;">
+                    <td style="width:20%;">${text/ticket_status | NULL}</td>
+                    <td style="width:30%;font-weight:bold;">${detail/ticket/0/ticket_status | NULL}</td>
+                    <td style="width:20%;">${text/ticket_fortschritt | NULL}</td>
+                    <td style="width:30%;font-weight:bold;">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar"
+                                 aria-valuenow="${detail/ticket/0/fortschritt | NULL}" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: ${detail/ticket/0/fortschritt | NULL}%;">
+                                ${detail/ticket/0/fortschritt | NULL}%
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/ticket_zuordnung | NULL}</td>
+                    <td style="font-weight:bold;">${detail/ticket/0/zuordnung | NULL}</td>
+                    <td>${text/ticket_prio | NULL}</td>
+                    <td style="font-weight:bold;">${detail/ticket/0/prio | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/ticket_abgabe_datum | NULL}</td>
+                    <td style="font-weight:bold;">${detail/ticket/0/niceAbgabetermin | NULL}</td>
+                    <td>${text/ticket_system | NULL}</td>
+                    <td style="font-weight:bold;">
+                        <a data-toggle="tooltip" data-placement="left" title="${detail/ticket/0/smt_system | NULL}"
+                           href="${getPath}/${detail/ticket/0/smt_system/serverart | NULL}/detail/${detail/ticket/0/smt_system/id | NULL}">${detail/ticket/0/smt_system/bezeichnung | NULL}</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box" tal:condition="not:edit | NULL" style="margin-top:20px;">
+        <div class="box-header with-border">
+            <h3 class="box-title">${detail/ticket/0/titel | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <span tal:content="structure detail/ticket/0/beschreibung | NULL"/>
+        </div>
+    </div>
+
+    <div class="box box-warning" style="margin-top: 20px;" tal:condition="detail/anhang | NULL">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_hardware_new_attachment | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
+                <a title="${anhang/attachment}" href="${getPath}${getURL}/download/${anhang/attachment | NULL}">
+                    <img style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="box" tal:condition="detail/comment | NULL" style="margin-top:20px;" tal:repeat="comment detail/comment">
+        <div class="box-header with-border">
+            <h3 class="box-title">${comment/hinweis_titel | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <ul>
+                <span tal:content="structure comment/hinweis_text | NULL"/>
+            </ul>
+
+            <span tal:content="structure comment/beschreibung | NULL"/>
+        </div>
+    </div>
+
+
+</tal:block>

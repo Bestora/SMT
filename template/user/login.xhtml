@@ -1,0 +1,13 @@
+<tal:block metal:define-macro="standard">
+    <form name="login" method="post" action="${getPath}/user/login">
+        <div class="login-block">
+            <h1>${text/user_smt_login | NULL}</h1>
+            <input type="username" value="" placeholder="${text/user_admin_login_placeholder | NULL}" name="username"
+                   id="username" autofocus="autofocus"/>
+            <input type="password" value="" placeholder="${text/user_admin_login_placeholde_pw | NULL}" name="passwort"
+                   id="passwort"/>
+            <button>${text/user_login | NULL}</button>
+            <tal:block metal:use-macro="structure/footer.xhtml/standard"/>
+        </div>
+    </form>
+</tal:block>

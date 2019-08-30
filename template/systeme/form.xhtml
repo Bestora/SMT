@@ -1,0 +1,227 @@
+<tal:block metal:define-macro="standard">
+    <tal:block metal:use-macro="structure/metatags.xhtml/javascript"/>
+
+    <form name="system_new" method="post" action="${getPath}${getURL}/save">
+        <input tal:condition="referr | NULL" type="hidden" name="referr" value="${referr | NULL}"/>
+
+        <div class="box box-primary">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/structure_form_new_system | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="submit" aria-label="Left Align" title="${text/structure_form_server_save | NULL}"
+                            class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                    <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                       class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                       href="javascript:history.back();"/>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">
+                            ${text/structure_form_priority | NULL} <i data-toggle="popover" title="${text/titel_priority | NULL}" data-content="${text/text_priority | NULL}" class="btn btn-box-tool fa fa-question-circle smt-helper"></i>
+                        </td>
+                        <td style="width:75%;">
+                            <select class="form-control" name="prio" size="1" tal:condition="server_detail | NULL">
+                                <option value="3" tal:attributes="selected php:server_detail['prio'] == '3'">
+                                    ${text/structure_form_critical | NULL}
+                                </option>
+                                <option value="2" tal:attributes="selected php:server_detail['prio'] == '2'">
+                                    ${text/structure_form_important | NULL}
+                                </option>
+                                <option value="1" tal:attributes="selected php:server_detail['prio'] == '1'">
+                                    ${text/structure_form_standard | NULL}
+                                </option>
+                                <option value="0" tal:attributes="selected php:server_detail['prio'] == '0'">
+                                    ${text/structure_form_unimportant | NULL}
+                                </option>
+                            </select>
+                            <select class="form-control" name="prio" size="1" tal:condition="not:server_detail | NULL">
+                                <option value="3">${text/structure_form_critical_system | NULL}</option>
+                                <option value="2">${text/structure_form_important_system | NULL}</option>
+                                <option value="1" selected="selected">${text/structure_form_standard_system | NULL}
+                                </option>
+                                <option value="0">${text/structure_form_unimportant_sy | NULL}</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_hardware_designation | NULL}</td>
+                        <td><input type="text" name="bezeichnung" id="bezeichnung" minlength="5" class="form-control"
+                                   value="${server_detail/bezeichnung | NULL}"
+                                   placeholder="${text/structure_form_free_space | NULL}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-warning" style="margin-top:20px;">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/structure_form_hardware | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/inventory_host | NULL}</td>
+                        <td style="width:75%;"><input type="text" name="hostname" id="hostname"
+                                                      value="${server_detail/hostname | NULL}" class="form-control"
+                                                      placeholder="${text/structure_form_host | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/structure_details_aliase | NULL}</td>
+                        <td><input type="text" name="aliase" value="${server_detail/aliase | NULL}" class="form-control"
+                                   placeholder="${text/structure_form_value | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_ip | NULL}</td>
+                        <td><input type="text" name="ipadressen" id="ipadressen" minlength="7" class="form-control"
+                                   data-inputmask="'alias': 'ip'" data-mask=""
+                                   value="${server_detail/ipadressen | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            ${text/structure_form_activ_dns_check | NULL}
+                            <i data-toggle="popover" title="${text/title_help_dns | NULL}"
+                               data-content="${text/text_help_dns | NULL}"
+                               class="btn btn-box-tool fa fa-question-circle smt-helper"></i>
+                        </td>
+                        <td>
+                            <select class="form-control" name="live_dns" size="1" tal:condition="server_detail | NULL">
+                                <option value="off" tal:attributes="selected php:server_detail['live_dns'] == 'off'">
+                                    ${text/structure_form_deactivate | NULL}
+                                </option>
+                                <option value="on" tal:attributes="selected php:server_detail['live_dns'] == 'on'">
+                                    ${text/structure_form_activate | NULL}
+                                </option>
+                            </select>
+
+                            <select class="form-control" name="live_dns" size="1"
+                                    tal:condition="not:server_detail | NULL">
+                                <option value="off">${text/structure_form_deactivate | NULL}</option>
+                                <option value="on" selected="selected">${text/structure_form_activate | NULL}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-primary" style="margin-top:20px;">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/structure_form_hardware_info | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/structure_details_os | NULL}</td>
+                        <td style="width:75%;"><input type="text" name="betriebssystem" id="betriebssystem"
+                                                      value="${server_detail/betriebssystem | NULL}"
+                                                      class="form-control"
+                                                      placeholder="${text/structure_form_os | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/structure_details_hardware | NULL}</td>
+                        <td><input type="text" name="technischedaten" id="technischedaten"
+                                   value="${server_detail/technischedaten | NULL}" class="form-control"
+                                   placeholder="${text/structure_form_hardware | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/structure_details_location | NULL}</td>
+                        <td><input type="text" name="standort" id="standort" value="${server_detail/standort | NULL}"
+                                   class="form-control" placeholder="${text/structure_form_placeholder_loc | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:25%;">${text/structure_details_use | NULL}</td>
+                        <td style="width:75%;"><input type="text" name="verwendungszweck"
+                                                      value="${server_detail/verwendungszweck | NULL}"
+                                                      class="form-control"
+                                                      placeholder="${text/structure_form_details_use | NULL}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-warning" style="margin-top:20px;">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/structure_collect_details | NULL}</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr id="${details/id | NULL}" tal:condition="server_detail/detail | NULL"
+                        tal:repeat="details server_detail/detail">
+                        <td style="width:25%;"><input type="text" id="name_${details/id | NULL}" name="detail_name[]"
+                                                      value="${details/form_name | NULL}" class="form-control"/></td>
+                        <td style="width:70%;"><input type="text" id="value_${details/id | NULL}" name="detail_value[]"
+                                                      value="${details/form_value | NULL}" class="form-control"/></td>
+                        <td><a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-remove"
+                               aria-hidden="true" style="cursor:pointer;float:right;"
+                               onclick="removeField('${details/id | NULL}'); document.getElementById('${details/id | NULL}').style.display = 'none';"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:25%;"><input type="text" name="detail_name[]" class="form-control"
+                                                      placeholder="${text/structur_metatags_placeholder | NULL}"/></td>
+                        <td style="width:70%;"><input type="text" name="detail_value[]" class="form-control"
+                                                      placeholder="${text/structure_metatags_value | NULL}"/></td>
+                        <td><a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus"
+                               aria-hidden="true"
+                               onclick="insertInputFieldName('${text/structur_metatags_placeholder | NULL}');insertInputFieldValue('${text/structure_metatags_value | NULL}');"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:25%;">
+                            <fieldset id="name"></fieldset>
+                        </td>
+                        <td style="width:75%;">
+                            <fieldset id="value"></fieldset>
+                        </td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-primary" style="margin-top: 20px;">
+            <div class="box-body" style="padding: 15px;">
+                <textarea name="beschreibung" id="editor" class="textarea" style="width: 100%; height: 500px;">${server_detail/beschreibung | NULL}</textarea>
+            </div>
+        </div>
+
+    </form>
+
+</tal:block>

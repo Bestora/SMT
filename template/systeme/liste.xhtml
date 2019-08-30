@@ -1,0 +1,50 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <thead tal:condition="not:showSearch | NULL">
+                <tr style="height: 35px;">
+                    <th>${text/inventory_hardware_designation | NULL}</th>
+                    <th>${text/inventory_host | NULL}</th>
+                    <th>${text/inventory_ip | NULL}</th>
+                    <th>${text/structure_details_location | NULL}</th>
+                    <th style="width:80px;">
+                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" tal:condition="php:controller!='inventory' && isset(aSession['admin']) | NULL" href="${getPath}/${aSession/controller}/new"/>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr role="row" class="odd" tal:repeat="liste server_liste">
+                    <td><a href="${getPath}/${liste/serverart | NULL}/detail/${liste/id}">${liste/bezeichnung}</a></td>
+                    <td>${liste/hostname}</td>
+                    <td>${liste/ipadressen}</td>
+                    <td>${liste/standort}</td>
+                    <td style="text-align:right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-alert"
+                           aria-hidden="true" tal:condition="php:liste['wartung'] == 1 | NULL"
+                           title="${text/inventory_server_mt_off | NULL}"
+                           href="${getPath}/${controller}/wartung/off/${liste/id}"/>
+                        <span tal:condition="php:_SESSION['rechte'] != 'usr' | NULL">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                   aria-hidden="true" title="${text/vmware_detail_edit | NULL}"
+                   href="${getPath}/${liste/serverart | NULL}/edit/${liste/id}"/>
+              </span>
+                        <span tal:condition="aSession/admin | NULL">
+								<a disabledtype="button" aria-label="Left Align"
+                                   class="btn btn-default glyphicon glyphicon-trash" aria-hidden="true"
+                                   title="${text/structur_system_del | NULL}"
+                                   href="${getPath}/${liste/serverart | NULL}/delete/${liste/id}"
+                                   onclick="return confirm('${text/inventory_hardware_delete | NULL}');"/>
+							</span>
+                        &nbsp;
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</tal:block>

@@ -1,0 +1,139 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box box-success" style="margin-top: 20px;">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_license_license_descripti | NULL}</h3>
+            <div class="box-tools pull-right">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-pencil"
+                   aria-hidden="true"
+                   tal:condition="php:_SESSION['rechte'] != 'usr' | NULL"
+                   href="${getPath}/${controller}/${methode}/edit/${detail/id | NULL}"/>
+                <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                   class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                   href="javascript:history.back();"/>
+            </div>
+
+        </div>
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;">
+                    <td style="width:25%;">${text/inventory_hardware_manufacturer | NULL}</td>
+                    <td style="width:75%;">${detail/hersteller | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_license_list_product | NULL}</td>
+                    <td>${detail/produkt | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_license_version | NULL}</td>
+                    <td>${detail/version | NULL}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box box-danger" style="margin-top: 20px;">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_license_key_number | NULL}</h3>
+        </div>
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;">
+                    <td style="width:25%;">${text/inventory_license_licensekey | NULL}</td>
+                    <td style="width:75%;">${detail/licensekey | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_license_list_number | NULL}</td>
+                    <td>${detail/anzahl | NULL}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box box-warning" style="margin-top: 20px;"
+         tal:condition="php: detail['zuordnung'] != '' || detail['vmware'] != '0' | NULL">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_license_assigning_license | NULL}</h3>
+        </div>
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;" tal:condition="php: detail['zuordnung'] != '' | NULL">
+                    <td style="width:25%;">${text/inventory_license_new_user | NULL}</td>
+                    <td style="width:75%;">${detail/zuordnung | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="php: detail['vmware'] != '0' | NULL">
+                    <td>${text/inventory_license_mapping_image | NULL}</td>
+                    <td>
+                        <select name="vmware" style="width: 100%;" tabindex="-1" aria-hidden="true" disabled="disabled">
+                            <option>${text/inventory_license_mapping_image | NULL}</option>
+                            <option tal:condition="detail | NULL" tal:repeat="liste images" value="${liste/id}"
+                                    tal:attributes="selected php:detail['vmware'] == liste['id'] | NULL">
+                                ${liste/bezeichnung}
+                            </option>
+                            <option tal:condition="not:detail | NULL" tal:repeat="liste images" value="${liste/id}">
+                                ${liste/bezeichnung}
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-warning" style="margin-top: 20px;" tal:condition="detail/anhang | NULL">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_hardware_new_attachment | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+
+                <tr style="height:72px;">
+                    <td>${text/inventory_hardware_attachment_list | NULL}</td>
+                    <td>
+                        <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
+                            <a title="${anhang}" href="${getPath}/download/${anhang | NULL}"><img
+                                    style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-warning" tal:condition="detail/beschreibung | NULL">
+        <div class="box-header with-border">
+            <h3 class="box-title">${text/inventory_hardware_description | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            ${structure detail/beschreibung | NULL}
+        </div>
+    </div>
+
+</tal:block>

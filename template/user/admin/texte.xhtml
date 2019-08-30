@@ -1,0 +1,105 @@
+<tal:block metal:define-macro="standard">
+
+    <!-- Neuen Textbaustein anlegen -->
+    <form name="newtext" method="post" action="${getPath}${getURL}/new">
+        <input type="hidden" name="sprache" value="${sprache}"/>
+        <div class="box box-warning collapsed-box">
+            <div class="box-header with-border">
+                <h3 class="box-title">${text/user_admin_texte_new | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="width:30%;">
+                            <input type="text" name="text_name" id="text_name" minlength="5" class="form-control"
+                                   placeholder="${text/user_admin_name | NULL}"/>
+                            <br/><input style="width:100%;" type="submit" class="btn btn-primary save"
+                                        value="${text/admin_text_save | NULL}"/>
+                        </td>
+                        <td style="width:70%;">
+                            <textarea style="min-height:90px;" name="text_value" class="form-control"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+    <!-- Vorhandene Texte bearbeiten -->
+    <div class="box box-primary" style="margin-top: 10px;">
+        <div class="box-body">
+            <form name="config" method="post" action="${getPath}${getURL}/save">
+                <input type="hidden" name="sprache" value="${sprache}"/>
+                <table id="table_text" class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr tal:repeat="texte texte">
+                        <td style="width:30%;">
+                            <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                               aria-hidden="true" onclick="return confirm('${text/user_admin_text_delete | NULL}');"
+                               href="${getPath}${getURL}/delete/text/${texte/id}"/>
+                            ${texte/text_name | NULL}
+                        </td>
+                        <td style="width:70%;">
+                            <textarea style="min-height:50px; width:100%;" name="${texte/id | NULL}"
+                                      class="form-control">${texte/text_value | NULL}</textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <input style="float:left; margin-top:-40px;" type="submit" class="btn btn-primary save"
+                       value="${text/admin_text_save | NULL}"/>
+            </form>
+        </div>
+    </div>
+
+    <!--
+
+    <table>
+      <tr style="background-color:#000; font-weight:bold; color:#fff;">
+        <td colspan="3">${text/user_admin_texte_installed | NULL}</td>
+      </tr>
+
+      <tr style="background-color:#449d44; font-weight:bold; color:#fff;">
+        <td style="padding:35px;">
+          <a style="margin-right:25px;" onclick="return confirm('${text/user_admin_texte_installing | NULL}');" href="${getPath}${getURL}/install/${lang/id}" tal:repeat="lang texte_inaktiv">
+            <img src="${getPath}/assets/icons/lang/${lang/id}.gif" />
+          </a>
+          <br /><br />
+          ${text/user_admin_texte_hinweis | NULL}
+        </td>
+      </tr>
+    </table>
+
+    <table>
+      <tr style="background-color:#000; font-weight:bold; color:#fff;">
+        <td colspan="3">${text/user_admin_texte_delete | NULL}</td>
+      </tr>
+
+      <tr style="background-color:#c12e2a; font-weight:bold; color:#fff;">
+        <td style="padding:35px;">
+          <span tal:repeat="lang aSession/sprachen">
+            <a style="margin-right:25px;" href="${getPath}${getURL}/delete/lang/${lang/id}" onclick="return confirm('${text/user_admin_texte_deleting | NULL}');"><img border="0" src="${getPath}/assets/icons/lang/${lang/id}.gif" /></a>&nbsp;&nbsp;
+          </span>
+
+          <br /><br />
+          ${text/user_admin_texte_hinweis | NULL}
+        </td>
+      </tr>
+    </table>
+    -->
+
+</tal:block>

@@ -1,0 +1,16 @@
+<tal:block metal:define-macro="standard">
+
+    <div tal:condition="save | NULL" class="btn btn-success" style="width:100%;margin-bottom: 25px;">
+        ${text/user_admin_data_saved | NULL}
+    </div>
+    <div tal:condition="password_error | NULL" class="btn btn-danger" style="width:100%;margin-bottom: 25px;">
+        ${text/user_admin_wrong_password | NULL}
+    </div>
+
+    <form name="edit" method="post" action="${getPath}/user/admin/member/new/save">
+
+        <tal:block metal:use-macro="user/admin/member/form.xhtml/standard"/>
+
+    </form>
+
+</tal:block>

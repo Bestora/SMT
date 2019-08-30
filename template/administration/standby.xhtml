@@ -1,0 +1,113 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-body">
+            <table class="table table-striped dataTable" role="grid">
+                <thead>
+                    <tr style="height: 35px;">
+                        <th style="width: 40px;">${text/standby_kw | NULL}</th>
+                        <th style="width: 120px;">${text/standby_date_start | NULL}</th>
+                        <th style="width: 120px;">${text/standby_date_ende | NULL}</th>
+                        <th style="width: 100px;">${text/standby_anzahl_logs | NULL}</th>
+                        <th>${text/standby_user | NULL}</th>
+                        <th style="width: 200px;">
+                            <div class="btn-group" style="float: right; margin-right: -25px;">
+                                <button type="button" class="btn btn-danger">Jahr wählen (${aktuellesJahr})</button>
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li tal:repeat="jahre StandbyJahre"><a href="${getPath}/administration/standby/show/${jahre}">${jahre}</a></li>
+                                </ul>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr role="row" class="odd" tal:repeat="liste data" style="height: 25px;">
+                        <td><strong>${liste/KW | NULL}</strong></td>
+                        <td>${liste/start | NULL}</td>
+                        <td>${liste/ende | NULL}</td>
+                        <td>
+                            <a data-toggle="modal" data-target="#log_${liste/id}" tal:condition="php:liste['logs']['number'] != '0' | NULL" style="cursor: pointer;"><strong>${liste/logs/number | NULL}</strong></a>
+                        </td>
+                        <td>
+                            <form name="update_standby" method="post" action="${getPath}/administration/standby/save/${liste/id | NULL}">
+                                <select name="username[]" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="${text/standby_edit_user | NULL}" style="width: 80%;" tabindex="-1" aria-hidden="true">
+                                    <span tal:condition="user_liste | NULL">
+                                        <option tal:condition="php:liste['username'] == '' | NULL" tal:repeat="user user_liste" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
+                                        <option tal:condition="php:liste['username'] != '' | NULL" tal:repeat="user user_liste" tal:attributes="selected php:in_array(user['username'], explode(',', liste['username'])) | NULL" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
+                                    </span>
+                                </select>
+                                <button type="submit" aria-label="Left Align" title="${text/standby_edit_user | NULL}" class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true" />
+                            </form>
+                        </td>
+                        <td>
+                            <a data-toggle="modal" data-target="#report_${liste/id}" class="callout callout-success" tal:condition="php:liste['lastupdate'] != '0000-00-00 00:00:00' | NULL" style="float: right; cursor: pointer; height: 28px;"><strong>Bericht vom ${liste/lastupdate}</strong></a>
+                            <a data-toggle="modal" data-target="#report_${liste/id}" type="button" tal:condition="php:liste['lastupdate'] == '0000-00-00 00:00:00' | NULL" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-copy" aria-hidden="true" title="${text/standby_report | NULL}" style="float: right;" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div tal:repeat="liste data" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="report_${liste/id}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form name="report_${liste/id}" method="post" action="${getPath}/administration/standby/report/${liste/id}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Bericht bearbeiten</h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="report" id="editor" class="textarea" style="width: 100%; height: 300px; ">${liste/report | NULL}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" value="${text/admin_text_save | NULL}"/>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">${text/system_cancel | NULL}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div tal:repeat="liste data" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="log_${liste/id}">
+        <div class="modal-dialog modal-lg" role="document" tal:condition="php:liste['logs']['number'] != '0' | NULL" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Logfile zum Zeitfenster</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped dataTable" role="grid">
+                        <thead>
+                            <tr style="height: 35px;">
+                                <th style="width:15%;">${text/structure_system_type | NULL}</th>
+                                <th>${text/structure_system_message | NULL}</th>
+                                <th style="width:15%; text-align:right;">${text/structure_system_date_time | NULL}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr style="height:34px;" tal:repeat="detail liste/logs/result">
+                                <td>${detail/type | NULL}</td>
+                                <td>${structure detail/message  | NULL}</td>
+                                <td><span style="float:right;">${detail/datetime  | NULL}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</tal:block>

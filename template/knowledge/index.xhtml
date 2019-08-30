@@ -1,0 +1,16 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box box-solid box-default box-knowledge" tal:repeat="kb knowledge_liste"
+         onclick="location.href='${getPath}/knowledge/show/${kb/id}';">
+        <div class="box-header with-border">
+            <h3 class="box-title" tal:content="php:substr(kb['page_name'], 0, 45)"/>
+        </div>
+
+        <div class="box-body box-knowledge-detail">
+            <span tal:content="structure kb/page_content"/>
+        </div>
+    </div>
+
+    <div class="clearfix"/>
+
+</tal:block>

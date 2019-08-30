@@ -1,0 +1,204 @@
+<tal:block metal:define-macro="standard">
+
+    <div tal:condition="save_erfolg | NULL" class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Erfolg!</strong><br/>${save_erfolg| NULL}
+    </div>
+
+    <div tal:condition="pwalert | NULL" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Achtung!</strong><br/>${pwalert| NULL}
+    </div>
+
+    <div tal:condition="temp_passwd | NULL" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Achtung!</strong><br/>Das Passwort wurde auf das folgende geaendert: <b>${temp_passwd}</b>
+    </div>
+
+    <div class="box box-success">
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th style="width:20px;">#</th>
+                    <th style="width:20%;"><a href="${getPath}${getURL}/order/userid/asc">Aktive Benutzer</a></th>
+                    <th><a href="${getPath}${getURL}/order/homedir/asc">Verzeichnis</a></th>
+                    <th style="width:5%;"><a href="${getPath}${getURL}/order/count/desc">Logins</a></th>
+                    <th style="width:10%;"><a href="${getPath}${getURL}/order/accessed/desc">Letzter Login</a></th>
+                    <th style="width:10%;"><a href="${getPath}${getURL}/order/modified/desc">Letzte &Auml;nderung</a>
+                    </th>
+                    <th style="width:150px;text-align:right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus"
+                           aria-hidden="true" tal:condition="aSession/admin | NULL" data-toggle="modal"
+                           data-target="#newUser"/>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr tal:repeat="user user">
+                    <td><img alt="Aktiver Benutzer" style="height:20px;" src="${getPath}/assets/dist/img/on.png"/></td>
+                    <td>${user/userid}</td>
+                    <td>${user/homedir}</td>
+                    <td>${user/count}</td>
+                    <td>${user/niceDatumLogin}</td>
+                    <td>${user/niceDatumChange}</td>
+                    <td style="text-align: right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-ban-circle"
+                           aria-hidden="true" title="Benutzer sperren" href="${getPath}${getURL}/block/${user/userid}"
+                           onclick="return confirm('Soll der Benutzer wirklich gesperrt werden');"/>
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                           aria-hidden="true" title="Benutzer bearbeiten" data-toggle="modal"
+                           data-target="#${user/id}"/>
+                        <a disabled="disabled" type="button" aria-label="Left Align"
+                           class="btn btn-default glyphicon glyphicon-time" aria-hidden="true"
+                           title="Verlauf und Logfile einsehen" data-toggle="modal"
+                           href="${getPath}/${controller}/${methode}/weblog/${user/userid}"/>
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                           aria-hidden="true" title="Benutzer löschen" href="${getPath}${getURL}/delete/${user/userid}"
+                           onclick="return confirm('Achtung, der Benutzer wird gelöscht!!!');"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-danger">
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th style="width:20px;">#</th>
+                    <th style="width:20%;"><a href="${getPath}${getURL}/order/userid/asc">Gesperrte Benutzer</a></th>
+                    <th><a href="${getPath}${getURL}/order/homedir/asc">Verzeichnis</a></th>
+                    <th style="width:5%;"><a href="${getPath}${getURL}/order/count/desc">Logins</a></th>
+                    <th style="width:10%;"><a href="${getPath}${getURL}/order/accessed/desc">Letzter Login</a></th>
+                    <th style="width:10%;"><a href="${getPath}${getURL}/order/modified/desc">Letzte &Auml;nderung</a>
+                    </th>
+                    <th style="width:150px;"></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr tal:repeat="closed closed">
+                    <td><img alt="Gesperrter Benutzer" style="height:20px;" src="${getPath}/assets/dist/img/off.png"/>
+                    </td>
+                    <td>${closed/userid}</td>
+                    <td>${closed/homedir}</td>
+                    <td>${closed/count}</td>
+                    <td>${closed/niceDatumLogin}</td>
+                    <td>${closed/niceDatumChange}</td>
+                    <td style="text-align: right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-ok-circle"
+                           aria-hidden="true" title="Benutzer freishalten"
+                           href="${getPath}${getURL}/unlock/${closed/userid}"/>
+                        <a disabled="disabled" type="button" aria-label="Left Align"
+                           class="btn btn-default glyphicon glyphicon-time" aria-hidden="true"
+                           title="Verlauf und Logfile einsehen" data-toggle="modal"
+                           href="${getPath}/${controller}/${methode}/weblog/${closed/userid}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-danger">
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>LogFile</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>
+                        <div style="max-height:500px; overflow: auto; margin-top: -5px;"
+                             tal:content="structure logfile"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="newUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form name="ftpuser" method="post" action="${getPath}/module/proftpd/index/new">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Neuen Benutzer anlegen</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="border">
+                            <tr>
+                                <td>
+                                    <label>Benutzername</label>
+                                    <input style="width:400px;" type="text" name="userid" id="userid" minlength="5"
+                                           class="form-control"
+                                           onchange="document.getElementById('ftpdir').innerHTML=document.getElementById('userid').value"/>
+                                    <br/>
+                                    <label>Passwort</label>
+                                    <input type="text" name="passwd" id="passwd" minlength="5" class="form-control"/>
+                                    <br/>
+                                    <label>Verzeichnis (z.b. /var/www)</label>
+                                    <input type="text" name="homedir" id="homedir" minlength="5" class="form-control"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" value="Speichern"/>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div tal:repeat="list user" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         id="${list/id}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form name="ftpuser" method="post" action="${getPath}/module/proftpd/index/save/${list/id}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Benutzer bearbeiten</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="border">
+                            <tr>
+                                <td>
+                                    <label>Benutzername</label>
+                                    <input style="width:400px;" type="text" name="userid" id="userid" minlength="5"
+                                           class="form-control" value="${list/userid}"/>
+                                    <br/>
+                                    <label>Passwort</label>
+                                    <input type="text" name="passwd" class="form-control" id="passwd" minlength="6"/>
+                                    <br/>
+                                    <label>Verzeichnis (z.b. /var/www)</label>
+                                    <input type="text" name="homedir" id="homedir" minlength="5" class="form-control"
+                                           value="${list/homedir}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-success" value="Speichern"/>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Abbrechen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</tal:block>

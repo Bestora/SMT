@@ -1,0 +1,38 @@
+<tal:block metal:define-macro="standard">
+
+    <table class="data-table" style="width: 100%;">
+        <tr>
+            <th>ID</th>
+            <th>Benutzer</th>
+            <th>an Userid</th>
+            <th>Datum</th>
+            <th>Inhalt</th>
+        </tr>
+
+        <tr class="even" tal:repeat="weblog weblog">
+            <td>${weblog/id}</td>
+            <td>${weblog/benutzer}</td>
+            <td>${weblog/userid}</td>
+            <td>${weblog/zeit}</td>
+            <td>${weblog/inhalt}</td>
+        </tr>
+
+    </table>
+
+    <div class="notice" style="height: 350px; overflow: auto;">
+        <h4>LogFiles zum Benutzer: ${userid}</h4>
+        <hr/>
+        <span tal:repeat="log1 log1">${log1}
+      <div class="clear"/>
+    </span>
+    </div>
+
+    <div class="notice" style="height: 350px; overflow: auto;">
+        <h4>LogFiles zum Tranfer von ${userid}</h4>
+        <hr/>
+        <span tal:repeat="log2 log2">${log2}
+      <div class="clear"/>
+    </span>
+    </div>
+
+</tal:block>

@@ -1,0 +1,88 @@
+<tal:block metal:define-macro="standard">
+
+    <form name="news" method="post" action="${getPath}${getURL}/save">
+        <table style="width:25%;float:left;margin-right:25px;">
+            <tr style="background-color:#e3e3e3; font-weight: bold;">
+                <td>
+                    <input style="width:100%;float:left;" type="text" name="titel" class="form-control" id="contactName"
+                           placeholder="${text/user_admin_news_title_placeholder}"/>
+                    <select class="form-control" style="width:100%;float:left;margin-top:5px;" name="controller">
+                        <option value="">${text/user_admin_news_select_option_1}</option>
+                        <option value="">-----------------------------------</option>
+                        <option value="home">${text/user_admin_news_select_option_2}</option>
+                        <option value="server">${text/user_admin_news_select_option_3}</option>
+                        <option value="vmware">${text/user_admin_news_select_option_4}</option>
+                        <option value="inventory">${text/user_admin_news_select_option_5}</option>
+                        <option value="monitor">${text/user_admin_news_select_option_6}</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <textarea name="nachricht" class="textarea" id="editor" style="width: 100%; height: 500px; "></textarea>
+                    <div style="float:right;">
+                        <button type="submit" aria-label="Left Align" title="${text/user_admin_submit | NULL}"
+                                class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                        <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                           class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                           href="javascript:history.back();"/>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+    <form tal:condition="news_edit | NULL" tal:repeat="form news_edit" name="news" method="post"
+          action="${getPath}${getURL}/save">
+        <input type="hidden" value="${form/id}" name="id"/>
+        <table style="width:25%;float:left;margin-right:25px;">
+            <tr style="background-color:#e3e3e3; font-weight: bold;">
+                <td>
+                    <input value="${form/titel | NULL}" style="width:100%;float:left;" type="text" name="titel"
+                           class="form-control" id="contactName"
+                           placeholder="${text/user_admin_news_title_placeholder}"/>
+                    <select class="form-control" style="width:100%;float:left;margin-top:5px;" name="controller">
+                        <option value="" tal:attributes="selected php: form['controller'] == ''">
+                            ${text/user_admin_news_select_option_1}
+                        </option>
+                        <option value="">-----------------------------------</option>
+                        <option value="home" tal:attributes="selected php: form['controller'] == 'home'">
+                            ${text/user_admin_news_select_option_2}
+                        </option>
+                        <option value="server" tal:attributes="selected php: form['controller'] == 'server'">
+                            ${text/user_admin_news_select_option_3}
+                        </option>
+                        <option value="vmware" tal:attributes="selected php: form['controller'] == 'vmware'">
+                            ${text/user_admin_news_select_option_4}
+                        </option>
+                        <option value="inventory" tal:attributes="selected php: form['controller'] == 'inventory'">
+                            ${text/user_admin_news_select_option_5}
+                        </option>
+                        <option value="ticket" tal:attributes="selected php: form['controller'] == 'ticket'">
+                            ${text/home_six_nav}
+                        </option>
+                        <option value="monitor" tal:attributes="selected php: form['controller'] == 'monitor'">
+                            ${text/user_admin_news_select_option_6}
+                        </option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <textarea name="nachricht" class="textarea" id="editor">${form/nachricht | NULL}</textarea>
+                    <div style="float:right;">
+                        <button type="submit" aria-label="Left Align" title="${text/user_admin_submit | NULL}"
+                                class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                           aria-hidden="true" href="${getPath}${getURL}/delete/${form/id}"
+                           onclick="return confirm('${text/user_admin_news_link_del | NULL}');"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</tal:block>

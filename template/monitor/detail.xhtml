@@ -1,0 +1,106 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-header no-border">
+            <h3 class="box-title">${detail/label}</h3>
+            <div class="box-tools pull-right">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                   aria-hidden="true" tal:condition="aSession/admin | NULL"
+                   href="${getPath}/monitor/service/edit/${detail/server_id}"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-briefcase"
+                   aria-hidden="true" title="${text/monitor_overview_show_systemdetails | NULL}"
+                   href="/server/detail/${detail/home_system | NULL}"/>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;">
+                    <td style="width:33%;">${text/inventory_hardware_designation | NULL}: ${detail/label}</td>
+                    <td style="width:33%;">
+                        <a href="#" onclick="startDetailPortScan('${detail/ip | NULL}', '${config/fast_port_scanner}');"
+                           data-toggle="modal" data-target="#portscan">${detail/ip | NULL}</a>
+                    </td>
+                    <td style="width:33%;">${text/monitor_service_port | NULL}: ${detail/port}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/structure_system_type | NULL}: ${detail/type}</td>
+                    <td>${text/monitor_service_searchpattern | NULL}: ${detail/pattern}</td>
+                    <td>${text/structure_system_status | NULL}: ${detail/status}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/monitor_overview_last_online | NULL}: ${detail/last_online}</td>
+                    <td>${text/monitior_overview_last_check | NULL}: ${detail/last_check}</td>
+                    <td>${text/monitor_overview_rtime | NULL}: ${detail/rtime}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/structure_system_monitor | NULL}: ${detail/active}</td>
+                    <td>${text/structure_system_pushover | NULL}: ${detail/pushover}</td>
+                    <td>${text/structure_system_email | NULL}: ${detail/email}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="box" tal:condition="detail/beschreibung | NULL">
+            <div class="box-header with-border">
+                <h3 class="box-title">${text/inventory_hardware_description | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                ${structure detail/beschreibung | NULL}
+            </div>
+        </div>
+
+    </div>
+
+<!--
+    <div class="box" tal:condition="graphs | NULL">
+        <div class="box">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/structure_history_availability | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <tal:block metal:use-macro="systeme/system.xhtml/history"/>
+            </div>
+        </div>
+    </div>
+-->
+
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">${text/nav_inventar_logfile | NULL} (<span tal:content="php:count(detail['log'])"/>)
+            </h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <tbody>
+                <tr style="height:35px;" tal:repeat="detail detail/log">
+                    <td>${detail/datetime}</td>
+                    <td>${structure detail/message}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</tal:block>

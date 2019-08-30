@@ -1,0 +1,119 @@
+<tal:block metal:define-macro="service_log">
+
+    <table id="table" class="table table-striped dataTable" role="grid">
+        <thead tal:condition="not:showSearch | NULL">
+        <tr style="height: 35px;">
+            <th style="width:15%;">${text/structure_system_type | NULL}</th>
+            <th>${text/structure_system_message | NULL}</th>
+            <th style="width:15%; text-align:right;">${text/structure_system_date_time | NULL}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr style="height:34px;" tal:repeat="detail detail/log">
+            <td>${detail/type}</td>
+            <td>${structure detail/message}</td>
+            <td>
+          <span style="float:right;">
+            ${detail/niceDatum}
+          </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</tal:block>
+
+
+<tal:block metal:define-macro="logfile_liste">
+<div class="box">
+    <div class="box-body">
+        <table id="table" class="table table-striped dataTable" role="grid">
+            <thead tal:condition="not:showSearch | NULL">
+            <tr style="height: 35px;">
+                <th style="width:15%;">${text/structure_system_type | NULL}</th>
+                <th>${text/structure_system_message | NULL}</th>
+                <th style="width:15%;text-align:right;">${text/structure_system_date_time | NULL}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr style="height:35px;" tal:repeat="detail logfile_liste">
+                <td>${detail/type}</td>
+                <td>${structure detail/message}</td>
+                <td>
+              <span style="float:right;">
+                ${detail/niceDatum}
+              </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</tal:block>
+
+
+<tal:block metal:define-macro="history">
+
+<link rel="stylesheet" href="/assets/plugins/jqplot/jquery.jqplot.min.css" />
+<link rel="stylesheet" href="/assets/dist/css/history.css" />
+
+<script type="text/javascript">
+    var day_format = '${graphs/day_format}';
+    var long_date_format = '${graphs/long_date_format}';
+    var short_date_format = '${graphs/short_date_format}';
+    var short_time_format = '${graphs/short_time_format}';
+</script>
+
+<table class="table">
+    <tbody>
+    <tr>
+        <td>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <div class="chart-content">
+                        <div id="chart${graphs/graphs/0/chart_id}" class="chart" data-title="${graphs/graphs/0/title}"
+                             data-plotMode="${graphs/graphs/0/plotmode}" data-endTime="${graphs/graphs/0/end_timestamp}"
+                             data-lines="${graphs/graphs/0/server_lines}"
+                             data-down="${graphs/graphs/0/server_down}">
+                        </div>
+                    </div>
+                </div>
+                <div class="info-container">
+                    <div class="info-content">
+                        <div class="info-dropdown btn-group">
+                            <button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-info-sign"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li tal:repeat="record graphs/graphs/0/info">
+                                    <span>${record/label}: ${record/value}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="server-info">
+                            <ul>
+                                <li tal:repeat="record graphs/graphs/0/info">
+                                    <span>${record/label}: ${record/value}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chart-selector">
+                        <div class="btn-group">
+                            <button tal:repeat="button graphs/graphs/0/buttons"
+                                    class="btn ${button/class_active | NULL}" data-chartId="${graphs/graphs/0/chart_id}"
+                                    data-chartMode="${button/mode}">${button/label}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both;">&nbsp;</div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</tal:block>
