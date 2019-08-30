@@ -61,7 +61,7 @@ if (isset($_POST['aktion']) && $_POST['aktion'] == 'install') {
 } else {
 
   echo '<div class="content">
-          <h4>Installation von SMT 2.0</h4>
+          <h4>Installation von SMT 2.1</h4>
           <form name="install" method="post" action="/index.php">
           <input type="hidden" name="aktion" value="install" />
           <input type="hidden" name="iAnzahl" value="20" />

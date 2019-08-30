@@ -29,3 +29,10 @@ Currently the tool offers the following features:
 * with freely configurable priorities
 * Multiupload per ticket and comment
 * Server / V-SERVER Integration
+
+
+![Screenshot](http://palle.zapto.org/bilder/config.png)
+SMT configuration
+ 
+![Screenshot](http://palle.zapto.org/bilder/texte.png)
+edit & change texte
