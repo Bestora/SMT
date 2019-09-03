@@ -57,63 +57,32 @@
 
 <tal:block metal:define-macro="history">
 
-<link rel="stylesheet" href="/assets/plugins/jqplot/jquery.jqplot.min.css" />
-<link rel="stylesheet" href="/assets/dist/css/history.css" />
+    <script>
+        window.onload = function () {
 
-<script type="text/javascript">
-    var day_format = '${graphs/day_format}';
-    var long_date_format = '${graphs/long_date_format}';
-    var short_date_format = '${graphs/short_date_format}';
-    var short_time_format = '${graphs/short_time_format}';
-</script>
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title:{
+                    text: "Verfügbarkeit"
+                },
+                axisY: {
+                    title: "Reaktionszeit",
+                    suffix: "ms"
+                },
+                data: [{
+                    type: "spline",
+                    markerSize: 3,
+                    xValueType: "dateTime",
+                    dataPoints: ${structure dataPoints | NULL}
+        }]
+        });
 
-<table class="table">
-    <tbody>
-    <tr>
-        <td>
-            <div class="chart-row">
-                <div class="chart-container">
-                    <div class="chart-content">
-                        <div id="chart${graphs/graphs/0/chart_id}" class="chart" data-title="${graphs/graphs/0/title}"
-                             data-plotMode="${graphs/graphs/0/plotmode}" data-endTime="${graphs/graphs/0/end_timestamp}"
-                             data-lines="${graphs/graphs/0/server_lines}"
-                             data-down="${graphs/graphs/0/server_down}">
-                        </div>
-                    </div>
-                </div>
-                <div class="info-container">
-                    <div class="info-content">
-                        <div class="info-dropdown btn-group">
-                            <button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-info-sign"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li tal:repeat="record graphs/graphs/0/info">
-                                    <span>${record/label}: ${record/value}</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="server-info">
-                            <ul>
-                                <li tal:repeat="record graphs/graphs/0/info">
-                                    <span>${record/label}: ${record/value}</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="chart-selector">
-                        <div class="btn-group">
-                            <button tal:repeat="button graphs/graphs/0/buttons"
-                                    class="btn ${button/class_active | NULL}" data-chartId="${graphs/graphs/0/chart_id}"
-                                    data-chartMode="${button/mode}">${button/label}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="clear: both;">&nbsp;</div>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            chart.render();
+
+        }
+    </script>
+
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/canvas/canvasjs.min.js"/>
 
 </tal:block>
