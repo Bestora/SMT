@@ -60,29 +60,51 @@
     <script>
         window.onload = function () {
 
-            var chart = new CanvasJS.Chart("chartContainer", {
+            var chart = new CanvasJS.Chart("chartContainerDay", {
                 animationEnabled: true,
                 title:{
-                    text: "Verfügbarkeit"
+                    text: "${text/structure_history_availability | NULL} (24 Stunden)"
                 },
                 axisY: {
                     title: "Reaktionszeit",
-                    suffix: "ms"
+                    suffix: " Sek."
                 },
                 data: [{
                     type: "spline",
                     markerSize: 3,
                     xValueType: "dateTime",
-                    dataPoints: ${structure dataPoints | NULL}
+                    dataPoints: ${structure dataPoints1 | NULL}
         }]
         });
+
+            chart.render();
+
+            var chart = new CanvasJS.Chart("chartContainerWeek", {
+                animationEnabled: true,
+                title:{
+                    text: "${text/structure_history_availability | NULL} (vergangene Woche)"
+                },
+                axisY: {
+                    title: "Reaktionszeit",
+                    suffix: " Sek."
+                },
+                data: [{
+                    type: "spline",
+                    markerSize: 3,
+                    xValueType: "dateTime",
+                    dataPoints: ${structure dataPoints2 | NULL}
+                }]
+            });
 
             chart.render();
 
         }
     </script>
 
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <div id="chartContainerDay" style="height: 370px; width: 100%;"></div>
+    <br /> <br />
+    <div id="chartContainerWeek" style="height: 370px; width: 100%;"></div>
+
     <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/canvas/canvasjs.min.js"/>
 
 </tal:block>

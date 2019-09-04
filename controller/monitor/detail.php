@@ -21,14 +21,27 @@ $g['graphs']['0']['server_lines'] = explode("],", $g['graphs']['0']['server_line
 $g['graphs']['0']['server_lines'] = str_replace('[', '', $g['graphs']['0']['server_lines']);
 $g['graphs']['0']['server_lines'] = str_replace(']', '', $g['graphs']['0']['server_lines']);
 
+$g['graphs']['1']['server_lines'] = explode("],", $g['graphs']['1']['server_lines']);
+$g['graphs']['1']['server_lines'] = str_replace('[', '', $g['graphs']['1']['server_lines']);
+$g['graphs']['1']['server_lines'] = str_replace(']', '', $g['graphs']['1']['server_lines']);
+
 for($i=0; $i<count($g['graphs']['0']['server_lines']); $i++) {
   $temp = explode(",", $g['graphs']['0']['server_lines'][$i]);
   $g['graphs']['0']['server_lines'][$i] = array("x" => $temp['0'], "y" => $temp['1']);
 }
 
+for($i=0; $i<count($g['graphs']['1']['server_lines']); $i++) {
+  $temp = explode(",", $g['graphs']['1']['server_lines'][$i]);
+  $g['graphs']['1']['server_lines'][$i] = array("x" => $temp['0'], "y" => $temp['1']);
+}
+
 template::setText('chartTage', $d);
 template::setText('graphs', $g);
+template::setText('uptime', round($g['graphs']['1']['uptime'], 2));
+template::setText('latency', round($g['graphs']['1']['latency_avg'], 2));
 
-$dataPoints = $g['graphs']['0']['server_lines'];
+$dataPoints1 = $g['graphs']['0']['server_lines'];
+template::setText('dataPoints1', json_encode($dataPoints1, JSON_NUMERIC_CHECK));
 
-template::setText('dataPoints', json_encode($dataPoints, JSON_NUMERIC_CHECK));
+$dataPoints2 = $g['graphs']['1']['server_lines'];
+template::setText('dataPoints2', json_encode($dataPoints2, JSON_NUMERIC_CHECK));
