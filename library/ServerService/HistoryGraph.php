@@ -36,12 +36,15 @@ class HistoryGraph
   public function createHTML($server_id)
   {
     $now = new DateTime();
+    $last_day = new DateTime('-1 day 0:0:0');
     $last_week = new DateTime('-1 week 0:0:0');
     $last_year = new DateTime('-1 year -1 week 0:0:0');
 
     $graphs = array(
-      0 => $this->generateGraphUptime($server_id, $last_week, $now),
-      1 => $this->generateGraphHistory($server_id, $last_year, $last_week),
+
+      0 => $this->generateGraphUptime($server_id, $last_day, $now),
+      1 => $this->generateGraphUptime($server_id, $last_week, $now),
+      2 => $this->generateGraphHistory($server_id, $last_year, $last_week),
     );
     $info_fields = array(
       'latency_avg' => '%01.4f',
@@ -63,12 +66,7 @@ class HistoryGraph
     }
 
     $tpl_data = array(
-      'graphs' => $graphs,
-      'label_server' => 'Server',
-      'day_format' => '%d.%m.%Y',
-      'long_date_format' => '%d.%m.%Y %H:%M:%S Uhr',
-      'short_date_format' => '%d.%m %H:%M Uhr',
-      'short_time_format' => '%H:%M Uhr',
+      'graphs' => $graphs
     );
 
     return $tpl_data;
@@ -92,14 +90,6 @@ class HistoryGraph
     $records = $this->getRecords('uptime', $server_id, $start_time, $end_time);
 
     $data = $this->generateGraphLines($records, $lines, $cb_if_up, 'latency', $start_time, $end_time, true);
-
-    $data['title'] = 'Vergangene Woche';
-    $data['plotmode'] = 'hour';
-    $data['buttons'] = array();
-    $data['buttons'][] = array('mode' => 'hour', 'label' => 'Stunde', 'class_active' => 'btn-info');
-    $data['buttons'][] = array('mode' => 'day', 'label' => 'Tag');
-    $data['buttons'][] = array('mode' => 'week', 'label' => 'Woche');
-    $data['chart_id'] = $server_id . '_uptime';
 
     return $data;
   }
@@ -127,14 +117,6 @@ class HistoryGraph
     };
     $records = $this->getRecords('history', $server_id, $start_time, $end_time);
     $data = $this->generateGraphLines($records, $lines, $cb_if_up, 'latency_avg', $start_time, $end_time, false);
-
-    $data['title'] = 'Historie';
-    $data['plotmode'] = 'month';
-    $data['buttons'] = array();
-    $data['buttons'][] = array('mode' => 'week2', 'label' => 'Woche');
-    $data['buttons'][] = array('mode' => 'month', 'label' => 'Monat', 'class_active' => 'btn-info');
-    $data['buttons'][] = array('mode' => 'year', 'label' => 'Jahr');
-    $data['chart_id'] = $server_id . '_history';
 
     return $data;
   }
@@ -165,6 +147,7 @@ class HistoryGraph
       'start_time' => $start_time->format('Y-m-d H:i:s'),
       'end_time' => $end_time->format('Y-m-d H:i:s'),
     ), True);
+
     return $records;
   }
 
