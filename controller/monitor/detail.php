@@ -13,35 +13,35 @@ $arc->archive($sys);
 $h = new HistoryGraph;
 $g = $h->createHTML($sys);
 
-for($i=7; $i>0; $i--) {
-  $d[$i] = date("d.m.Y", mktime(0, 0, 0, date("m"), date("d") - $i, date("Y")));
+$dataPointMin = array();
+$dataPointAvg = array();
+$dataPointMax = array();
+
+for($i=0; $i<count($g['2']); $i++) {
+  $dataPointMin[$i]['label'] = $g['2'][$i]['date'];
+  $dataPointAvg[$i]['label'] = $g['2'][$i]['date'];
+  $dataPointMax[$i]['label'] = $g['2'][$i]['date'];
+
+  $dataPointMin[$i]['y'] = $g['2'][$i]['latency_min'];
+  $dataPointAvg[$i]['y'] = $g['2'][$i]['latency_avg'];
+  $dataPointMax[$i]['y'] = $g['2'][$i]['latency_max'];
 }
 
-$g['graphs']['0']['server_lines'] = explode("],", $g['graphs']['0']['server_lines']);
-$g['graphs']['0']['server_lines'] = str_replace('[', '', $g['graphs']['0']['server_lines']);
-$g['graphs']['0']['server_lines'] = str_replace(']', '', $g['graphs']['0']['server_lines']);
-
-$g['graphs']['1']['server_lines'] = explode("],", $g['graphs']['1']['server_lines']);
-$g['graphs']['1']['server_lines'] = str_replace('[', '', $g['graphs']['1']['server_lines']);
-$g['graphs']['1']['server_lines'] = str_replace(']', '', $g['graphs']['1']['server_lines']);
-
-for($i=0; $i<count($g['graphs']['0']['server_lines']); $i++) {
-  $temp = explode(",", $g['graphs']['0']['server_lines'][$i]);
-  $g['graphs']['0']['server_lines'][$i] = array("x" => $temp['0'], "y" => $temp['1']);
+for($i=0; $i<count($g['0']); $i++) {
+  if(!empty(strtotime($g['0'][$i]['date']))) {
+    $d = explode(' ', $g['0'][$i]['date']);
+    $g['0']['chart_day'][$i] = array("label" => $g['0'][$i]['date'], "y" => $g['0'][$i]['latency']);
+  }
 }
 
-for($i=0; $i<count($g['graphs']['1']['server_lines']); $i++) {
-  $temp = explode(",", $g['graphs']['1']['server_lines'][$i]);
-  $g['graphs']['1']['server_lines'][$i] = array("x" => $temp['0'], "y" => $temp['1']);
+for($i=0; $i<count($g['1']); $i++) {
+  if(!empty(strtotime($g['1'][$i]['date']))) {
+    $g['1']['chart_week'][$i] = array("label" => $g['1'][$i]['date'], "y" => $g['1'][$i]['latency']);
+  }
 }
 
-template::setText('chartTage', $d);
-template::setText('graphs', $g);
-template::setText('uptime', round($g['graphs']['1']['uptime'], 2));
-template::setText('latency', round($g['graphs']['1']['latency_avg'], 2));
-
-$dataPoints1 = $g['graphs']['0']['server_lines'];
-template::setText('dataPoints1', json_encode($dataPoints1, JSON_NUMERIC_CHECK));
-
-$dataPoints2 = $g['graphs']['1']['server_lines'];
-template::setText('dataPoints2', json_encode($dataPoints2, JSON_NUMERIC_CHECK));
+template::setText('dataPoints1', json_encode($g['0']['chart_day'], JSON_NUMERIC_CHECK));
+template::setText('dataPoints2', json_encode($g['1']['chart_week'], JSON_NUMERIC_CHECK));
+template::setText('dataPointsMin', json_encode($dataPointMin, JSON_NUMERIC_CHECK));
+template::setText('dataPointsAvg', json_encode($dataPointAvg, JSON_NUMERIC_CHECK));
+template::setText('dataPointsMax', json_encode($dataPointMax, JSON_NUMERIC_CHECK));

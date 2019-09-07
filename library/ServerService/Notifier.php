@@ -61,6 +61,16 @@ class Notifier
     $value = $db->getValue();
     $this->server = $value['0'];
 
+    $query_standby = "SELECT * FROM wos_standby WHERE year=:year && kw=:kw";
+    $db->getQuery($query_standby, array(':year' => date('Y') , ':kw' => date('W')));
+
+    $value_standby = $db->getValue();
+    $value_standby = $value_standby['0'];
+
+    if($db->getNumrows() == 1 && !empty($value_standby['username'])) {
+      $this->server['user'] = $this->server['user'] . ',' . $value_standby['username'];
+    }
+
     $server_data = $server->getSystem($value['0']['home_system'], False, True);
     $this->server['system'] = $server_data['bezeichnung'];
 
