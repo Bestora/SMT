@@ -118,21 +118,21 @@
                 data: [{
                     name: "Schnellster Wert",
                     type: "spline",
-                    yValueFormatString: "#0.## Sek",
+                    yValueFormatString: "#0.#### Sek",
                     showInLegend: true,
                     dataPoints: ${structure dataPointsMin | NULL}
                     },
                     {
                         name: "Durchschnittliche Reaktionszeit",
                         type: "spline",
-                        yValueFormatString: "#0.## Sek",
+                        yValueFormatString: "#0.#### Sek",
                         showInLegend: true,
                         dataPoints: ${structure dataPointsAvg | NULL}
                     },
                     {
                         name: "Langsamster Wert",
                         type: "spline",
-                        yValueFormatString: "#0.## Sek",
+                        yValueFormatString: "#0.#### Sek",
                         showInLegend: true,
                         dataPoints: ${structure dataPointsMax | NULL}
                     }]
