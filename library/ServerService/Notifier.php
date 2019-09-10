@@ -102,6 +102,7 @@ class Notifier
     $mail = new Mail();
     $db = new Database('SMT-USER');
     $user = explode(',', $users);
+    $session = Session::getInstance();
 
     $subject = $this->parse_msg($this->status_new, 'email_subject', $this->server);
     $utf8Html = $this->parse_msg($this->status_new, 'email_body', $this->server);
@@ -109,7 +110,7 @@ class Notifier
     // go through empl
     for ($i = 0; $i < count($user); $i++) {
       $db->getQuery("SELECT * FROM db_user_contact WHERE username=:username", array(':username' => $user[$i]));
-      $mail->sendMail($db->getValue('email'), base::get('monitor_email_address'), $subject, $utf8Html);
+      $mail->sendMail($db->getValue('email'), $session->get('monitor_email_address'), $subject, $utf8Html);
     }
 
     $this->add_log($this->server_id, 'email', $subject, $users);
