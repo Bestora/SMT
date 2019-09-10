@@ -109,7 +109,7 @@ class Notifier
     // go through empl
     for ($i = 0; $i < count($user); $i++) {
       $db->getQuery("SELECT * FROM db_user_contact WHERE username=:username", array(':username' => $user[$i]));
-      $mail->sendMail($db->getValue('email'), 'monitor@kgu-consulting.com', $subject, $utf8Html);
+      $mail->sendMail($db->getValue('email'), base::get('monitor_email_address'), $subject, $utf8Html);
     }
 
     $this->add_log($this->server_id, 'email', $subject, $users);

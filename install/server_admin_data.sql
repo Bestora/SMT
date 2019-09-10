@@ -77,7 +77,9 @@ INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES
 ('pushover_api_token', '', 'text', 'nein'),
 ('ticket_prio', 'ticket_prio_niedrig,ticket_prio_normal,ticket_prio_hoch', 'text', 'ja'),
 ('ticket_status', 'ticket_status_offen,ticket_status_planung,ticket_status_arbeit,ticket_status_feedback,ticket_status_fertig,ticket_status_geschlossen', 'text', 'ja'),
-('version', '2.1', 'hidden', 'nein');
+('version', '2.1', 'hidden', 'nein'),
+('monitor_email_address', 'absender@domain.de', '', 'nein'),
+;
 
 INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES ('allowed_auto_system_ip', 'on', 'text', 'nein');
 INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES ('allowed_auto_system_port', 'on', 'text', 'nein');
