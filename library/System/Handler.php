@@ -92,6 +92,9 @@ class Handler extends Texte
       if ($config[$i]['id'] == 'pushover_api_token') {
         $session->set('pushover_api_token', $config[$i]['value']);
       }
+      if ($config[$i]['id'] == 'monitor_email_address') {
+        $session->set('monitor_email_address', $config[$i]['value']);
+      }
     }
     Template::setText('config', $this->config);
     Template::setText('max_upload', ini_get('upload_max_filesize'));
