@@ -120,6 +120,8 @@ class User
         $db->getQuery($query, $value);
 
         $this->createCookie();
+        $this->setLimitController();
+
         return True;
       } else {
         return False;
@@ -158,12 +160,28 @@ class User
         $value = array(':username' => $session->get('username'));
         $db->getQuery($query, $value);
 
+        $this->setLimitController();
+
         return True;
       } else {
         return False;
       }
     }
 
+  }
+
+
+  public function setLimitController() {
+    $session = Session::getInstance();
+
+    $db = new Database('SMT-USER');
+    $db->getQuery("SELECT * FROM db_user_secure WHERE username=:username", array(':username' => $this->getUsername()));
+
+    if($db->getValue('limitController') != '') {
+      $session->set('limitController', explode(',', $db->getValue('limitController')));
+    } else {
+      $session->set('limitController', array('server','administration','inventory','knowledge','ticket'));
+    }
   }
 
   private function createCookie()

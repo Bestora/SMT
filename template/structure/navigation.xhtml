@@ -2,8 +2,7 @@
 
     <a href="${getPath}" class="logo">
         <span class="logo-mini"><b>SMT</b></span>
-        <span class="logo-lg"><img src="${getPath}/assets/dist/img/SMT_Logo_white.png"
-                                   style="width:215px;margin-left:-5px;margin-top:-5px;"/></span>
+        <span class="logo-lg"><img src="${getPath}/assets/dist/img/SMT_Logo_white.png" style="width:215px;margin-left:-5px;margin-top:-5px;"/></span>
     </a>
 
     <nav class="navbar navbar-static-top" role="navigation">
@@ -64,81 +63,15 @@
             </a>
         </li>
 
-        <li class="treeview ${active_server | NULL}">
-            <a href="#"><i class="fa fa-server"></i> <span>${text/home_second_nav | NULL}</span>
-                <span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-            </a>
-            <ul class="treeview-menu">
-                <li class="${active_systeme_server | NULL}"><a href="${getPath}/server/liste">${text/home_physische_nav | NULL}</a>
-                </li>
-                <li class="${active_systeme_vmware | NULL}"><a href="${getPath}/vmware/liste">${text/home_third_nav | NULL}</a>
-                </li>
-            </ul>
-        </li>
+        <tal:block metal:use-macro="structure/navigation/server.xhtml/standard"/>
 
-        <li class="treeview ${active_inventory| NULL}">
-            <a href="#"><i class="fa fa-archive"></i> <span>${text/home_fourth_nav | NULL}</span>
-                <span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-            </a>
-            <ul class="treeview-menu">
-                <li class="${active_inventory_index | NULL}"><a href="${getPath}/inventory/index">${text/nav_inventar_index | NULL}</a></li>
-                <li class="${active_inventory_license | NULL}"><a href="${getPath}/inventory/license">${text/nav_inventar_license | NULL}</a></li>
-                <li class="${active_inventory_hardware | NULL}"><a href="${getPath}/inventory/hardware">${text/nav_inventar_hardware | NULL}</a></li>
-                <li class="${active_inventory_password | NULL}"><a href="${getPath}/inventory/password">${text/nav_inventar_password | NULL}</a></li>
-                <li class="${active_inventory_contract | NULL}"><a href="${getPath}/inventory/contract">${text/nav_inventar_contract | NULL}</a></li>
-                <!--<li class="${active_inventory_inventur | NULL}"><a href="#">${text/nav_inventur}</a></li>-->
-                <li class="${active_inventory_services | NULL}"><a href="${getPath}/inventory/services">${text/nav_inventar_services | NULL}</a></li>
+        <tal:block metal:use-macro="structure/navigation/inventory.xhtml/standard"/>
 
-            </ul>
-        </li>
+        <tal:block metal:use-macro="structure/navigation/administration.xhtml/standard"/>
 
-        <li class="treeview ${active_administration | NULL}">
-            <a href="#"><i class="fa fa-book"></i> <span>${text/home_eight_nav | NULL}</span>
-                <span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-            </a>
-            <ul class="treeview-menu">
-                <li class="${active_administration_standby | NULL}"><a href="${getPath}/administration/standby">${text/nav_inventar_standby | NULL}</a></li>
-                <li class="${active_administration_servicelog | NULL}"><a href="${getPath}/administration/servicelog">${text/nav_inventar_logfile | NULL}</a></li>
-                <li class="${active_administration_ipadressen | NULL}"><a href="${getPath}/administration/ipadressen">${text/nav_inventar_ip | NULL}</a></li>
-                <li class="${active_administration_dnscheck | NULL}"><a href="${getPath}/administration/dnscheck">${text/nav_inventar_dns | NULL}</a></li>
-            </ul>
-        </li>
+        <tal:block metal:use-macro="structure/navigation/ticket.xhtml/standard"/>
 
-        <li class="treeview ${active_ticket | NULL}">
-            <a href="#"><i class="fa fa-ticket"></i> <span>${text/home_six_nav | NULL}</span>
-                <span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-            </a>
-            <ul class="treeview-menu">
-                <li class="${active_ticket_index | NULL}"><a
-                        href="${getPath}/ticket/index">${text/list_ticket | NULL}</a></li>
-                <li class="${active_ticket_my | NULL}"><a
-                        href="${getPath}/ticket/user">${text/list_my_ticket | NULL}</a></li>
-                <li class="${active_ticket_new | NULL}"><a href="${getPath}/ticket/new">${text/new_ticket | NULL}</a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="treeview ${active_knowledge | NULL}">
-            <a href="#"><i class="fa fa-building"></i> <span>${text/home_fifth_nav | NULL}</span>
-                <span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
-            </a>
-            <ul class="treeview-menu">
-                <li tal:condition="aSession/sst |  NULL"><a href="${getPath}/knowledge/clear">Filter zurücksetzen</a>
-                </li>
-                <li class="${active_knowledge | NULL}"><a href="${getPath}/knowledge/index">Alle Einträge</a></li>
-                <li class="${active_knowledge | NULL}"><a href="${getPath}/knowledge/new">Neuer Eintrag</a></li>
-            </ul>
-        </li>
+        <tal:block metal:use-macro="structure/navigation/knowledge.xhtml/standard"/>
 
         <li tal:condition="php:count(module_menu) > 0 | NULL" class="treeview ${active_module | NULL}">
             <a href="#"><i class="fa fa-simplybuilt"></i> <span>${text/home_seven_nav | NULL}</span>

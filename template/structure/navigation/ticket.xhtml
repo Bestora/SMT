@@ -1,0 +1,19 @@
+<tal:block metal:define-macro="standard">
+
+    <li class="treeview ${active_ticket | NULL}" tal:condition="php:in_array('ticket', _SESSION['limitController']) | NULL">
+        <a href="#"><i class="fa fa-ticket"></i> <span>${text/home_six_nav | NULL}</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="${active_ticket_index | NULL}"><a
+                    href="${getPath}/ticket/index">${text/list_ticket | NULL}</a></li>
+            <li class="${active_ticket_my | NULL}"><a
+                    href="${getPath}/ticket/user">${text/list_my_ticket | NULL}</a></li>
+            <li class="${active_ticket_new | NULL}"><a href="${getPath}/ticket/new">${text/new_ticket | NULL}</a>
+            </li>
+        </ul>
+    </li>
+
+</tal:block>
