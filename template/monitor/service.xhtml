@@ -167,11 +167,8 @@
                                     data-placeholder="${text/monitor_service_user_notification | NULL}"
                                     style="width: 100%;" tabindex="-1" aria-hidden="true">
                   <span tal:condition="user_liste | NULL">
-                    <option tal:condition="not:service_detail | NULL" tal:repeat="user user_liste"
-                            value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
-                    <option tal:condition="service_detail | NULL" tal:repeat="user user_liste"
-                            tal:attributes="selected php:in_array(user['username'], explode(',', service_detail['user'])) | NULL"
-                            value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
+                    <option tal:condition="not:service_detail | NULL" tal:repeat="user user_liste" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
+                    <option tal:condition="service_detail | NULL" tal:repeat="user user_liste" tal:attributes="selected php:in_array(user['username'], explode(',', service_detail['user'])) | NULL" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
                   </span>
                             </select>
                         </td>
@@ -255,12 +252,10 @@
                 </div>
             </div>
             <div class="box-body">
-                <select name="service_relations[]" class="form-control select2 select2-hidden-accessible" multiple=""
-                        data-placeholder="${text/monitor_service_user_notification | NULL}" style="width: 100%;"
-                        tabindex="-1" aria-hidden="true">
-          <span tal:condition="user_liste | NULL">
-            <option tal:repeat="service all_services" value="${service/server_id}">${service/label}</option>
-          </span>
+                <select name="service_relations[]" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="${text/monitor_service_user_notification | NULL}" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                  <span tal:condition="user_liste | NULL">
+                    <option tal:repeat="service all_services" value="${service/server_id}">${service/label}</option>
+                  </span>
                 </select>
             </div>
         </div>

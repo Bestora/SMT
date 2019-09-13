@@ -20,9 +20,10 @@ if (end($url) == 'save') {
    * Rechte zum Benutzer speichern
    */
   $db = new Database('SMT-USER');
-  $query = "UPDATE db_user SET rechte=:rechte WHERE username=:username";
-  $value = array(':rechte' => $post['rechte'], ':username' => $post['username']);
-  $db->getQuery($query, $value);
+
+  $db->getQuery("UPDATE db_user SET rechte=:rechte WHERE username=:username", array(':rechte' => $post['rechte'], ':username' => $post['username']));
+  $db->getQuery("UPDATE db_user_secure SET limitController=:limitController WHERE username=:username", array(':limitController' => '', ':username' => $post['username']));
+  $db->getQuery("UPDATE db_user_secure SET limitController=:limitController WHERE username=:username", array(':limitController' => implode(',', $post['limitController']), ':username' => $post['username']));
 
   Base::setRoute('user', 'admin/member/liste');
 }

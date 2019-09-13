@@ -180,7 +180,7 @@ class User
     if($db->getValue('limitController') != '') {
       $session->set('limitController', explode(',', $db->getValue('limitController')));
     } else {
-      $session->set('limitController', array('server','administration','inventory','knowledge','ticket'));
+      $session->set('limitController', $session->get('configController'));
     }
   }
 
