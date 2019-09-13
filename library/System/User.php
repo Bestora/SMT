@@ -153,6 +153,11 @@ class User
         }
 
         $session->set('rechte', $this->getUserDaten('db_user', $session->get('username'), $feld = 'rechte'));
+
+        $query = "UPDATE db_user_secure SET countLogin=countLogin+1 WHERE username=:username";
+        $value = array(':username' => $session->get('username'));
+        $db->getQuery($query, $value);
+
         return True;
       } else {
         return False;
