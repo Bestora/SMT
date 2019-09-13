@@ -79,6 +79,7 @@ INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES
 ('ticket_status', 'ticket_status_offen,ticket_status_planung,ticket_status_arbeit,ticket_status_feedback,ticket_status_fertig,ticket_status_geschlossen', 'text', 'ja'),
 ('version', '2.1', 'hidden', 'nein'),
 ('monitor_email_address', 'absender@domain.de', '', 'nein'),
+('controller', 'server,administration,inventory,knowledge,ticket,monitor', 'text', 'nein'),
 ;
 
 INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES ('allowed_auto_system_ip', 'on', 'text', 'nein');
