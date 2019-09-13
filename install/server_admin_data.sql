@@ -52,8 +52,8 @@ INSERT INTO `db_user_private` (`id`, `username`, `salutation`, `company`, `lastn
 -- Daten für Tabelle `db_user_secure`
 --
 
-INSERT INTO `db_user_secure` (`id`, `username`, `countLogin`, `authCode`, `lastLogin`, `lastAuthCode`) VALUES
-(2, 'E673A64B-38A1-2F13-C45D-927F207AE309', 30, '', '2016-11-25 22:16:26', '0000-00-00 00:00:00');
+INSERT INTO `db_user_secure` (`id`, `username`, `countLogin`, `authCode`, `lastLogin`, `lastAuthCode`, `limitController`) VALUES
+(2, 'E673A64B-38A1-2F13-C45D-927F207AE309', 30, '', '2016-11-25 22:16:26', '0000-00-00 00:00:00', '');
 
 --
 -- Daten für Tabelle `wos_config`

@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `db_user_secure` (
   `authCode` char(100) NOT NULL,
   `lastLogin` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastAuthCode` datetime NOT NULL,
+  `limitController` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

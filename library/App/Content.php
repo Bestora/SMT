@@ -71,7 +71,11 @@ class Content extends Template
     $session->set('controller', $this->get('controller'));
     $session->set('methode', $this->get('methode'));
 
-    require_once $controller;
+    if(isset($_SESSION['limitController']) && !in_array($session->get('controller'), $session->get('limitController')) && $session->get('controller') != 'home' && $session->get('controller') != 'user') {
+      header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
+    } else {
+      require_once $controller;
+    }
   }
 
   /**
