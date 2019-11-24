@@ -87,7 +87,7 @@ class Notifier
      $this->notifyByPushover($this->server['user']);
     }
 
-    if ($this->server['MessageBird'] == 'yes') {
+    if ($this->server['messagebird'] == 'yes') {
       $this->notifyByMessageBird($this->server['user']);
     }
 
