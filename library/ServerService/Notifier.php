@@ -113,7 +113,7 @@ class Notifier
     $Message = new \MessageBird\Objects\Message();
 
     $Message->originator = $session->get('messagebird_originator');
-    $Message->body = $this->parse_msg($this->status_new, 'email_body', $this->server);
+    $Message->body = strip_tags($this->parse_msg($this->status_new, 'email_body', $this->server));
 
     // go through empl
     for ($i = 0; $i < count($user); $i++) {
