@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `db_user_contact` (
   `username` char(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `email` varchar(60) NOT NULL,
   `pushover` varchar(200) NOT NULL,
+  `mobile` char(18) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS `psm_servers` (
   `active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `email` enum('yes','no') NOT NULL DEFAULT 'yes',
   `pushover` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `messagebird` enum('yes','no') NOT NULL DEFAULT 'yes',
   `warning_threshold` mediumint(1) NOT NULL DEFAULT '1',
   `warning_threshold_counter` mediumint(1) NOT NULL,
   `description` text NOT NULL,

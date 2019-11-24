@@ -27,6 +27,7 @@
  **/
 
 define('project_path', dirname(__FILE__));
+define('project_vendor', project_path . '/vendor');
 define('project_base', filter_input(INPUT_SERVER, 'HTTP_HOST'));
 define('smt_cookie_runtime', 604800);
 define('smt_cookie_domain', project_base);
@@ -37,5 +38,6 @@ if (!file_exists(project_path . '/assets/config/' . $_SERVER['SERVER_NAME'] . '.
 } else {
   include_once 'library/App.php';
 }
+
 
 ?>

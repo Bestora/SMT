@@ -66,7 +66,7 @@ class Database
     try {
       $data = $this->get('DB');
 
-      $DB = new PDO('mysql:host=' . $data ['db_host'] . ';dbname=' . $data ['db_base'], $data ['db_user'], $data ['db_pass']);
+      $DB = new PDO('mysql:host=' . $data ['db_host'] . ';dbname=' . $data ['db_base'] . ';port=' . $data ['db_port'], $data ['db_user'], $data ['db_pass']);
       $DB->exec("set names " . $data ['db_charset']);
 
       $q = $DB->prepare($query);

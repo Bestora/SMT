@@ -28,7 +28,6 @@
 
 class Notifier
 {
-
   protected $send_emails = true;
   protected $send_pushover = true;
   protected $save_logs = true;
@@ -85,10 +84,43 @@ class Notifier
     }
 
     if ($this->server['pushover'] == 'yes') {
-      $this->notifyByPushover($this->server['user']);
+     $this->notifyByPushover($this->server['user']);
+    }
+
+    if ($this->server['MessageBird'] == 'yes') {
+      $this->notifyByMessageBird($this->server['user']);
     }
 
     return $notify;
+  }
+
+  /**
+   * This functions performs the messagebird notifications
+   *
+   * @param array $users
+   * @return boolean
+   */
+  protected function notifyByMessageBird($users)
+  {
+    $db = new Database('SMT-USER');
+    $user = explode(',', $users);
+    $session = Session::getInstance();
+
+    require project_vendor .'/autoload.php';
+    $MessageBird = new \MessageBird\Client('aWPa7VbsNpgYi8wZpntNRjwg7');
+    $Message = new \MessageBird\Objects\Message();
+
+    $Message->originator = +4915123213195;
+    $Message->body = $this->parse_msg($this->status_new, 'email_body', $this->server);
+
+    // go through empl
+    for ($i = 0; $i < count($user); $i++) {
+      $db->getQuery("SELECT * FROM db_user_contact WHERE username=:username", array(':username' => $user[$i]));
+      $Message->recipients = array($db->getValue('mobile'));
+      $MessageBird->messages->create($Message);
+    }
+
+    $this->add_log($this->server_id, 'email', $subject, $users);
   }
 
   /**
@@ -150,6 +182,7 @@ class Notifier
    */
   public function build_pushover()
   {
+    require project_vendor . '/php-pushover/php-pushover/Pushover.php';
     $session = Session::getInstance();
     $pushover = new Pushover();
     $pushover->setToken($session->get('pushover_api_token'));

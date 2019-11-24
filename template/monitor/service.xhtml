@@ -205,6 +205,22 @@
                             </select>
                         </td>
                     </tr>
+
+                    <tr>
+                        <td>${text/monitor_service_messagebird | NULL}</td>
+                        <td>
+                            <select class="form-control" name="messagebird" size="1">
+                                <option value="yes"
+                                        tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'yes'">
+                                    ${text/monitor_service_messagebird_on | NULL}
+                                </option>
+                                <option value="no"
+                                        tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'no'">
+                                    ${text/monitor_service_messagebird_off | NULL}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

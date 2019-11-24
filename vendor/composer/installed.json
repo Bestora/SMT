@@ -1,0 +1,243 @@
+[
+    {
+        "name": "messagebird/php-rest-api",
+        "version": "v1.16.1",
+        "version_normalized": "1.16.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/messagebird/php-rest-api.git",
+            "reference": "6a1666bdbfc4f33c54f090308cce7dc47c5e3014"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/messagebird/php-rest-api/zipball/6a1666bdbfc4f33c54f090308cce7dc47c5e3014",
+            "reference": "6a1666bdbfc4f33c54f090308cce7dc47c5e3014",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.4.0",
+            "symfony/polyfill-php56": "^1.10"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.25"
+        },
+        "time": "2019-10-08T15:00:24+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "MessageBird\\": "src/MessageBird/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-2-Clause"
+        ],
+        "authors": [
+            {
+                "name": "MessageBird",
+                "email": "info@messagebird.com"
+            }
+        ],
+        "description": "MessageBird REST API client for PHP",
+        "homepage": "https://github.com/messagebird/php-rest-api"
+    },
+    {
+        "name": "php-pushover/php-pushover",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/cschalenborgh/php-pushover.git",
+            "reference": "b2d060efacf48e4c6821427691b19db0315ccedd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/cschalenborgh/php-pushover/zipball/b2d060efacf48e4c6821427691b19db0315ccedd",
+            "reference": "b2d060efacf48e4c6821427691b19db0315ccedd",
+            "shasum": ""
+        },
+        "time": "2019-09-26T19:38:11+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "Pushover.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "authors": [
+            {
+                "name": "Chris Schalenborgh",
+                "email": "chris@schalenborgh.be"
+            }
+        ],
+        "description": "PHP class for the Pushover.net project"
+    },
+    {
+        "name": "phptal/phptal",
+        "version": "1.4.0",
+        "version_normalized": "1.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phptal/PHPTAL.git",
+            "reference": "c02324a880ef83074876585215980bde4d4f9b6b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phptal/PHPTAL/zipball/c02324a880ef83074876585215980bde4d4f9b6b",
+            "reference": "c02324a880ef83074876585215980bde4d4f9b6b",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^7.1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.36"
+        },
+        "time": "2019-03-22T10:55:21+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "PHPTAL": "classes/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-2.1+"
+        ],
+        "authors": [
+            {
+                "name": "Laurent Bédubourg",
+                "email": "lbedubourg@motion-twin.com",
+                "homepage": "http://labe.me"
+            },
+            {
+                "name": "Kornel Lesiński",
+                "email": "kornel@geekhood.net",
+                "homepage": "http://pornel.net/"
+            }
+        ],
+        "description": "PHPTAL is a templating engine for PHP5 that implements Zope Page Templates syntax",
+        "homepage": "http://phptal.org/",
+        "keywords": [
+            "phptal",
+            "template engine",
+            "zope"
+        ]
+    },
+    {
+        "name": "symfony/polyfill-php56",
+        "version": "v1.12.0",
+        "version_normalized": "1.12.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-php56.git",
+            "reference": "0e3b212e96a51338639d8ce175c046d7729c3403"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/0e3b212e96a51338639d8ce175c046d7729c3403",
+            "reference": "0e3b212e96a51338639d8ce175c046d7729c3403",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "symfony/polyfill-util": "~1.0"
+        },
+        "time": "2019-08-06T08:03:45+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.12-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Php56\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill backporting some PHP 5.6+ features to lower PHP versions",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "symfony/polyfill-util",
+        "version": "v1.12.0",
+        "version_normalized": "1.12.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-util.git",
+            "reference": "4317de1386717b4c22caed7725350a8887ab205c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/4317de1386717b4c22caed7725350a8887ab205c",
+            "reference": "4317de1386717b4c22caed7725350a8887ab205c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2019-08-06T08:03:45+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.12-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Util\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony utilities for portability of PHP codes",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compat",
+            "compatibility",
+            "polyfill",
+            "shim"
+        ]
+    }
+]

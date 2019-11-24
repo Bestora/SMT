@@ -31,7 +31,8 @@ class Template
 
   public function __construct()
   {
-    include('Plugins/PHPTAL.php');
+    //include('Plugins/PHPTAL.php');
+    require project_vendor . '/phptal/phptal/classes/PHPTAL.php';
     $this->vorlage = project_path . '/template/index.xhtml';
     $this->setText('page_title', $this->get('page_title'));
     $this->set('phptal', new PHPTAL($this->vorlage));

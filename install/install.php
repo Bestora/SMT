@@ -37,18 +37,21 @@ if (isset($_POST['aktion']) && $_POST['aktion'] == 'install') {
   $current .= "db_user = " . $_POST['db_user'] . "\n";
   $current .= "db_pass = " . $_POST['db_pass'] . "\n";
   $current .= "db_base = " . $_POST['db_name'] . "\n";
+  $current .= "db_port = 3306\n";
   $current .= "db_charset=utf8\n\n";
   $current .= "[SMT-MONITOR]\n";
   $current .= "db_host = " . $_POST['db_host'] . "\n";
   $current .= "db_user = " . $_POST['db_user'] . "\n";
   $current .= "db_pass = " . $_POST['db_pass'] . "\n";
   $current .= "db_base = " . $_POST['db_name'] . "\n";
+  $current .= "db_port = 3306\n";
   $current .= "db_charset=utf8\n\n";
   $current .= "[SMT-USER]\n";
   $current .= "db_host = " . $_POST['db_host'] . "\n";
   $current .= "db_user = " . $_POST['db_user'] . "\n";
   $current .= "db_pass = " . $_POST['db_pass'] . "\n";
   $current .= "db_base = " . $_POST['db_name'] . "\n";
+  $current .= "db_port = 3306\n";
   $current .= "db_charset=utf8\n";
   file_put_contents($file, $current);
 
