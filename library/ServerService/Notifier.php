@@ -121,7 +121,7 @@ class Notifier
       $MessageBird->messages->create($Message);
     }
 
-    $this->add_log($this->server_id, 'email', $subject, $users);
+    $this->add_log($this->server_id, 'sms', $subject, $users);
   }
 
   /**
