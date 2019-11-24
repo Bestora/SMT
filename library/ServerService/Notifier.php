@@ -77,7 +77,7 @@ class Notifier
      $this->notifyByPushover($this->server['user']);
     }
 
-    if ($this->server['messagebird'] == 'yes') {
+    if ($this->server['messagebird'] == 'yes' && $status_new == 'off') {
       $query_standby = "SELECT * FROM wos_standby WHERE year=:year && kw=:kw";
       $db->getQuery($query_standby, array(':year' => date('Y') , ':kw' => date('W')));
 
