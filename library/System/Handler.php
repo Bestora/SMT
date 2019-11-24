@@ -92,6 +92,12 @@ class Handler extends Texte
       if ($config[$i]['id'] == 'pushover_api_token') {
         $session->set('pushover_api_token', $config[$i]['value']);
       }
+      if ($config[$i]['id'] == 'messagebird_api_token') {
+        $session->set('messagebird_api_token', $config[$i]['value']);
+      }
+      if ($config[$i]['id'] == 'messagebird_originator') {
+        $session->set('messagebird_originator', $config[$i]['value']);
+      }
       if ($config[$i]['id'] == 'monitor_email_address') {
         $session->set('monitor_email_address', $config[$i]['value']);
       }

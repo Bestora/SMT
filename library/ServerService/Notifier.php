@@ -97,8 +97,10 @@ class Notifier
   /**
    * This functions performs the messagebird notifications
    *
-   * @param array $users
-   * @return boolean
+   * @param $users
+   * @throws \MessageBird\Exceptions\HttpException
+   * @throws \MessageBird\Exceptions\RequestException
+   * @throws \MessageBird\Exceptions\ServerException
    */
   protected function notifyByMessageBird($users)
   {
@@ -107,10 +109,10 @@ class Notifier
     $session = Session::getInstance();
 
     require project_vendor .'/autoload.php';
-    $MessageBird = new \MessageBird\Client('aWPa7VbsNpgYi8wZpntNRjwg7');
+    $MessageBird = new \MessageBird\Client($session->get('messagebird_api_token'));
     $Message = new \MessageBird\Objects\Message();
 
-    $Message->originator = +4915123213195;
+    $Message->originator = $session->get('messagebird_originator');
     $Message->body = $this->parse_msg($this->status_new, 'email_body', $this->server);
 
     // go through empl
