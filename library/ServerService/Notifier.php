@@ -109,6 +109,7 @@ class Notifier
     $user = explode(',', $users);
     $session = Session::getInstance();
 
+    $subject = $this->parse_msg($this->status_new, 'email_subject', $this->server);
     $MessageBird = new \MessageBird\Client($session->get('messagebird_api_token'));
     $Message = new \MessageBird\Objects\Message();
 
