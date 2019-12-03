@@ -536,4 +536,5 @@ INSERT INTO `wos_language_de` (`id`, `text_name`, `text_value`, `art`) VALUES
 (436, 'monitor_service_messagebird', 'Messagebird', 'sys'),
 (437, 'monitor_service_messagebird_on', 'Messagebird einschalten', 'sys'),
 (438, 'monitor_service_messagebird_off', 'Messagebird ausschalten', 'sys'),
-(439, 'user_admin_mobile', 'Mobilnummer', 'sys');
+(439, 'user_admin_mobile', 'Mobilnummer', 'sys'),
+(440, 'structure_messagebird_on', 'Anruffunktion ist eingeschalten', 'sys');

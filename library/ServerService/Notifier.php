@@ -103,18 +103,18 @@ class Notifier
    */
   protected function notifyByMessageBird($users)
   {
+    require project_vendor .'/autoload.php';
+
     $db = new Database('SMT-USER');
     $user = explode(',', $users);
     $session = Session::getInstance();
 
-    require project_vendor .'/autoload.php';
     $MessageBird = new \MessageBird\Client($session->get('messagebird_api_token'));
     $Message = new \MessageBird\Objects\Message();
 
     $Message->originator = $session->get('messagebird_originator');
     $Message->body = strip_tags($this->parse_msg($this->status_new, 'email_body', $this->server));
 
-    // go through empl
     for ($i = 0; $i < count($user); $i++) {
       $db->getQuery("SELECT * FROM db_user_contact WHERE username=:username", array(':username' => $user[$i]));
       $Message->recipients = array($db->getValue('mobile'));

@@ -32,6 +32,9 @@
                         <span aria-label="Left Align" class="btn btn-default glyphicon glyphicon-phone"
                               aria-hidden="true" title="${text/structure_push_message_on | NULL}"
                               tal:condition="php:liste['pushover'] == 'yes' | NULL"/>
+                        <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-earphone"
+                              aria-hidden="true" title="${text/structure_messagebird_on | NULL}"
+                              tal:condition="php:liste['messagebird'] == 'yes' | NULL"/>
                     </td>
                     <td style="text-align:right;">
               <span tal:condition="aSession/admin | NULL">
