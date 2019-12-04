@@ -96,33 +96,30 @@ class Notifier
   /**
    * This functions performs the messagebird notifications
    *
-   * @param $users
-   * @throws \MessageBird\Exceptions\HttpException
-   * @throws \MessageBird\Exceptions\RequestException
-   * @throws \MessageBird\Exceptions\ServerException
+   * @param $user
    */
-  protected function notifyByMessageBird($users)
+  protected function notifyByMessageBird($user)
   {
     require project_vendor .'/autoload.php';
 
     $db = new Database('SMT-USER');
-    $user = explode(',', $users);
-    $session = Session::getInstance();
-
     $subject = $this->parse_msg($this->status_new, 'email_subject', $this->server);
-    $MessageBird = new \MessageBird\Client($session->get('messagebird_api_token'));
-    $Message = new \MessageBird\Objects\Message();
 
-    $Message->originator = $session->get('messagebird_originator');
-    $Message->body = strip_tags($this->parse_msg($this->status_new, 'email_body', $this->server));
+    $db->getQuery("SELECT * FROM db_user_private WHERE username=:username", array(':username' => $user));
+    $data = array("mitarbeiter" => $db->getValue('displayName'));
+    $data_string = json_encode($data);
 
-    for ($i = 0; $i < count($user); $i++) {
-      $db->getQuery("SELECT * FROM db_user_contact WHERE username=:username", array(':username' => $user[$i]));
-      $Message->recipients = array($db->getValue('mobile'));
-      $MessageBird->messages->create($Message);
-    }
+    $ch = curl_init('https://flows.messagebird.com/flows/f94dda1b-d80d-43e9-a763-00fc0b602c59/invoke');
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_string)));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_exec($ch);
+    curl_close($ch);
 
-    $this->add_log($this->server_id, 'sms', $subject, $users);
+    $this->add_log($this->server_id, 'sms', $subject, $user);
   }
 
   /**
