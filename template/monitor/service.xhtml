@@ -174,16 +174,14 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr tal:condition="php:_SESSION['pushover_api_token'] != '' | NULL">
                         <td>${text/monitor_service_push_notification | NULL}</td>
                         <td>
                             <select class="form-control" name="pushover" size="1">
-                                <option value="yes"
-                                        tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'yes'">
+                                <option value="yes"  tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'yes'">
                                     ${text/monitor_service_push_on | NULL}
                                 </option>
-                                <option value="no"
-                                        tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'no'">
+                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'no'">
                                     ${text/monitor_service_push_off | NULL}
                                 </option>
                             </select>
@@ -194,28 +192,24 @@
                         <td>${text/monitor_service_push_mail | NULL}</td>
                         <td>
                             <select class="form-control" name="email" size="1">
-                                <option value="yes"
-                                        tal:attributes="selected php:_SESSION['service_detail']['email'] == 'yes'">
+                                <option value="yes" tal:attributes="selected php:_SESSION['service_detail']['email'] == 'yes'">
                                     ${text/monitor_service_push_mail_on}
                                 </option>
-                                <option value="no"
-                                        tal:attributes="selected php:_SESSION['service_detail']['email'] == 'no'">
+                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['email'] == 'no'">
                                     ${text/monitor_service_push_mail_off | NULL}
                                 </option>
                             </select>
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr tal:condition="php:_SESSION['messsagebird_flowtoken'] != '' | NULL">
                         <td>${text/monitor_service_messagebird | NULL}</td>
                         <td>
                             <select class="form-control" name="messagebird" size="1">
-                                <option value="yes"
-                                        tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'yes'">
+                                <option value="yes" tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'yes'">
                                     ${text/monitor_service_messagebird_on | NULL}
                                 </option>
-                                <option value="no"
-                                        tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'no'">
+                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'no'">
                                     ${text/monitor_service_messagebird_off | NULL}
                                 </option>
                             </select>

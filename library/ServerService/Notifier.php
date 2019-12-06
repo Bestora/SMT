@@ -49,6 +49,7 @@ class Notifier
   {
     $db = new Database('SMT-MONITOR');
     $server = new Server('SMT-ADMIN');
+    $session = Session::getInstance();
 
     $this->server_id = $server_id;
     $this->status_old = $status_old;
@@ -73,11 +74,11 @@ class Notifier
       $this->notifyByEmail($this->server['user']);
     }
 
-    if ($this->server['pushover'] == 'yes') {
+    if ($this->server['pushover'] == 'yes' && !empty($session->get('pushover_api_token'))) {
      $this->notifyByPushover($this->server['user']);
     }
 
-    if ($this->server['messagebird'] == 'yes' && $status_new == 'off') {
+    if ($this->server['messagebird'] == 'yes' && $status_new == 'off'&& !empty($session->get('messsagebird_flowtoken'))) {
       $query_standby = "SELECT * FROM wos_standby WHERE year=:year && kw=:kw";
       $db->getQuery($query_standby, array(':year' => date('Y') , ':kw' => date('W')));
 
