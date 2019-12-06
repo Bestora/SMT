@@ -172,7 +172,7 @@ class Updater
   {
     $starttime = microtime(true);
 
-    $curl_result = $this->curl_get($this->server['ip'], true, ($this->server['pattern'] == '' ? false : true), 10);
+    $curl_result = $this->curl_get($this->server['ip'], true, ($this->server['pattern'] == '' ? false : true), 20);
     $this->rtime = (microtime(true) - $starttime);
 
     $status_code = strtok($curl_result, "\r\n");

@@ -187,3 +187,71 @@ Stack trace:
 
 
 
+/
+PDOException: SQLSTATE[HY000] [1049] Unknown database 'server_admin' in C:\wamp64\www\smt\library\System\Database.php:69
+Stack trace:
+#0 C:\wamp64\www\smt\library\System\Database.php(69): PDO->__construct('mysql:host=loca...', 'root', '')
+#1 C:\wamp64\www\smt\library\System\Handler.php(86): Database->getQuery('SELECT * FROM w...', Array)
+#2 C:\wamp64\www\smt\library\System\Handler.php(42): Handler->loadConfig()
+#3 C:\wamp64\www\smt\library\App\Base.php(120): Handler->__construct()
+#4 C:\wamp64\www\smt\library\App\Config.php(108): Base->registerClass('Handler')
+#5 C:\wamp64\www\smt\library\App\Config.php(40): Config->autoLoader()
+#6 C:\wamp64\www\smt\library\App.php(38): Config->__construct()
+#7 C:\wamp64\www\smt\library\App.php(43): App\App->__construct()
+#8 C:\wamp64\www\smt\index.php(38): include_once('C:\\wamp64\\www\\s...')
+#9 {main}
+24.10.2019 - 13:35Uhr: 
+
+
+
+/
+PDOException: SQLSTATE[HY000] [1049] Unknown database 'server_admin' in C:\wamp64\www\smt\library\System\Database.php:69
+Stack trace:
+#0 C:\wamp64\www\smt\library\System\Database.php(69): PDO->__construct('mysql:host=loca...', 'root', '')
+#1 C:\wamp64\www\smt\library\System\Handler.php(86): Database->getQuery('SELECT * FROM w...', Array)
+#2 C:\wamp64\www\smt\library\System\Handler.php(42): Handler->loadConfig()
+#3 C:\wamp64\www\smt\library\App\Base.php(120): Handler->__construct()
+#4 C:\wamp64\www\smt\library\App\Config.php(108): Base->registerClass('Handler')
+#5 C:\wamp64\www\smt\library\App\Config.php(40): Config->autoLoader()
+#6 C:\wamp64\www\smt\library\App.php(38): Config->__construct()
+#7 C:\wamp64\www\smt\library\App.php(43): App\App->__construct()
+#8 C:\wamp64\www\smt\index.php(38): include_once('C:\\wamp64\\www\\s...')
+#9 {main}
+24.10.2019 - 13:35Uhr: 
+
+
+
+/
+PDOException: SQLSTATE[HY000] [1049] Unknown database 'server_admin' in C:\wamp64\www\smt\library\System\Database.php:69
+Stack trace:
+#0 C:\wamp64\www\smt\library\System\Database.php(69): PDO->__construct('mysql:host=loca...', 'root', '')
+#1 C:\wamp64\www\smt\library\System\Handler.php(86): Database->getQuery('SELECT * FROM w...', Array)
+#2 C:\wamp64\www\smt\library\System\Handler.php(42): Handler->loadConfig()
+#3 C:\wamp64\www\smt\library\App\Base.php(120): Handler->__construct()
+#4 C:\wamp64\www\smt\library\App\Config.php(108): Base->registerClass('Handler')
+#5 C:\wamp64\www\smt\library\App\Config.php(40): Config->autoLoader()
+#6 C:\wamp64\www\smt\library\App.php(38): Config->__construct()
+#7 C:\wamp64\www\smt\library\App.php(43): App\App->__construct()
+#8 C:\wamp64\www\smt\index.php(38): include_once('C:\\wamp64\\www\\s...')
+#9 {main}
+24.10.2019 - 13:35Uhr: 
+
+
+
+/
+PDOException: could not find driver in C:\wamp64\www\smt\library\System\Database.php:69
+Stack trace:
+#0 C:\wamp64\www\smt\library\System\Database.php(69): PDO->__construct('mariadb:host=lo...', 'root', '')
+#1 C:\wamp64\www\smt\library\System\Handler.php(86): Database->getQuery('SELECT * FROM w...', Array)
+#2 C:\wamp64\www\smt\library\System\Handler.php(42): Handler->loadConfig()
+#3 C:\wamp64\www\smt\library\App\Base.php(120): Handler->__construct()
+#4 C:\wamp64\www\smt\library\App\Config.php(108): Base->registerClass('Handler')
+#5 C:\wamp64\www\smt\library\App\Config.php(40): Config->autoLoader()
+#6 C:\wamp64\www\smt\library\App.php(38): Config->__construct()
+#7 C:\wamp64\www\smt\library\App.php(43): App\App->__construct()
+#8 C:\wamp64\www\smt\index.php(38): include_once('C:\\wamp64\\www\\s...')
+#9 {main}
+25.10.2019 - 09:29Uhr: 
+
+
+
