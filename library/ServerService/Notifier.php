@@ -100,8 +100,7 @@ class Notifier
    */
   protected function notifyByMessageBird($user)
   {
-    require project_vendor .'/autoload.php';
-
+    $session = Session::getInstance();
     $db = new Database('SMT-USER');
     $subject = $this->parse_msg($this->status_new, 'email_subject', $this->server);
 
