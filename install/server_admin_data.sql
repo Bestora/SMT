@@ -76,7 +76,6 @@ INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES
 ('only_admin_methode', 'license,admin,hardware', 'text', 'nein'),
 ('pushover_api_token', '', 'text', 'nein'),
 ('messagebird_api_token', '', 'text', 'nein'),
-('messagebird_originator', '', 'text', 'nein'),
 ('messsagebird_flowtoken', '', 'text', 'nein'),
 ('ticket_prio', 'ticket_prio_niedrig,ticket_prio_normal,ticket_prio_hoch', 'text', 'ja'),
 ('ticket_status', 'ticket_status_offen,ticket_status_planung,ticket_status_arbeit,ticket_status_feedback,ticket_status_fertig,ticket_status_geschlossen', 'text', 'ja'),
