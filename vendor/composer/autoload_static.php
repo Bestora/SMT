@@ -7,7 +7,35 @@ namespace Composer\Autoload;
 class ComposerStaticInit7eb409455d39a911de9f6ff679fd5f57
 {
     public static $files = array (
+        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '19a4dc513bdd3dc9cdb61bee4cf68876' => __DIR__ . '/..' . '/php-pushover/php-pushover/Pushover.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Util\\' => 22,
+            'Symfony\\Polyfill\\Php56\\' => 23,
+        ),
+        'M' => 
+        array (
+            'MessageBird\\' => 12,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Util\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-util',
+        ),
+        'Symfony\\Polyfill\\Php56\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
+        ),
+        'MessageBird\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/messagebird/php-rest-api/src/MessageBird',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -23,6 +51,8 @@ class ComposerStaticInit7eb409455d39a911de9f6ff679fd5f57
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7eb409455d39a911de9f6ff679fd5f57::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7eb409455d39a911de9f6ff679fd5f57::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit7eb409455d39a911de9f6ff679fd5f57::$prefixesPsr0;
 
         }, null, ClassLoader::class);

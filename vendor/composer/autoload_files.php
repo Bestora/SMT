@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'bd9634f2d41831496de0d3dfe4c94881' => $vendorDir . '/symfony/polyfill-php56/bootstrap.php',
     '19a4dc513bdd3dc9cdb61bee4cf68876' => $vendorDir . '/php-pushover/php-pushover/Pushover.php',
 );

@@ -109,7 +109,7 @@ class Notifier
     $data = array("mitarbeiter" => $db->getValue('displayName'));
     $data_string = json_encode($data);
 
-    $ch = curl_init('https://flows.messagebird.com/flows/f94dda1b-d80d-43e9-a763-00fc0b602c59/invoke');
+    $ch = curl_init('https://flows.messagebird.com/flows/'.$session->get('messsagebird_flowtoken').'/invoke');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
