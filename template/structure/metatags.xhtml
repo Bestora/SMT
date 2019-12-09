@@ -1,0 +1,65 @@
+<tal:block metal:define-macro="standard">
+
+    <title>${page_title | NULL}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="Description" lang="en" content="ADD SITE DESCRIPTION"/>
+    <meta name="author" content="ADD AUTHOR INFORMATION"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="apple-touch-icon" href="${getPath}/assets/images/apple-touch-icon.png"/>
+    <link rel="shortcut icon" href="${getPath}/favicon.ico"/>
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <link rel="stylesheet" href="${getPath}/assets/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/plugins/pace/pace.min.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/dist/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/dist/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/plugins/datatables/dataTables.bootstrap.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/plugins/datepicker/datepicker3.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/plugins/select2/select2.min.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/dist/css/AdminLTE.min.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/dist/css/skins/skin-blue.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/dist/css/smt.css"/>
+    <link rel="stylesheet" href="${getPath}/assets/plugins/bootstrap-wysiwyg/editor.min.css"/>
+</tal:block>
+
+
+<tal:block metal:define-macro="javascript">
+<script type="text/javascript">
+    function insertInputFieldName(placeholder_text) {
+        var inputField = document.createElement("input");
+        inputField.setAttribute("class", "form-control");
+        inputField.setAttribute("placeholder", placeholder_text);
+        inputField.setAttribute("type", "text");
+        inputField.setAttribute("autocomplete", "off");
+        inputField.setAttribute("list", "detail_name");
+        inputField.setAttribute("name", "detail_name[]");
+        var div = document.createElement("div");
+        div.setAttribute("style", "height:4px;");
+        document.getElementById('name').appendChild(inputField);
+        document.getElementById('name').appendChild(div);
+    }
+
+    function insertInputFieldValue(value_text) {
+        var inputField = document.createElement("input");
+        inputField.setAttribute("class", "form-control");
+        inputField.setAttribute("placeholder", value_text);
+        inputField.setAttribute("type", "text");
+        inputField.setAttribute("autocomplete", "off");
+        inputField.setAttribute("list", "detail_value");
+        inputField.setAttribute("name", "detail_value[]");
+        var div = document.createElement("div");
+        div.setAttribute("style", "height:4px;");
+        document.getElementById('value').appendChild(inputField);
+        document.getElementById('value').appendChild(div);
+    }
+
+    function removeField(id) {
+        document.getElementById('name_' + id).value = '';
+        document.getElementById('value_' + id).value = '';
+    }
+</script>
+</tal:block>

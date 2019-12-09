@@ -1,0 +1,15 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="panel panel-default" tal:condition="news_content | NULL" tal:repeat="panel news_content">
+
+        <div class="panel-heading">
+            <h4 class="panel-title">${panel/titel}</h4>
+        </div>
+
+        <div class="panel-body">
+            <p tal:content="structure panel/nachricht | NULL"/>
+            <p>${panel/datum}</p>
+        </div>
+    </div>
+
+</tal:block>

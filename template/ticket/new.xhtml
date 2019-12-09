@@ -1,0 +1,9 @@
+<tal:block metal:define-macro="standard">
+
+    <form name="newticket" method="post" action="${getPath}${getURL}/save" multipart="" enctype="multipart/form-data">
+
+        <tal:block metal:use-macro="ticket/form.xhtml/standard"/>
+
+    </form>
+
+</tal:block>

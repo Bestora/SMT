@@ -1,0 +1,53 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <thead tal:condition="not:showSearch | NULL">
+                <tr>
+                    <th style="width:25px;">#</th>
+                    <th style="width:auto;">${text/ticket_titel | NULL}</th>
+                    <th style="width:14%;">${text/structure_system_date | NULL}</th>
+                    <th style="width:14%;">${text/ticket_status | NULL}</th>
+                    <th style="width:12.5%;">${text/ticket_fortschritt | NULL}</th>
+                    <th>${text/ticket_zuordnung | NULL}</th>
+                    <th>
+                        <div class="box-tools pull-right" style="margin-right: 5px;">
+                            <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true" tal:condition="aSession/admin | NULL" href="${getPath}/${controller}/new"/>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr tal:condition="ticket_liste | NULL" tal:repeat="list ticket_liste">
+                    <td><a href="${getPath}/ticket/detail/${list/ticket/0/id | NULL}">${list/ticket/0/id | NULL}</a>
+                    </td>
+                    <td><a href="${getPath}/ticket/detail/${list/ticket/0/id | NULL}">${list/ticket/0/titel | NULL}</a>
+                    </td>
+                    <td>${list/ticket/0/niceDatum | NULL}</td>
+                    <td><span
+                            tal:condition="php: isset(list['ticket']['0']['comments']) && list['ticket']['0']['comments'] > 0 | NULL"
+                            class="badge">${list/ticket/0/comments | NULL}</span> ${list/ticket/0/ticket_status | NULL}
+                    </td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar"
+                                 aria-valuenow="${list/ticket/0/fortschritt | NULL}" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: ${list/ticket/0/fortschritt | NULL}%;">
+                                ${list/ticket/0/fortschritt | NULL}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>${list/ticket/0/zuordnung | NULL}</td>
+                    <td><a style="float:right;" type="button" aria-label="Left Align"
+                           class="btn btn-default glyphicon glyphicon-pencil" aria-hidden="true"
+                           href="${getPath}/ticket/detail/edit/${list/ticket/0/id | NULL}"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</tal:block>

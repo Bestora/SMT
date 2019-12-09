@@ -1,0 +1,176 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="modal fade" id="portscan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <span class="modal-title" id="myModalLabel">Portscanner <span id="check_current_port"></span></span>
+                </div>
+
+                <div class="modal-body" id="check_content" style="max-height:500px;overflow:auto;"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-tool-box" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/jQuery/jquery-2.2.3.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/pace/pace.min.js"></script>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/bootstrap/js/bootstrap.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/select2/select2.full.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/input-mask/jquery.inputmask.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/input-mask/jquery.inputmask.date.extensions.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/input-mask/jquery.inputmask.extensions.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/datatables/jquery.dataTables.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/datatables/dataTables.bootstrap.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/dist/js/smt.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/dist/js/app.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/validator/jquery.validate.min.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/datepicker/bootstrap-datepicker.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/dist/js/cirque.js"/>
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/bootstrap-wysiwyg/editor.js"></script>
+
+    <script>
+
+        $(function () {
+            $('.textarea').wysihtml5();
+
+            $(".select2").select2();
+
+            $('[data-toggle="popover"]').popover()
+
+            $('#table').DataTable({
+                "lengthMenu": [[20, 50, 100, 250], [20, 50, 100, 250]],
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+            });
+
+            $('#table_text').DataTable({
+                "lengthMenu": [[8, 16, 25, 50], [8, 16, 25, 50]],
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": false,
+            });
+
+            $("[data-mask]").inputmask();
+
+            $('#datepicker_start').datepicker({
+                autoclose: true
+            });
+
+            $('#datepicker_ende').datepicker({
+                autoclose: true
+            });
+
+            $('#abgabetermin').datepicker({
+                autoclose: true
+            });
+
+            $("form[name='system_new']").validate({
+                rules: {
+                    bezeichnung: "required",
+                    hostname: "required",
+                    ipadressen: "required",
+                    standort: "required",
+                },
+                messages: {
+                    bezeichnung: '<i class="fa fa-edit"></i> Bitte eine Beschreibung eingeben, bis 25 Zeichen',
+                    hostname: '<i class="fa fa-terminal"></i> Bitte einen gültigen Hostnamen eingeben',
+                    ipadressen: '<i class="fa fa-exclamation-triangle"></i> Bitte eine gültige IP Adresse eingeben',
+                    standort: '<i class="fa fa-bell-o"></i> Bitte einen gültigen Standort angeben',
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+
+            $("form[name='newtext']").validate({
+                rules: {
+                    text_name: "required",
+                },
+                messages: {
+                    text_name: '<i class="fa fa-edit"></i> Mindestens 10 Zeichen, max. 25 Zeichen',
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+
+            $("form[name='newticket']").validate({
+                rules: {
+                    titel: "required",
+                },
+                messages: {
+                    titel: '<i class="fa fa-edit"></i> Der Titel sollte mindestens 20 Zeichen enthalen',
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+
+            $("form[name='newhardware']").validate({
+                rules: {
+                    hersteller: "required",
+                    modell: "required",
+                    kategorie: "required",
+                },
+                messages: {
+                    hersteller: '<i class="fa fa-edit"></i> Bitte den Hersteller angeben',
+                    modell: '<i class="fa fa-edit"></i> Bitte das Modell angeben',
+                    kategorie: '<i class="fa fa-edit"></i> Bitte die Kategorie angeben',
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+
+            $("form[name='newlicense']").validate({
+                rules: {
+                    hersteller: "required",
+                    produkt: "required",
+                    licensekey: "required",
+                },
+                messages: {
+                    hersteller: '<i class="fa fa-edit"></i> Bitte den Hersteller angeben',
+                    produkt: '<i class="fa fa-edit"></i> Bitte das Produkt angeben',
+                    licensekey: '<i class="fa fa-edit"></i> Bitte einen Lizenzkey angeben',
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+
+            $("form[name='ftpuser']").validate({
+                rules: {
+                    userid: "required",
+                    passwd: "required",
+                },
+                messages: {
+                    userid: '<i class="fa fa-edit"></i> Bitte einen Benutzernamen angeben',
+                    passwd: '<i class="fa fa-edit"></i> 6-25 Zeichen (min. 1 Zahl , 1 Grossbuchstaben, 1 Kleinbuchstaben)',
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+
+            $(document).ajaxStart(function () {
+                Pace.restart();
+            });
+
+        });
+
+    </script>
+
+</tal:block>

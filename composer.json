@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phptal/phptal": "^1.4",
+        "php-pushover/php-pushover": "^1.0",
+        "messagebird/php-rest-api": "^1.16"
+    }
+}

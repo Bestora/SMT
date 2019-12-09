@@ -1,0 +1,42 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-body">
+            <table id="table" class="table table-hover">
+                <thead tal:condition="not:showSearch | NULL">
+                <tr>
+                    <th style="width:125px;">${text/user_admin_last_name | NULL}</th>
+                    <th style="width:125px;">${text/user_admin_first_name | NULL}</th>
+                    <th>${text/user_admin_email | NULL}</th>
+                    <th>${text/user_admin_company | NULL}</th>
+                    <th style="width:100px;">${text/user_admin_rights | NULL}</th>
+                    <th style="width:100px; text-align:right;">
+                        <a style="margin-right:-25px;" tal:condition="authpass | NULL" type="button"
+                           aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true"
+                           title="${text/structure_new_user | NULL}" href="${getPath}/user/admin/member/new"/>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr tal:repeat="liste user_liste">
+                    <td style="width:125px;">${liste/lastname}</td>
+                    <td style="width:125px;">${liste/firstname}</td>
+                    <td>${liste/email}</td>
+                    <td>${liste/company}</td>
+                    <td style="width:100px;">${liste/rechte}</td>
+                    <td style="width:100px; text-align:right;">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                           aria-hidden="true" title="${text/user_admin_list_edit_user | NULL}"
+                           href="${getPath}/user/admin/member/edit/${liste/username}"/>
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                           aria-hidden="true" title="${text/user_admin_del_user | NULL}"
+                           href="${getPath}/user/admin/member/liste/delete/${liste/username}"
+                           onclick="return confirm('${text/user_admin_user_del | NULL}');"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</tal:block>

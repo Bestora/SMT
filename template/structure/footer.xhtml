@@ -1,0 +1,16 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="pull-right hidden-xs">
+        <a href="http://palle.zapto.org/">v${SMTVERSION} PHP-SMT</a>
+    </div>
+
+    <strong tal:condition="aSession/username| NULL">Copyright &copy; <span tal:content="php:date('Y') "/>
+      <a href="mailto:werner.pallentin@outlook.de">Werner Pallentin</a>
+    </strong>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="btn btn-default glyphicon glyphicon-arrow-up"></i>
+    </a>
+
+</tal:block>

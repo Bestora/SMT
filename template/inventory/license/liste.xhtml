@@ -1,0 +1,51 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <thead tal:condition="not:showSearch | NULL">
+                <tr>
+                    <th style="width:15px;">#</th>
+                    <th class="sorting" aria-controls="table">${text/inventory_license_list_product | NULL}</th>
+                    <th class="sorting" aria-controls="table">${text/inventory_license_list_key | NULL}</th>
+                    <th class="sorting" aria-controls="table">${text/inventory_hardware_assignment | NULL}</th>
+                    <th style="width:75px;">
+                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" tal:condition="aSession/admin | NULL" title="${text/structure_new_license | NULL}" href="${getPath}/inventory/license/new"/>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr tal:repeat="list license_liste">
+                    <td>${list/anzahl | NULL}</td>
+                    <td><a href="${getPath}/inventory/license/detail/${list/id | NULL}">${list/hersteller | NULL}
+                        ${list/produkt | NULL} ${list/version | NULL}</a></td>
+                    <td>
+                        <span id="lizenz_${list/id | NULL}"
+                              value="${list/licensekey | NULL}">${list/licensekey | NULL}</span>
+                        <span id="lizenz_${list/id | NULL}_kopiert" style="display:none;color:#4cae4c">Lizenz in die Zwischenablage kopiert</span>
+                    </td>
+                    <td>${list/zuordnung | NULL}</td>
+                    <td>
+            <span style="float:right">
+              <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-copy"
+                 aria-hidden="true" title="${text/copy_to_clipboard | NULL}"
+                 onclick="copyToClipboard('lizenz_${list/id | NULL}'); hide('lizenz_${list/id | NULL}'); show('lizenz_${list/id | NULL}_kopiert');"/>
+              <span tal:condition="aSession/admin | NULL">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                   aria-hidden="true" title="${text/vmware_detail_edit | NULL}"
+                   href="${getPath}/inventory/license/edit/${list/id | NULL}"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                   aria-hidden="true" title="${text/structur_system_del | NULL}"
+                   href="${getPath}/inventory/license/delete/${list/id | NULL}"
+                   onclick="return confirm('${text/inventory_hardware_delete | NULL}');"/>
+              </span>
+            </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</tal:block>

@@ -1,0 +1,25 @@
+<tal:block metal:define-macro="standard">
+
+    <li class="dropdown user user-menu loggedin">
+        <a style="cursor: pointer;" title="${text/nav_administration | NULL}" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="hidden-xs">${aSession/displayName | NULL}</span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="${getPath}/user/mypage">${text/structure_sub_mypage | NULL}</a></li>
+            <li><a href="${getPath}/user/daten">${text/structure_sub_mydata | NULL}</a></li>
+            <li><a href="${getPath}/ticket/user">${text/list_my_ticket | NULL}</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="${getPath}/user/admin/config">${text/structure_sub_config | NULL}</a></li>
+            <li><a href="${getPath}/user/admin/member/liste">${text/structure_sub_users | NULL}</a></li>
+            <li><a href="${getPath}/user/admin/texte">${text/structure_sub_text_edit | NULL}</a></li>
+            <!--<li><a href="${getPath}/user/admin/news">${text/structure_sub_messages | NULL}</a></li>-->
+            <li role="separator" class="divider"></li>
+            <li style="padding:15px;">
+                <button href="${getPath}/user/logout" id="logout" class="btn btn-danger logout"
+                        onclick="location.href='${getPath}/user/logout'">${text/logout | NULL}
+                </button>
+            </li>
+        </ul>
+    </li>
+
+</tal:block>

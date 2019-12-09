@@ -1,0 +1,250 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="widget">
+        <div class="widget-header">Physische Server (${sys/systeme/server | NULL}/${sys/systeme/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/systeme/server_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="widget">
+        <div class="widget-header">Virtuelle Maschinen (${sys/systeme/vmware | NULL}/${sys/systeme/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/systeme/vmware_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="widget">
+        <div class="widget-header">Wartungsmodus (${sys/systeme/wartung | NULL}/${sys/systeme/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/systeme/wartung_prozent | NULL}"
+                     data-arc-color="blue" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- HIER BEGINNT DER ABSCHNITT SERVICES (ANZAHL)-->
+    <div class="widget">
+        <div class="widget-header">Monitoring: Services (${sys/service/service | NULL}/${sys/service/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/service/service_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header">Monitoring: Website (${sys/service/website | NULL}/${sys/service/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/service/website_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header">Monitoring: Reminder (${sys/service/reminder | NULL}/${sys/service/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/service/reminder_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIER BEGINNT DER ABSCHNITT SERVICES (STATUS) -->
+    <div class="widget">
+        <div class="widget-header">Monitoring: OK (${sys/service/on | NULL}/${sys/service/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/service/on_prozent | NULL}"
+                     data-arc-color="#53a000 " style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header">Monitoring: ERROR (${sys/service/off | NULL}/${sys/service/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/service/off_prozent | NULL}"
+                     data-arc-color="#a00000 " style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TICKETSTATISTIK -->
+    <div class="widget">
+        <div class="widget-header">Zugeordnete Tickets (${sys/ticket/zuordnung | NULL}/${sys/ticket/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/ticket/zuordnung_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header">Erstellte Tickets (${sys/ticket/user | NULL}/${sys/ticket/all | NULL})</div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/ticket/user_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header">
+            <button type="button" class="btn btn-box-tool" aria-hidden="true" data-toggle="modal"
+                    data-target="#Lizenzen"><i class="fa fa-info-circle"></i></button>
+            Freie Lizenzen (${sys/license/frei | NULL}/${sys/license/all | NULL})
+        </div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/license/frei_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget">
+        <div class="widget-header">
+            <button type="button" class="btn btn-box-tool" aria-hidden="true" data-toggle="modal"
+                    data-target="#Hardware"><i class="fa fa-info-circle"></i></button>
+            Freie Hardware (${sys/hardware/frei | NULL}/${sys/hardware/all | NULL})
+        </div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${sys/hardware/frei_prozent | NULL}"
+                     data-arc-color="#222" style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div tal:condition="sys/hardware/kategorie | NULL" class="widget" tal:repeat="cat sys/hardware/kategorie">
+        <div class="widget-header">${cat/kategorie_bezeichnung | NULL}
+            (${cat/kategorie_anzahl | NULL}/${sys/hardware/all | NULL})
+        </div>
+        <div class="widget-content">
+            <div class="cirque-stats">
+                <div class="ui-cirque cirque-container" data-value="${cat/prozent | NULL}" data-arc-color="#FF9900"
+                     style="width: 120px; height: 120px;">
+                    <canvas width="120" height="120" class="cirque-fill"></canvas>
+                    <canvas width="120" height="120" class="cirque-track"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"/>
+
+    <div class="modal fade" id="Lizenzen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <span class="modal-title" id="myModalLabel">Übersicht der freien Lizenzen</span>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr tal:repeat="liste sys/license/liste">
+                            <td>
+                                <span class="badge">${liste/count(id)}</span> &nbsp;
+                                <a tal:condition="php:liste['version'] == '' | NULL"
+                                   href="${getPath}/inventory/search/${liste/produkt | NULL}">${liste/hersteller | NULL}
+                                    ${liste/produkt | NULL}</a>
+                                <a tal:condition="php:liste['version'] != '' | NULL"
+                                   href="${getPath}/inventory/search/${liste/version | NULL}">${liste/hersteller | NULL}
+                                    ${liste/produkt | NULL} ${liste/version | NULL}</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-tool-box" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="Hardware" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <span class="modal-title" id="myModalLabel">Übersicht der freien Hardware</span>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr tal:repeat="liste sys/hardware/liste">
+                            <td><span class="badge">${liste/count(id)}</span> &nbsp; <a
+                                    href="${getPath}/inventory/search/${liste/modell}">${liste/hersteller}
+                                ${liste/modell}</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-tool-box" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</tal:block>

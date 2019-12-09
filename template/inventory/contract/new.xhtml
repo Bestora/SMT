@@ -1,0 +1,161 @@
+<tal:block metal:define-macro="standard">
+    <tal:block metal:use-macro="structure/metatags.xhtml/javascript"/>
+
+    <form id="newhardware" name="newContract" method="post" action="${getPath}${getURL}/save" multipart="" enctype="multipart/form-data">
+        <input tal:condition="referr | NULL" type="hidden" name="referr" value="${referr | NULL}"/>
+        <div class="box box-primary">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/inventory_hardware_info | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="submit" aria-label="Left Align" title="${text/ticket_save_button | NULL}" class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                    <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}" class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true" href="javascript:history.back();"/>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/inventory_hardware_designation | NULL}</td>
+                        <td style="width:75%;">
+                            <input type="text" name="bezeichnung" class="form-control" value="${detail/contract/0/bezeichnung | NULL}" placeholder="${text/inventory_hardware_designation | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_contract_number | NULL}</td>
+                        <td>
+                            <input type="text" name="vertragsnummer" id="vertragsnummer" minlength="2" class="form-control" value="${detail/contract/0/vertragsnummer | NULL}" placeholder="${text/inventory_contract_number | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_contract_partner | NULL}</td>
+                        <td>
+                            <input type="text" name="vertragspartner" id="vertragspartner" minlength="3" value="${detail/contract/0/vertragspartner | NULL}" class="form-control" placeholder="${text/inventory_contract_partner | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_contract_category | NULL}</td>
+                        <td>
+                            <input type="text" name="kategorie" id="kategorie" minlength="3" value="${detail/contract/0/kategorie | NULL}" class="form-control" placeholder="${text/inventory_contract_category | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_contract_department | NULL}</td>
+                        <td>
+                            <input type="text" name="abteilung" id="abteilung" minlength="3" value="${detail/contract/0/abteilung | NULL}" class="form-control" placeholder="${text/inventory_contract_department | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_contract_responsible | NULL}</td>
+                        <td>
+                            <input type="text" name="verantwortlicher" id="verantwortlicher" minlength="3" value="${detail/contract/0/verantwortlicher | NULL}" class="form-control" placeholder="${text/inventory_contract_responsible | NULL}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/inventory_contract_term | NULL}</td>
+                        <td>
+                            <input tal:condition="not:detail | NULL" type="text" name="vertragsbeginn" id="datepicker_start" class="form-control pull-left" data-date-format="yyyy-mm-dd" style="width:150px;" />
+                            <input tal:condition="detail | NULL" type="text" name="vertragsbeginn" id="datepicker_start" class="form-control pull-left" data-date-format="yyyy-mm-dd" value="${detail/contract/0/vertragsbeginn | NULL}" style="width:150px;" />
+
+                            <input tal:condition="not:detail | NULL" type="text" name="vertragsende" id="datepicker_ende" class="form-control pull-left" data-date-format="yyyy-mm-dd" style="width:150px; margin-left: 100px;" />
+                            <input tal:condition="detail | NULL" type="text" name="vertragsende" id="datepicker_ende" class="form-control pull-left" data-date-format="yyyy-mm-dd" value="${detail/contract/0/vertragsende | NULL}" style="width:150px; margin-left: 100px;" />
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-warning" style="margin-top:20px;">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/inventory_hardware_more | NULL}</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr tal:condition="detail/detail | NULL" tal:repeat="details detail/detail" id="${details/id | NULL}">
+                        <td style="width:25%;"><input type="text" id="name_${details/id | NULL}" name="detail_name[]" value="${details/form_name | NULL}" class="form-control"/></td>
+                        <td style="width:70%;"><input type="text" id="value_${details/id | NULL}" name="detail_value[]" value="${details/form_value | NULL}" class="form-control"/></td>
+                        <td style="width:5%;"><a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true" style="cursor:pointer;float:right;" onclick="removeField('${details/id | NULL}'); document.getElementById('${details/id | NULL}').style.display = 'none';"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:25%;"><input type="text" name="detail_name[]" class="form-control" placeholder="${text/structur_metatags_placeholder | NULL}"/></td>
+                        <td style="width:70%;"><input type="text" name="detail_value[]" class="form-control" placeholder="${text/structure_metatags_value | NULL}"/></td>
+                        <td style="width:5%;"><a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true" style="float:right;cursor:pointer;" onclick="insertInputFieldName('${text/structur_metatags_placeholder | NULL}');insertInputFieldValue('${text/structure_metatags_value | NULL}');"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:25%;">
+                            <fieldset id="name"></fieldset>
+                        </td>
+                        <td style="width:70%;">
+                            <fieldset id="value"></fieldset>
+                        </td>
+                        <td style="width:5%;float:right;"></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-primary" style="margin-top: 20px;">
+            <div class="box-header no-border">
+                <h3 class="box-title">${text/inventory_hardware_new_attachment | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/inventory_hardware_attachment_new | NULL}</td>
+                        <td style="width:75%;"><input type="file" name="filesToUpload[]" id="filesToUpload" multiple="multiple"/></td>
+                    </tr>
+
+                    <tr><td colspan="2"><hr /></td></tr>
+
+                    <tr style="height:72px;" tal:condition="detail/anhang | NULL">
+                        <td>${text/inventory_hardware_attachment_list | NULL}</td>
+                        <td>
+                            <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
+                                <img style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
+                                (<a title="${anhang/attachment | NULL}" href="${getPath}${getURL}/download/${anhang/attachment | NULL}">download</a> -
+                                <a title="${anhang/attachment | NULL}" href="${getPath}${getURL}/deleteattachment/${anhang/attachment | NULL}" onclick="return confirm('${text/inventory_hardware_delete | NULL}');">delete</a>)
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="box box-warning" style="margin-top: 20px;">
+            <div class="box-body" style="padding: 15px;">
+                <textarea name="beschreibung" class="textarea" id="editor" style="width: 100%; height: 500px; ">${detail/contract/0/beschreibung | NULL}</textarea>
+            </div>
+        </div>
+
+    </form>
+
+</tal:block>

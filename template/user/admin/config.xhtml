@@ -1,0 +1,35 @@
+<tal:block metal:define-macro="standard">
+
+    <form name="config" method="post" action="${getPath}${getURL}/save">
+        <div class="box box-danger">
+            <div class="box-header ">
+                <h3 class="box-title">${text/user_admin_config_title | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="submit" aria-label="Left Align" title="${text/user_admin_submit | NULL}"
+                            class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                    <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                       class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                       href="javascript:history.back();"/>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr tal:repeat="conf editconfig">
+                        <td style="width:25%;">${conf/id | NULL}</td>
+                        <td style="width:75%;">
+                            <input tal:condition="php: conf['field'] != 'password' | NULL" type="text"
+                                   name="${conf/id | NULL}" class="form-control" value="${conf/value | NULL}"/>
+                            <input tal:condition="php: conf['field'] == 'password' | NULL" type="text"
+                                   name="${conf/id | NULL}" class="form-control"
+                                   placeholder="${text/user_admin_password_placeholder | NULL}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+</tal:block>

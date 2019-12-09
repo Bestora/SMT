@@ -1,0 +1,165 @@
+<tal:block metal:define-macro="service_log">
+
+    <table id="table" class="table table-striped dataTable" role="grid">
+        <thead tal:condition="not:showSearch | NULL">
+        <tr style="height: 35px;">
+            <th style="width:15%;">${text/structure_system_type | NULL}</th>
+            <th>${text/structure_system_message | NULL}</th>
+            <th style="width:15%; text-align:right;">${text/structure_system_date_time | NULL}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr style="height:34px;" tal:repeat="detail detail/log">
+            <td>${detail/type}</td>
+            <td>${structure detail/message}</td>
+            <td>
+          <span style="float:right;">
+            ${detail/niceDatum}
+          </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</tal:block>
+
+
+<tal:block metal:define-macro="logfile_liste">
+<div class="box">
+    <div class="box-body">
+        <table id="table" class="table table-striped dataTable" role="grid">
+            <thead tal:condition="not:showSearch | NULL">
+            <tr style="height: 35px;">
+                <th style="width:15%;">${text/structure_system_type | NULL}</th>
+                <th>${text/structure_system_message | NULL}</th>
+                <th style="width:15%;text-align:right;">${text/structure_system_date_time | NULL}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr style="height:35px;" tal:repeat="detail logfile_liste">
+                <td>${detail/type}</td>
+                <td>${structure detail/message}</td>
+                <td>
+              <span style="float:right;">
+                ${detail/niceDatum}
+              </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</tal:block>
+
+
+<tal:block metal:define-macro="history">
+
+    <script>
+        window.onload = function () {
+
+            var chart = new CanvasJS.Chart("chartContainerDay", {
+                animationEnabled: true,
+                title:{
+                    text: "Letzten 24 Stunden"
+                },
+                axisY: {
+                    title: "Reaktionszeit",
+                    suffix: " Sek."
+                },
+                data: [{
+                    type: "spline",
+                    markerSize: 3,
+                    dataPoints: ${structure dataPoints1 | NULL}
+        }]
+        });
+
+            chart.render();
+
+            var chart = new CanvasJS.Chart("chartContainerWeek", {
+                animationEnabled: true,
+                title:{
+                    text: "Vergangene Woche"
+                },
+                axisY: {
+                    title: "Reaktionszeit",
+                    suffix: " Sek."
+                },
+                data: [{
+                    type: "spline",
+                    markerSize: 3,
+                    dataPoints: ${structure dataPoints2 | NULL}
+                }]
+            });
+
+            chart.render();
+
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                title:{
+                    text: "Vergangener Monat"
+                },
+                axisY: {
+                    title: "Reaktionszeit",
+                    includeZero: false,
+                    suffix: " Sek"
+                },
+                legend:{
+                    cursor: "pointer",
+                    fontSize: 16,
+                    itemclick: toggleDataSeries
+                },
+                toolTip:{
+                    shared: true
+                },
+                data: [{
+                    name: "Schnellster Wert",
+                    type: "spline",
+                    yValueFormatString: "#0.#### Sek",
+                    showInLegend: true,
+                    dataPoints: ${structure dataPointsMin | NULL}
+                    },
+                    {
+                        name: "Durchschnittliche Reaktionszeit",
+                        type: "spline",
+                        yValueFormatString: "#0.#### Sek",
+                        showInLegend: true,
+                        dataPoints: ${structure dataPointsAvg | NULL}
+                    },
+                    {
+                        name: "Langsamster Wert",
+                        type: "spline",
+                        yValueFormatString: "#0.#### Sek",
+                        showInLegend: true,
+                        dataPoints: ${structure dataPointsMax | NULL}
+                    }]
+            });
+
+            chart.render();
+
+            function toggleDataSeries(e){
+                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                }
+                else{
+                    e.dataSeries.visible = true;
+                }
+                chart.render();
+            }
+
+        }
+    </script>
+
+
+    <div id="chartContainerDay" style="height: 370px; width: 100%;"></div>
+    <br /> <br />
+    <div id="chartContainerWeek" style="height: 370px; width: 100%;"></div>
+    <br /><br />
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/canvas/canvasjs.min.js"/>
+
+</tal:block>

@@ -1,0 +1,121 @@
+<tal:block metal:define-macro="standard">
+
+    <div tal:condition="save | NULL" class="btn btn-success" style="width:100%;margin-bottom: 25px;">
+        ${text/user_admin_data_saved | NULL}
+    </div>
+    <div tal:condition="password_error | NULL" class="btn btn-danger" style="width:100%;margin-bottom: 25px;">
+        ${text/user_admin_wrong_password | NULL}
+    </div>
+
+    <form name="edit" method="post" action="${getPath}/user/daten/save">
+        <div class="box box-primary">
+            <div class="box-header ">
+                <h3 class="box-title">${text/user_admin_general_data | NULL}</h3>
+                <div class="box-tools pull-right">
+                    <button type="submit" aria-label="Left Align" title="${text/user_admin_save_data | NULL}"
+                            class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                    <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                       class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                       href="javascript:history.back();"/>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/user_admin_salutation | NULL}</td>
+                        <td style="width:75%">
+                            <select class="form-control" name="private[salutation]" size="1">
+                                <option value="Herr"
+                                        tal:attributes="selected php:daten['private']['salutation'] == 'Herr'">
+                                    ${text/user_admin_man | NULL}
+                                </option>
+                                <option value="Frau"
+                                        tal:attributes="selected php:daten['private']['salutation'] == 'Frau'">
+                                    ${text/user_admin_woman | NULL}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/user_admin_last_name | NULL}</td>
+                        <td><input type="text" name="private[lastname]" id="contactEmail" class="form-control"
+                                   value="${daten/private/lastname | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/user_admin_first_name | NULL}</td>
+                        <td><input type="text" name="private[firstname]" id="contactEmail" class="form-control"
+                                   value="${daten/private/firstname | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/user_admin_company | NULL}</td>
+                        <td><input type="text" name="private[company]" id="contactEmail" class="form-control"
+                                   value="${daten/private/company | NULL}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="box box-warning">
+            <div class="box-header ">
+                <h3 class="box-title">${text/user_admin_contact_info | NULL}</h3>
+            </div>
+
+            <div class="box-body">
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/user_admin_email | NULL}</td>
+                        <td style="width:75;"><input type="text" name="contact[email]" id="contactEmail"
+                                                     class="form-control" value="${daten/contact/email | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/user_admin_push_api_key | NULL}</td>
+                        <td><input type="text" name="contact[pushover]" id="contactEmail" class="form-control"
+                                   value="${daten/contact/pushover | NULL}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/user_admin_mobile | NULL}</td>
+                        <td><input type="text" name="contact[mobile]" id="contactEmail" class="form-control"
+                                   value="${daten/contact/mobile | NULL}"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="box box-danger" tal:condition="authpass | NULL">
+            <div class="box-header ">
+                <h3 class="box-title">${text/user_admin_change_password | NULL}</h3>
+            </div>
+
+            <div class="box-body">
+                <table class="table table-hover table-striped">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;">${text/user_admin_enter_password | NULL}</td>
+                        <td style="width:75;"><input type="password" name="password_1" id="contactEmail"
+                                                     class="form-control"/></td>
+                    </tr>
+
+                    <tr>
+                        <td>${text/user_admin_confirm_pw | NULL}</td>
+                        <td><input type="password" name="password_2" id="contactEmail" class="form-control"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+
+</tal:block>

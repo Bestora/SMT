@@ -1,0 +1,17 @@
+<tal:block metal:define-macro="standard">
+
+    <li class="treeview ${active_administration | NULL}" tal:condition="php:in_array('administration', _SESSION['limitController']) | NULL">
+        <a href="#"><i class="fa fa-book"></i> <span>${text/home_eight_nav | NULL}</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li class="${active_administration_standby | NULL}"><a href="${getPath}/administration/standby">${text/nav_inventar_standby | NULL}</a></li>
+            <li class="${active_administration_servicelog | NULL}"><a href="${getPath}/administration/servicelog">${text/nav_inventar_logfile | NULL}</a></li>
+            <li class="${active_administration_ipadressen | NULL}"><a href="${getPath}/administration/ipadressen">${text/nav_inventar_ip | NULL}</a></li>
+            <li class="${active_administration_dnscheck | NULL}"><a href="${getPath}/administration/dnscheck">${text/nav_inventar_dns | NULL}</a></li>
+        </ul>
+    </li>
+
+</tal:block>

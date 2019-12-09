@@ -1,0 +1,160 @@
+<tal:block metal:define-macro="standard">
+
+    <tal:block metal:use-macro="structure/metatags.xhtml/javascript"/>
+    <div class="box box-primary">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_hardware_info | NULL}</h3>
+            <div class="box-tools pull-right">
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-pencil"
+                   aria-hidden="true"
+                   tal:condition="php:_SESSION['rechte'] != 'usr' | NULL"
+                   href="${getPath}/${controller}/${methode}/edit/${detail/hardware/0/id | NULL}"/>
+                <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                   class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                   href="javascript:history.back();"/>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;">
+                    <td style="width:25%;">${text/inventory_hardware_designation | NULL}</td>
+                    <td style="width:75%;">${detail/hardware/0/bezeichnung | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_hardware_manufacturer | NULL}</td>
+                    <td>${detail/hardware/0/hersteller | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_hardware_model | NULL}</td>
+                    <td>${detail/hardware/0/modell | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;">
+                    <td>${text/inventory_hardware_category | NULL}</td>
+                    <td>
+                        <select name="kategorie" id="kategorie" style="width: 100%;"
+                                tabindex="-1" aria-hidden="true" disabled="disabled">
+                            <option value="">Bitte Hardwarekategorie wählen</option>
+                            <option tal:condition="detail | NULL" tal:repeat="cat hardware_kategorie"
+                                    value="${cat/key | NULL}"
+                                    tal:attributes="selected php:detail['hardware']['0']['kategorie'] == cat['key']">
+                                ${cat/val | NULL}
+                            </option>
+                            <option tal:condition="not:detail | NULL" tal:repeat="cat hardware_kategorie"
+                                    value="${cat/key | NULL}">${cat/val | NULL}
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box box-warning" style="margin-top: 20px;">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_hardware_new_details | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table table-striped">
+                <tbody>
+                <tr style="height:40px;" tal:condition="detail/hardware/0/inventarnummer | NULL">
+                    <td style="width:25%;">${text/inventory_hardware_inventorynumber | NULL}</td>
+                    <td style="width:75%;">${detail/hardware/0/inventarnummer | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="detail/hardware/0/seriennummer | NULL">
+                    <td style="width:25%;">${text/inventory_hardware_new_serial_numbe | NULL}</td>
+                    <td style="width:75%;">${detail/hardware/0/seriennummer | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="detail/hardware/0/kaufdatum | NULL">
+                    <td style="width:25%;">${text/inventory_hardware_date_purchase | NULL}</td>
+                    <td style="width:75%;">${detail/hardware/0/kaufdatum | NULL}</td>
+                </tr>
+
+                <tr style="height:40px;" tal:condition="detail/hardware/0/zuordnung | NULL">
+                    <td style="width:25%;">${text/inventory_hardware_assignment | NULL}</td>
+                    <td style="width:75%;">${detail/hardware/0/zuordnung | NULL}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-primary" style="margin-top:20px;" tal:condition="detail/detail | NULL">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_hardware_more | NULL}</h3>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table">
+                <tbody>
+                <tr style="height:40px;" tal:condition="detail/detail | NULL"
+                    tal:repeat="details detail/detail">
+                    <td style="width:25%;">${details/form_name | NULL}</td>
+                    <td style="width:75%;">${structure details/form_value | NULL}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-warning" style="margin-top: 20px;" tal:condition="detail/anhang | NULL">
+        <div class="box-header no-border">
+            <h3 class="box-title">${text/inventory_hardware_new_attachment | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table class="table">
+                <tbody>
+                <tr style="height:72px;" tal:condition="detail/anhang | NULL">
+                    <td>${text/inventory_hardware_attachment_list | NULL}</td>
+                    <td>
+                        <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
+                            <a title="${anhang/attachment}" href="${getPath}${getURL}/download/${anhang/attachment | NULL}">
+                                <img style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="box box-warning" tal:condition="detail/hardware/0/beschreibung | NULL | NULL">
+        <div class="box-header with-border">
+            <h3 class="box-title">${text/inventory_hardware_description | NULL}</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="box-body">
+            ${structure detail/hardware/0/beschreibung | NULL}
+        </div>
+    </div>
+
+
+</tal:block>

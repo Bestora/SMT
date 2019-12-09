@@ -1,0 +1,53 @@
+<tal:block metal:define-macro="standard">
+
+    <div id="check_menue_main">
+    <span tal:repeat="ip scanarea" class="btn btn-success btn-lrg ajax" id="check_start_button_dns_8" style="margin-right: 20px;" onclick="post_ajax_dns(1, 254, '${ip}'); document.getElementById('scanner').style.display='block'; document.getElementById('list').style.display='none'; return false;">
+      ${text/inventory_license_scan | NULL} (${ip})
+    </span> (Für eine vollständige Statistik den Scan durchlaufen lassen)
+        <br/><br/>
+    </div>
+
+    <div class="box box-primary" id="scanner" style="display: none;">
+        <div class="box-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th style="width:15%;">${text/inventory_ip | NULL}</th>
+                    <th style="width:35%;">${text/inventory_dns_system_type | NULL}</th>
+                    <th style="width:30%;">${text/inventory_dns_new | NULL}</th>
+                    <th style="width:20%"><span id="check_current_dns" class="text-blue"></span></th>
+                </tr>
+                </thead>
+            </table>
+
+            <div id="check_content_dns"></div>
+
+        </div>
+    </div>
+
+    <div class="box box-primary" id="list">
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <thead>
+                <tr style="height: 35px;">
+                    <th style="width:15%;">IP Adresse</th>
+                    <th style="width:35%;">Port</th>
+                    <th style="width:30%;">Hostname</th>
+                    <th style="width:20%">Datum</th>
+                </tr>
+                </thead>
+
+                <tr tal:repeat="ip listip" style="height:35px;">
+                    <td>${ip/ip}</td>
+                    <td>${ip/port}</td>
+                    <td>${structure ip/hostname}</td>
+                    <td>${ip/datum}</td>
+                </tr>
+            </table>
+
+            <div id="check_content_dns"></div>
+
+        </div>
+    </div>
+
+</tal:block>  

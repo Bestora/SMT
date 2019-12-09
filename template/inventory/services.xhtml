@@ -1,0 +1,62 @@
+<tal:block metal:define-macro="standard">
+
+    <div class="box">
+        <div class="box-body">
+            <table id="table" class="table table-striped dataTable" role="grid">
+                <thead tal:condition="not:showSearch | NULL">
+                <tr style="height: 35px;">
+                    <th style="width:25px;">#</th>
+                    <th>Bezeichnung</th>
+                    <th style="width:15%;">Art</th>
+                    <th style="width:15%;">Port</th>
+                    <th style="width:15%;">Letzter Check</th>
+                    <th style="width:15%;">Infos</th>
+                    <th style="width:50px;"></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr tal:repeat="liste services_liste">
+                    <td>${liste/server_id}</td>
+                    <td><a href='${getPath}/monitor/detail/${liste/server_id}'>${liste/label}</a></td>
+                    <td>${liste/type}</td>
+                    <td>${liste/port}</td>
+                    <td>${liste/niceDatum}</td>
+                    <td>
+                        <span aria-label="Left Align" class="btn btn-default glyphicon glyphicon-eye-open"
+                              aria-hidden="true" title="${text/structure_activ_monitoring | NULL}"
+                              tal:condition="php:liste['active'] == 'yes' | NULL"/>
+                        <span aria-label="Left Align" class="btn btn-default glyphicon glyphicon-envelope"
+                              aria-hidden="true" title="${text/structure_email_message_on | NULL}"
+                              tal:condition="php:liste['email'] == 'yes' | NULL"/>
+
+                        <span tal:condition="php:_SESSION['pushover_api_token'] != '' | NULL">
+                            <span aria-label="Left Align" class="btn btn-default glyphicon glyphicon-phone"
+                                  aria-hidden="true" title="${text/structure_push_message_on | NULL}"
+                                  tal:condition="php:liste['pushover'] == 'yes' | NULL"/>
+                        </span>
+
+                        <span tal:condition="php:_SESSION['messsagebird_flowtoken'] != '' | NULL">
+                            <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-earphone"
+                                  aria-hidden="true" title="${text/structure_messagebird_on | NULL}"
+                                  tal:condition="php:liste['messagebird'] == 'yes' | NULL"/>
+                        </span>
+                    </td>
+                    <td style="text-align:right;">
+                      <span tal:condition="aSession/admin | NULL">
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit"
+                           aria-hidden="true" title="${text/monitor_detail_service_edit | NULL}"
+                           href="${getPath}/monitor/service/edit/${liste/server_id}"/>
+                        <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-trash"
+                           aria-hidden="true" title="${text/structure_del_service | NULL}"
+                           href="${getPath}/monitor/service/delete/${liste/server_id}"
+                           onclick="return confirm('${text/inventory_hardware_delete | NULL}');"/>
+                      </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</tal:block>

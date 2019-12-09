@@ -1,0 +1,78 @@
+<tal:block metal:define-macro="standard">
+
+    <div style="width:100%; float:left;">
+        <ul class="nav nav-tabs">
+            <li class="${server_treffer | NULL}"><a href="#server" data-toggle="tab">${text/search_systeme | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${server_anzahl | NULL}</span></a></li>
+            <li class="${services_treffer | NULL}"><a href="#services" data-toggle="tab">${text/search_services | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${services_anzahl | NULL}</span></a></li>
+            <li class="${hardware_treffer | NULL}"><a href="#hardware" data-toggle="tab">${text/search_hardware | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${hardware_anzahl | NULL}</span></a></li>
+            <li class="${license_treffer | NULL}"><a href="#licenses" data-toggle="tab">${text/search_lizenzen | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${license_anzahl | NULL}</span></a></li>
+            <li class="${logfile_treffer | NULL}"><a href="#logfiles" data-toggle="tab">${text/search_logfile | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${logfile_anzahl | NULL}</span></a></li>
+            <li class="${knowledge_treffer | NULL}"><a href="#knowledge" data-toggle="tab">${text/search_knowledge | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${knowledge_anzahl | NULL}</span></a></li>
+            <li class="${ticket_treffer | NULL}"><a href="#tickets" data-toggle="tab">${text/search_ticket | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${ticket_anzahl | NULL}</span></a></li>
+            <!--<li class="${password_treffer | NULL}"><a href="#password" data-toggle="tab">${text/nav_inventar_password | NULL}
+                <span style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${password_anzahl | NULL}</span></a></li>-->
+            <li class="${contract_treffer | NULL}"><a href="#contract" data-toggle="tab">${text/nav_inventar_contract | NULL}
+                <span  style="margin:3px 10px 0px 10px;" class="label pull-right bg-blue">${contract_anzahl | NULL}</span></a></li>
+        </ul>
+    </div>
+
+    <div style="width:100%; float:left;">
+        <div class="tab-content ">
+            <div class="tab-pane fade ${server_treffer | NULL}" id="server">
+                <tal:block condition="server_liste | NULL" metal:use-macro="systeme/liste.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: server_liste | NULL">
+                    ${text/search_systeme_noresult | NULL}</h3>
+            </div>
+            <div class="tab-pane fade ${services_treffer | NULL}" id="services">
+                <tal:block condition="services_liste | NULL" metal:use-macro="inventory/services.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: services_liste | NULL">
+                    ${text/search_services_noresult | NULL}</h3>
+            </div>
+            <div class="tab-pane fade ${hardware_treffer | NULL}" id="hardware">
+                <tal:block condition="hardware_liste | NULL" metal:use-macro="inventory/hardware/liste.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: hardware_liste | NULL">
+                    ${text/search_hardware_noresult | NULL}</h3>
+            </div>
+            <div class="tab-pane fade ${license_treffer | NULL}" id="licenses">
+                <tal:block condition="license_liste | NULL" metal:use-macro="inventory/license/liste.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: license_liste | NULL">
+                    ${text/search_lizenzen_noresult | NULL}</h3>
+            </div>
+            <div class="tab-pane fade ${logfile_treffer | NULL}" id="logfiles">
+                <tal:block condition="logfile_liste  | NULL" metal:use-macro="systeme/system.xhtml/logfile_liste"/>
+                <h3 style="margin-top:25px;" tal:condition="not: logfile_liste | NULL">
+                    ${text/search_logfile_noresult | NULL}</h3>
+            </div>
+            <div class="tab-pane fade ${knowledge_treffer | NULL}" id="knowledge">
+                <tal:block condition="knowledge_liste  | NULL" metal:use-macro="knowledge/index.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: knowledge_liste | NULL">
+                    ${text/search_knowledge_noresult | NULL}</h3>
+            </div>
+            <div class="tab-pane fade ${ticket_treffer | NULL}" id="tickets">
+                <tal:block condition="ticket_liste  | NULL" metal:use-macro="ticket/index.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: ticket_liste | NULL">
+                    ${text/search_ticket_noresult | NULL}</h3>
+            </div>
+            <!--<div class="tab-pane fade ${password_treffer | NULL}" id="password">
+                <tal:block condition="password_liste  | NULL" metal:use-macro="inventory/password.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: password_liste | NULL">
+                    ${text/search_password_noresult | NULL}</h3>
+            </div>-->
+            <div class="tab-pane fade ${contract_treffer | NULL}" id="contract">
+                <tal:block condition="contract_liste  | NULL" metal:use-macro="inventory/contract.xhtml/standard"/>
+                <h3 style="margin-top:25px;" tal:condition="not: contract_liste | NULL">
+                    ${text/search_contract_noresult | NULL}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"/>
+
+</tal:block>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <tal:block metal:use-macro="structure/metatags.xhtml/standard"/>
+</head>
+
+<body id="page-top" class="hold-transition skin-blue sidebar-mini" tal:condition="php:controller!='moin' && controller!='overview'">
+<div class="wrapper" tal:condition="aSession/username | NULL">
+
+    <header class="main-header">
+        <tal:block metal:use-macro="structure/navigation.xhtml/top"/>
+    </header>
+
+    <aside class="main-sidebar">
+        <tal:block metal:use-macro="structure/navigation.xhtml/left"/>
+    </aside>
+
+    <div class="content-wrapper">
+
+        <section class="content" id="content" tal:condition="php:controller!='module' | NULL">
+            <tal:block condition="php:controller!='server' && controller != 'vmware' | NULL"
+                       metal:use-macro="${controller}/${methode}.xhtml/standard"/>
+            <tal:block condition="php:controller=='server' || controller == 'vmware' | NULL"
+                       metal:use-macro="systeme/${methode}.xhtml/standard"/>
+        </section>
+
+        <section class="content" id="content" tal:condition="php:controller=='module' | NULL">
+            <tal:block metal:use-macro="module/${methode}/index.xhtml/standard"/>
+        </section>
+
+    </div>
+
+    <footer class="main-footer">
+        <tal:block metal:use-macro="structure/footer.xhtml/standard"/>
+    </footer>
+
+    <tal:block metal:use-macro="structure/javascript.xhtml/standard"/>
+</div>
+
+
+<div tal:condition="not:aSession/username | NULL">
+    <section class="content">
+        <tal:block metal:use-macro="user/login.xhtml/standard"/>
+    </section>
+</div>
+
+</body>
+
+
+<body class="hold-transition skin-blue sidebar-mini" tal:condition="php:controller=='moin' || controller=='overview'">
+
+<section class="content" id="content">
+    <tal:block metal:use-macro="monitor/status.xhtml/standard"/>
+</section>
+
+<tal:block metal:use-macro="structure/javascript.xhtml/standard"/>
+
+</body>
+</html>
