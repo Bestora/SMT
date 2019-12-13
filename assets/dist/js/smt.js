@@ -419,6 +419,11 @@ function setContent(field, content) {
                     $('#send-report-emails').next().css('border', '1px solid red');
                 }else{
                     $('#send-report-emails').next().css('border', 'none');
+                    $('.email-sent-text').fadeIn('slow', function(){
+                        setTimeout(function(){
+                            $('.email-sent-text').fadeOut();
+                        }, 500);
+                    });
                 }
             }
         });
