@@ -4,12 +4,12 @@
         <a href="http://palle.zapto.org/">v${SMTVERSION} PHP-SMT</a>
     </div>
 
-    <strong tal:condition="aSession/username| NULL">Copyright &copy; <span tal:content="php:date('Y') "/>
+    <strong tal:condition="aSession/username| NULL">Copyright <span class="footer-copyright" data-toggle="tooltip" data-placement="top" title="Click me ;)">&copy;</span> <span tal:content="php:date('Y') "/>
       <a href="mailto:werner.pallentin@outlook.de">Werner Pallentin</a>
     </strong>
 
     <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
+    <a class="scroll-to-top rounded">
         <i class="btn btn-default glyphicon glyphicon-arrow-up"></i>
     </a>
 

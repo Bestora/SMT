@@ -30,9 +30,9 @@ class File
 {
 
   public $DIR_ROOT = project_path;
-  public $CONTROLLER = 'controller/';
-  public $TEMPLATE = 'template/';
-  public $CONTENT = 'content/';
+  public $CONTROLLER = 'controller';
+  public $TEMPLATE = 'template';
+  public $CONTENT = 'content';
   public $UPLOAD = 'assets/uploads/';
 
 
@@ -147,22 +147,22 @@ class File
    */
   public function getControllerDir()
   {
-    return '/' . $this->CONTROLLER . project_lib;
+    return '/' . $this->CONTROLLER;
   }
 
   public function getControllerPath()
   {
-    return $this->CONTROLLER . project_lib;
+    return $this->CONTROLLER;
   }
 
   public function getTemplateDir()
   {
-    return '/' . $this->TEMPLATE . project_lib;
+    return $this->DIR_ROOT . $this->TEMPLATE;
   }
 
   public function getTemplatePath()
   {
-    return $this->TEMPLATE . project_lib;
+    return $this->TEMPLATE;
   }
 
   public function getContentDir()

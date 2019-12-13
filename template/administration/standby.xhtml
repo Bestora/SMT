@@ -10,9 +10,10 @@
                         <th style="width: 120px;">${text/standby_date_ende | NULL}</th>
                         <th style="width: 100px;">${text/standby_anzahl_logs | NULL}</th>
                         <th>${text/standby_user | NULL}</th>
-                        <th style="width: 200px;">
+                        <th style="width: 250px;">
                             <div class="btn-group" style="float: right; margin-right: -25px;">
-                                <button type="button" class="btn btn-danger">Jahr wählen (${aktuellesJahr})</button>
+                                <button type="button" class="btn btn-info open-month-report-modal" data-toggle="modal" data-target="#modal-month-report">${text/monthly_report | NULL}</button>
+                                <button type="button" class="btn btn-danger">${text/choose_year | NULL} (${aktuellesJahr})</button>
                                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
@@ -26,27 +27,31 @@
                 </thead>
 
                 <tbody>
-                    <tr role="row" class="odd" tal:repeat="liste data" style="height: 25px;">
-                        <td><strong>${liste/KW | NULL}</strong></td>
-                        <td>${liste/start | NULL}</td>
-                        <td>${liste/ende | NULL}</td>
+                    <tr tal:repeat="kw_entry data" role="row" class="odd kw_entry_${kw_entry/kw}" style="height: 25px;" data-kw-id="${kw_entry/kw}">
+                        <td class="kw_entry_days">
+                            <label class="kw_entry_day" tal:repeat="day kw_entry/days">
+                                <span class="kw_entry_day_user" tal:condition="php:isset(day['user'])" data-user="${day/user}">${day/date}</span>
+                                <span class="kw_entry_day_no_user" tal:condition="php:!isset(day['user'])">${day/date}</span>
+                            </label>
+                        </td>
+                        <td><strong>${kw_entry/kw}</strong></td>
+                        <td>${kw_entry/start}</td>
+                        <td>${kw_entry/ende}</td>
                         <td>
-                            <a data-toggle="modal" data-target="#log_${liste/id}" tal:condition="php:liste['logs']['number'] != '0' | NULL" style="cursor: pointer;"><strong>${liste/logs/number | NULL}</strong></a>
+                            <a class="show-logs" data-start="${kw_entry/start}" data-ende="${kw_entry/ende}" data-toggle="modal" data-target="#alarm-log-modal" tal:condition="php:kw_entry['logs']['number'] != '0' | NULL" style="cursor: pointer;"><strong>${kw_entry/logs/number | NULL}</strong></a>
                         </td>
                         <td>
-                            <form name="update_standby" method="post" action="${getPath}/administration/standby/save/${liste/id | NULL}">
-                                <select name="username[]" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="${text/standby_edit_user | NULL}" style="width: 80%;" tabindex="-1" aria-hidden="true">
-                                    <span tal:condition="user_liste | NULL">
-                                        <option tal:condition="php:liste['username'] == '' | NULL" tal:repeat="user user_liste" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
-                                        <option tal:condition="php:liste['username'] != '' | NULL" tal:repeat="user user_liste" tal:attributes="selected php:in_array(user['username'], explode(',', liste['username'])) | NULL" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
-                                    </span>
-                                </select>
-                                <button type="submit" aria-label="Left Align" title="${text/standby_edit_user | NULL}" class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true" />
-                            </form>
+                            <div class="standby-users">
+                                <span tal:condition="kw_entry/users | NULL" tal:repeat="user kw_entry/users" data-kw="${kw_entry/kw}" data-user="${user/username}" data-toggle="tooltip" title="" data-original-title="${user/dayString}" data-html="true">
+                                    <i class="fa fa-times remove-user" aria-hidden="true"></i>
+                                    ${user/displayName}
+                                </span>
+                            </div>
+                            <i class="fa fa-plus add-user" aria-hidden="true" data-toggle="modal" data-target="#add-user"></i>
                         </td>
                         <td>
-                            <a data-toggle="modal" data-target="#report_${liste/id}" class="callout callout-success" tal:condition="php:liste['lastupdate'] != '0000-00-00 00:00:00' | NULL" style="float: right; cursor: pointer; height: 28px;"><strong>Bericht vom ${liste/lastupdate}</strong></a>
-                            <a data-toggle="modal" data-target="#report_${liste/id}" type="button" tal:condition="php:liste['lastupdate'] == '0000-00-00 00:00:00' | NULL" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-copy" aria-hidden="true" title="${text/standby_report | NULL}" style="float: right;" />
+                            <a tal:condition="php:kw_entry['reports'] != '0' | NULL" data-toggle="modal" data-target="#modal-report-list" type="button" aria-label="Left Align" class="callout callout-success show-reports" aria-hidden="true" title="${text/show_write_report | NULL}" style="float: right;cursor: pointer" data-kw="${kw_entry/kw}" data-year="${kw_entry/year}">${text/show_report | NULL}</a>
+                            <a tal:condition="php:kw_entry['reports'] == '0' | NULL" data-toggle="modal" data-target="#modal-report-list" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-copy show-reports" aria-hidden="true" title="${text/standby_report | NULL}" style="float: right;" data-kw="${kw_entry/kw}" data-year="${kw_entry/year}"></a>
                         </td>
                     </tr>
                 </tbody>
@@ -54,38 +59,137 @@
         </div>
     </div>
 
+    <!-- Modal: List Reports for Week -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-report-list-label" id="modal-report-list">
+        <div class="modal-dialog" role="document" style="width: 650px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-report-list-label">${text/reports_for_week | NULL} <span class="modal-report-list-kw">42</span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>
+                            ${text/choose_day | NULL}
+                            <select class="form-control day-select">
+                            </select>
+                        </label>
+                    </div>
+                    <div id="editor">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-success save-reports" value="${text/admin_text_save | NULL}"/>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">${text/admin_text_close | NULL}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div tal:repeat="liste data" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="report_${liste/id}">
+    <!-- Modal: Send Monthly Report -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-report-list-label" id="modal-month-report">
+        <div class="modal-dialog" role="document" style="width: 650px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-month-report-title">${text/monthly_report_send | NULL}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>
+                            ${text/monthly_report_choose | NULL}
+                            <input type="hidden" value="${aktuellesJahr}" id="month-report-current-year"/>
+                            <select class="form-control month-select">
+                                <option value="1">Januar</option>
+                                <option value="2">Februar</option>
+                                <option value="3">März</option>
+                                <option value="4">April</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Dezember</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="form-group send-report">
+                        <label for="send-report-emails">${text/recipient | NULL}</label>
+                        <select class="form-control select2" id="send-report-emails" multiple="multiple" data-placeholder="Email Adressen eingeben.." style="width: 100%;">
+                            <option disabled="">${text/monthly_report_enter_emails | NULL}</option>
+                        </select>
+                        <p class="help-block">
+                            ${text/monthly_report_accept_enter | NULL}
+                            <br/>
+                            ${text/monthly_report_sent_to_you | NULL}
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-success send-report-btn" value="${text/admin_text_send | NULL}"/>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">${text/admin_text_close | NULL}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Add User to Standby -->
+    <div class="modal fade" id="add-user" tabindex="-1" role="dialog" aria-labelledby="add-user-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form name="report_${liste/id}" method="post" action="${getPath}/administration/standby/report/${liste/id}">
+                <form name="ftpuser" method="post" action="">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Bericht bearbeiten</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="add-user-label">${text/standby_add_user | NULL}</h4>
                     </div>
                     <div class="modal-body">
-                        <textarea name="report" id="editor" class="textarea" style="width: 100%; height: 300px; ">${liste/report | NULL}</textarea>
+                        <table class="border">
+                            <tr>
+                                <td>
+                                    <label>${text/standby_user | NULL}</label>
+                                    <select name="username" class="form-control select2 select2-hidden-accessible select-user" data-placeholder="Mitarbeiter auswählen" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                        <option value="" selected="">${text/choose_please | NULL}</option>
+                                        <option tal:repeat="user user_liste" value="${user/username}">${user/displayName}</option>
+                                    </select>
+                                    <br/><br/>
+                                    <label>
+                                        ${text/admin_text_days | NULL}
+                                        <span class="days-checkbox-multi-select">
+                                            (<label>${text/admin_text_all | NULL}</label> | <label>${text/admin_text_none | NULL}</label>)
+                                        </span>
+                                    </label>
+                                    <div class="form-group">
+                                        <div class="checkbox days-checkbox"></div>
+                                        <span class="days-checkbox-warning">${text/choose_day_min_one | NULL}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-success" value="${text/admin_text_save | NULL}"/>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">${text/system_cancel | NULL}
-                        </button>
+                        <input type="button" class="btn btn-success add-user-confirm" value="${text/admin_text_save | NULL}"/>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">${text/admin_text_close | NULL}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-
-    <div tal:repeat="liste data" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="log_${liste/id}">
-        <div class="modal-dialog modal-lg" role="document" tal:condition="php:liste['logs']['number'] != '0' | NULL" >
+    <!-- Modal: Show weekly alarms -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="alarm-log-modal">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Logfile zum Zeitfenster</h4>
+                    <h4 class="modal-title" id="myModalLabel">${text/timerange_logfiles | NULL}</h4>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-striped dataTable" role="grid">
+                    <table class="table table-striped dataTable log-table" role="grid">
                         <thead>
                             <tr style="height: 35px;">
                                 <th style="width:15%;">${text/structure_system_type | NULL}</th>
@@ -93,12 +197,9 @@
                                 <th style="width:15%; text-align:right;">${text/structure_system_date_time | NULL}</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            <tr style="height:34px;" tal:repeat="detail liste/logs/result">
-                                <td>${detail/type | NULL}</td>
-                                <td>${structure detail/message  | NULL}</td>
-                                <td><span style="float:right;">${detail/datetime  | NULL}</span></td>
+                            <tr>
+                                <td colspan="3" style="text-align: center;"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></td>
                             </tr>
                         </tbody>
                     </table>
@@ -110,4 +211,6 @@
         </div>
     </div>
 
+    <!-- Include Quill Editor -> not working in javascript.xhtml -->
+    <script language="javascript" type="text/javascript" src="${getPath}/assets/plugins/quill-editor/quill.min.js"></script>
 </tal:block>

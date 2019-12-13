@@ -336,3 +336,82 @@ tr {
 .scroll-to-top i {
   font-weight: 800;
 }
+.standby-users span, .add-user, .checkbox div {
+    color: white;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    background-color: #3c8dbc;
+    border-color: #367fa9;
+    padding: 1px 10px;
+}
+
+.standby-users span i {
+    cursor: pointer;
+}
+
+.add-user {
+    cursor: pointer;
+    padding: 4px 5px;
+}
+
+.add-user:hover {
+    background-color: #336b8c;
+}
+
+#add-user table {
+    width: 100%;
+}
+
+.checkbox div {
+    margin-bottom: 5px;
+    padding: 1px 5px;
+}
+
+.kw_entry_days {
+    display: none;
+}
+
+.days-checkbox {
+    margin: 0;
+}
+
+.days-checkbox-warning {
+    display: none;
+    color: red;
+}
+
+.days-checkbox-multi-select, .days-checkbox-multi-select label {
+    color: #636363;
+}
+
+.days-checkbox-multi-select label:hover {
+    cursor: pointer;
+    color: black;
+}
+
+#modal-report-list .box-header:hover{
+    cursor: pointer;
+}
+
+#modal-report-list .form-group {
+    margin-bottom: 0;
+}
+
+#editor {
+    height: 200px;
+}
+
+.send-report button {
+    margin-top: 5px;
+}
+
+.select2-search__field {
+    width: auto!important;
+}
+
+.footer-copyright {
+    cursor: pointer;
+}
