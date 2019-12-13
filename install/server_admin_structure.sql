@@ -1,96 +1,76 @@
-DROP TABLE IF EXISTS `db_user`;
-CREATE TABLE IF NOT EXISTS `db_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+
+CREATE TABLE `db_user` (
+  `id` int(11) NOT NULL,
   `username` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `password` varchar(32) NOT NULL DEFAULT 'bcfe9e3890e6c26deb554643e208bfb8',
   `status` enum('on','off','new') NOT NULL,
-  `rechte` set('usr','mod','adm') NOT NULL DEFAULT 'usr',
+  `rechte` set('usr','mod','adm') NOT NULL DEFAULT 'adm',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `sysadmin` int(1) NOT NULL DEFAULT '0'
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username_2` (`username`),
-  KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `db_user_config`;
-CREATE TABLE IF NOT EXISTS `db_user_config` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `db_user_config` (
+  `id` int(11) NOT NULL,
   `username` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `name` char(15) NOT NULL,
   `value` varchar(255) NOT NULL,
-  `info` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
+  `info` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `db_user_contact`;
-CREATE TABLE IF NOT EXISTS `db_user_contact` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `db_user_contact` (
+  `id` int(11) NOT NULL,
   `username` char(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `email` varchar(60) NOT NULL,
   `pushover` varchar(200) NOT NULL,
-  `mobile` char(18) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
+  `mobile` char(18) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `db_user_favorite`;
-CREATE TABLE IF NOT EXISTS `db_user_favorite` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `db_user_favorite` (
+  `id` int(11) NOT NULL,
   `username` char(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `server_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
+  `server_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `db_user_private`;
-CREATE TABLE IF NOT EXISTS `db_user_private` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `db_user_private` (
+  `id` int(11) NOT NULL,
   `username` char(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `salutation` char(12) NOT NULL DEFAULT 'Herr',
   `company` varchar(100) NOT NULL,
   `lastname` varchar(25) NOT NULL,
   `firstname` varchar(25) NOT NULL,
-  `displayName` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
+  `displayName` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `db_user_secure`;
-CREATE TABLE IF NOT EXISTS `db_user_secure` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `db_user_secure` (
+  `id` int(11) NOT NULL,
   `username` char(100) NOT NULL,
   `countLogin` int(11) NOT NULL,
   `authCode` char(100) NOT NULL,
   `lastLogin` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastAuthCode` datetime NOT NULL,
-  `limitController` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
+  `limitController` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `psm_last_update`;
-CREATE TABLE IF NOT EXISTS `psm_last_update` (
+CREATE TABLE `psm_last_update` (
   `last_update` datetime NOT NULL,
   `counter` int(2) NOT NULL,
   `updatet` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `psm_log`;
-CREATE TABLE IF NOT EXISTS `psm_log` (
-  `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `psm_log` (
+  `log_id` int(11) UNSIGNED NOT NULL,
   `server_id` int(11) UNSIGNED NOT NULL,
   `type` enum('status','email','sms','pushover','updater') NOT NULL,
   `message` varchar(255) NOT NULL,
   `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` varchar(255) NOT NULL,
-  `messageread` int(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`log_id`)
+  `messageread` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `psm_servers`;
-CREATE TABLE IF NOT EXISTS `psm_servers` (
-  `server_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `psm_servers` (
+  `server_id` int(11) UNSIGNED NOT NULL,
   `ip` varchar(100) NOT NULL,
   `port` int(5) UNSIGNED NOT NULL,
   `label` varchar(255) NOT NULL,
@@ -112,71 +92,75 @@ CREATE TABLE IF NOT EXISTS `psm_servers` (
   `warn_date` date NOT NULL,
   `isWarning` int(1) DEFAULT NULL,
   `user` varchar(255) NOT NULL,
-  PRIMARY KEY (`server_id`)
+  `beschreibung` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `psm_servers_history`;
-CREATE TABLE IF NOT EXISTS `psm_servers_history` (
-  `servers_history_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `psm_servers_history` (
+  `servers_history_id` int(11) UNSIGNED NOT NULL,
   `server_id` int(11) UNSIGNED NOT NULL,
   `date` date NOT NULL,
   `latency_min` float(9,7) NOT NULL,
   `latency_avg` float(9,7) NOT NULL,
   `latency_max` float(9,7) NOT NULL,
   `checks_total` int(11) UNSIGNED NOT NULL,
-  `checks_failed` int(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`servers_history_id`),
-  UNIQUE KEY `server_id_date` (`server_id`,`date`)
+  `checks_failed` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `psm_servers_uptime`;
-CREATE TABLE IF NOT EXISTS `psm_servers_uptime` (
-  `servers_uptime_id` int(25) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `psm_servers_uptime` (
+  `servers_uptime_id` int(25) UNSIGNED NOT NULL,
   `server_id` int(11) UNSIGNED NOT NULL,
   `date` datetime NOT NULL,
   `status` tinyint(1) UNSIGNED NOT NULL,
-  `latency` float(9,7) DEFAULT NULL,
-  PRIMARY KEY (`servers_uptime_id`),
-  UNIQUE KEY `servers_uptime_id` (`servers_uptime_id`),
-  KEY `server_id` (`server_id`)
+  `latency` float(9,7) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `psm_users`;
-CREATE TABLE IF NOT EXISTS `psm_users` (
-  `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(64) NOT NULL COMMENT 'user''s name, unique',
-  `pushover_key` varchar(255) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `unique_username` (`user_name`)
+CREATE TABLE `wos_attachments` (
+  `id` int(11) NOT NULL,
+  `controller` char(30) NOT NULL,
+  `identkey` int(11) NOT NULL,
+  `attachment` varchar(255) NOT NULL,
+  `contenttext` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_config`;
-CREATE TABLE IF NOT EXISTS `wos_config` (
+CREATE TABLE `wos_config` (
   `id` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   `field` char(20) NOT NULL DEFAULT 'text',
-  `textvalue` enum('ja','nein') NOT NULL DEFAULT 'nein',
-  PRIMARY KEY (`id`),
-  KEY `key` (`id`)
+  `textvalue` enum('ja','nein') NOT NULL DEFAULT 'nein'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_dns_cron`;
-CREATE TABLE IF NOT EXISTS `wos_dns_cron` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_contract` (
+  `id` int(11) NOT NULL,
+  `bezeichnung` varchar(255) NOT NULL,
+  `vertragsnummer` char(35) NOT NULL,
+  `vertragspartner` varchar(255) NOT NULL,
+  `kategorie` varchar(100) NOT NULL,
+  `abteilung` varchar(100) NOT NULL,
+  `verantwortlicher` char(50) NOT NULL,
+  `vertragsbeginn` date NOT NULL,
+  `vertragsende` date NOT NULL,
+  `beschreibung` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `wos_contract_details` (
+  `id` int(11) NOT NULL,
+  `contract_id` int(11) NOT NULL,
+  `form_name` varchar(255) NOT NULL,
+  `form_value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `wos_dns_cron` (
+  `id` int(11) NOT NULL,
   `sid` int(11) NOT NULL,
   `ipadresse` char(15) NOT NULL,
-  `hostname` char(20) NOT NULL,
+  `hostname` char(100) NOT NULL,
   `serverart` char(120) NOT NULL,
   `meldung` varchar(255) NOT NULL,
-  `fehler` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `server_id` (`sid`),
-  KEY `sid` (`sid`)
+  `fehler` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_hardware`;
-CREATE TABLE IF NOT EXISTS `wos_hardware` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_hardware` (
+  `id` int(11) NOT NULL,
   `bezeichnung` varchar(255) NOT NULL,
   `kategorie` char(100) NOT NULL,
   `inventarnummer` char(100) NOT NULL,
@@ -186,76 +170,55 @@ CREATE TABLE IF NOT EXISTS `wos_hardware` (
   `seriennummer` char(100) NOT NULL,
   `zuordnung` char(100) NOT NULL,
   `beschreibung` text NOT NULL,
-  `inventur` enum('ja','nein') NOT NULL DEFAULT 'ja',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `inventarnummer` (`inventarnummer`,`seriennummer`)
+  `inventur` enum('ja','nein') NOT NULL DEFAULT 'ja'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_hardware_details`;
-CREATE TABLE IF NOT EXISTS `wos_hardware_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_hardware_details` (
+  `id` int(11) NOT NULL,
   `hardware_id` int(11) NOT NULL,
   `form_name` varchar(255) CHARACTER SET latin1 NOT NULL,
-  `form_value` varchar(255) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`id`)
+  `form_value` varchar(255) CHARACTER SET latin1 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_international`;
-CREATE TABLE IF NOT EXISTS `wos_international` (
+CREATE TABLE `wos_international` (
   `id` varchar(10) NOT NULL DEFAULT '',
-  `aktiv` enum('ja','nein') NOT NULL,
-  UNIQUE KEY `id` (`id`)
+  `aktiv` enum('ja','nein') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_inventur`;
-CREATE TABLE IF NOT EXISTS `wos_inventur` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `barcode` char(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_2` (`id`),
-  UNIQUE KEY `barcode` (`barcode`),
-  KEY `id` (`id`),
-  KEY `barcode_2` (`barcode`)
+CREATE TABLE `wos_inventur` (
+  `id` int(11) NOT NULL,
+  `barcode` char(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_knowledge`;
-CREATE TABLE IF NOT EXISTS `wos_knowledge` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_knowledge` (
+  `id` int(11) NOT NULL,
   `datum` datetime NOT NULL,
   `page_name` varchar(255) NOT NULL,
   `page_content` text NOT NULL,
   `keywords` varchar(255) NOT NULL,
   `uploads` varchar(255) NOT NULL,
   `visible` int(1) NOT NULL DEFAULT '1',
-  `version` decimal(2,1) NOT NULL,
-  UNIQUE KEY `page_name` (`page_name`),
-  KEY `id` (`id`)
+  `version` decimal(2,1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_knowledge_history`;
-CREATE TABLE IF NOT EXISTS `wos_knowledge_history` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_knowledge_history` (
+  `id` int(11) NOT NULL,
   `parent` int(11) NOT NULL,
   `version` decimal(2,1) NOT NULL,
   `datum` datetime NOT NULL,
   `user` varchar(100) NOT NULL,
-  `content` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `content` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_language_de`;
-CREATE TABLE IF NOT EXISTS `wos_language_de` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_language_de` (
+  `id` int(11) NOT NULL,
   `text_name` char(60) NOT NULL,
   `text_value` text NOT NULL,
-  `art` enum('sys','usr','not') NOT NULL DEFAULT 'sys',
-  PRIMARY KEY (`id`),
-  KEY `text_name` (`text_name`)
+  `art` enum('sys','usr','not') NOT NULL DEFAULT 'sys'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_license`;
-CREATE TABLE IF NOT EXISTS `wos_license` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_license` (
+  `id` int(11) NOT NULL,
   `hersteller` varchar(200) NOT NULL,
   `produkt` varchar(200) NOT NULL,
   `version` char(50) NOT NULL,
@@ -264,30 +227,37 @@ CREATE TABLE IF NOT EXISTS `wos_license` (
   `beschreibung` text NOT NULL,
   `vmware` int(11) NOT NULL DEFAULT '0',
   `barcode` varchar(200) NOT NULL,
-  `zuordnung` char(50) NOT NULL,
-  PRIMARY KEY (`id`)
+  `zuordnung` char(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_news`;
-CREATE TABLE IF NOT EXISTS `wos_news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_news` (
+  `id` int(11) NOT NULL,
   `datum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `author` char(20) CHARACTER SET latin1 NOT NULL,
   `titel` varchar(255) CHARACTER SET tis620 COLLATE tis620_bin NOT NULL,
   `nachricht` text CHARACTER SET latin1 NOT NULL,
-  `controller` char(30) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`id`)
+  `controller` char(30) CHARACTER SET latin1 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_server`;
-CREATE TABLE IF NOT EXISTS `wos_server` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_password` (
+  `id` int(255) NOT NULL,
+  `user` varchar(50) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `passwort` binary(128) NOT NULL,
+  `verwendung` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `private` int(1) NOT NULL DEFAULT '0',
+  `system` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `wos_server` (
+  `id` int(11) NOT NULL,
   `bezeichnung` varchar(255) NOT NULL,
   `inventarnummer` char(30) NOT NULL,
-  `hostname` char(30) NOT NULL,
+  `hostname` char(100) NOT NULL,
   `aliase` varchar(255) NOT NULL,
   `ipadressen` char(50) NOT NULL,
-  `standort` char(25) NOT NULL,
+  `standort` char(255) NOT NULL,
   `betriebssystem` varchar(255) NOT NULL,
   `technischedaten` varchar(255) NOT NULL,
   `verwendungszweck` varchar(255) NOT NULL,
@@ -297,49 +267,45 @@ CREATE TABLE IF NOT EXISTS `wos_server` (
   `live_dns` enum('on','off') NOT NULL DEFAULT 'on',
   `prio` int(1) NOT NULL,
   `wartung` tinyint(1) NOT NULL DEFAULT '0',
-  `monitor` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `hostname` (`hostname`),
-  UNIQUE KEY `ipadressen` (`ipadressen`),
-  KEY `id` (`id`)
+  `monitor` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `wos_server_dnsip`;
-CREATE TABLE IF NOT EXISTS `wos_server_dnsip` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_server_dnsip` (
+  `id` int(11) NOT NULL,
   `ip` char(15) NOT NULL,
-  `port` int(5) NOT NULL,
+  `port` char(25) NOT NULL,
   `hostname` char(40) NOT NULL,
-  `datum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `ip` (`ip`),
-  KEY `hostname` (`hostname`)
+  `datum` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_server_ports`;
-CREATE TABLE IF NOT EXISTS `wos_server_ports` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_server_ports` (
+  `id` int(11) NOT NULL,
   `lastcheck` datetime NOT NULL,
   `ipadresse` char(20) NOT NULL,
   `port` int(5) NOT NULL,
   `bezeichnung` varchar(255) NOT NULL,
-  `beschreibung` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `ipadresse` (`ipadresse`)
+  `beschreibung` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `wos_system_details`;
-CREATE TABLE IF NOT EXISTS `wos_system_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_standby` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `kw` int(2) NOT NULL,
+  `is_public_holiday` tinyint(4) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `report` text NOT NULL,
+  `lastupdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `wos_system_details` (
+  `id` int(11) NOT NULL,
   `systemid` int(11) NOT NULL,
   `form_name` varchar(255) NOT NULL,
-  `form_value` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `form_value` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `wos_ticket`;
-CREATE TABLE IF NOT EXISTS `wos_ticket` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `wos_ticket` (
+  `id` int(11) NOT NULL,
   `tid` int(11) NOT NULL DEFAULT '0',
   `closed` int(1) NOT NULL DEFAULT '0',
   `datum` datetime NOT NULL,
@@ -354,36 +320,213 @@ CREATE TABLE IF NOT EXISTS `wos_ticket` (
   `abgabetermin` date NOT NULL,
   `ticket_status` char(25) NOT NULL DEFAULT '0',
   `fortschritt` int(3) NOT NULL DEFAULT '0',
-  `prio` char(25) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `zuordnung` (`zuordnung`)
+  `prio` char(25) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `wos_password` (
-  `id` int(255) NOT NULL,
-  `user` varchar(50) NOT NULL,
-  `username` varchar(100) NOT NULL,
-  `passwort` binary(128) NOT NULL,
-  `verwendung` varchar(255) NOT NULL,
-  `url` varchar(255) NOT NULL,
-  `private` int(1) NOT NULL,
-  `system` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
-ALTER TABLE `wos_password`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `db_user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username_2` (`username`),
+  ADD KEY `username` (`username`);
 
-ALTER TABLE `wos_password`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `db_user_config`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`);
 
-  CREATE TABLE `wos_attachments` (
-  `id` int(11) NOT NULL,
-  `controller` char(30) NOT NULL,
-  `identkey` int(11) NOT NULL,
-  `attachment` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `db_user_contact`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`);
+
+ALTER TABLE `db_user_favorite`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`);
+
+ALTER TABLE `db_user_private`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`);
+
+ALTER TABLE `db_user_secure`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`);
+
+ALTER TABLE `psm_log`
+  ADD PRIMARY KEY (`log_id`);
+
+ALTER TABLE `psm_servers`
+  ADD PRIMARY KEY (`server_id`);
+
+ALTER TABLE `psm_servers_history`
+  ADD PRIMARY KEY (`servers_history_id`),
+  ADD UNIQUE KEY `server_id_date` (`server_id`,`date`);
+
+ALTER TABLE `psm_servers_uptime`
+  ADD PRIMARY KEY (`servers_uptime_id`),
+  ADD UNIQUE KEY `servers_uptime_id` (`servers_uptime_id`),
+  ADD KEY `server_id` (`server_id`);
 
 ALTER TABLE `wos_attachments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `identkey` (`identkey`);
+
+ALTER TABLE `wos_config`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `key` (`id`);
+
+ALTER TABLE `wos_contract`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `bezeichnung` (`bezeichnung`),
+  ADD KEY `vertragspartner` (`vertragspartner`);
+
+ALTER TABLE `wos_dns_cron`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `server_id` (`sid`),
+  ADD KEY `sid` (`sid`);
+
+ALTER TABLE `wos_hardware`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_hardware_details`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_international`
+  ADD UNIQUE KEY `id` (`id`);
+
+ALTER TABLE `wos_inventur`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_2` (`id`),
+  ADD UNIQUE KEY `barcode` (`barcode`),
+  ADD KEY `id` (`id`),
+  ADD KEY `barcode_2` (`barcode`);
+
+ALTER TABLE `wos_knowledge`
+  ADD UNIQUE KEY `page_name` (`page_name`),
+  ADD KEY `id` (`id`);
+
+ALTER TABLE `wos_knowledge_history`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_language_de`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `text_name` (`text_name`);
+
+ALTER TABLE `wos_license`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_news`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_password`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_server`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `hostname` (`hostname`),
+  ADD UNIQUE KEY `ipadressen` (`ipadressen`),
+  ADD KEY `id` (`id`);
+
+ALTER TABLE `wos_server_dnsip`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ip` (`ip`);
+
+ALTER TABLE `wos_server_ports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ipadresse` (`ipadresse`);
+
+ALTER TABLE `wos_standby`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `date` (`date`),
+  ADD KEY `username` (`username`);
+
+ALTER TABLE `wos_system_details`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `wos_ticket`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `zuordnung` (`zuordnung`);
+
+
+ALTER TABLE `db_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `db_user_config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `db_user_contact`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `db_user_favorite`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `db_user_private`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `db_user_secure`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `psm_log`
+  MODIFY `log_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `psm_servers`
+  MODIFY `server_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `psm_servers_history`
+  MODIFY `servers_history_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `psm_servers_uptime`
+  MODIFY `servers_uptime_id` int(25) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_attachments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_contract`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_dns_cron`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_hardware`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_hardware_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_inventur`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_knowledge`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_knowledge_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_language_de`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_license`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_news`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_password`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_server`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_server_dnsip`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_server_ports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_standby`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_system_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `wos_ticket`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;

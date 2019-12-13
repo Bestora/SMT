@@ -85,6 +85,7 @@ class Content extends Template
   {
     $subcontroller = project_path . '/controller/' . $this->get('controller') . '/' . $this->get('methode') . '.php';
 
+
     if (!file_exists($subcontroller)) {
       $subcontroller = project_path . '/controller/structure/' . $this->get('methode') . '.php';
     }

@@ -18,10 +18,8 @@
     <div class="content-wrapper">
 
         <section class="content" id="content" tal:condition="php:controller!='module' | NULL">
-            <tal:block condition="php:controller!='server' && controller != 'vmware' | NULL"
-                       metal:use-macro="${controller}/${methode}.xhtml/standard"/>
-            <tal:block condition="php:controller=='server' || controller == 'vmware' | NULL"
-                       metal:use-macro="systeme/${methode}.xhtml/standard"/>
+            <tal:block condition="php:controller!='server' && controller != 'vmware' | NULL" metal:use-macro="${controller}/${methode}.xhtml/standard"/>
+            <tal:block condition="php:controller=='server' || controller == 'vmware' | NULL" metal:use-macro="systeme/${methode}.xhtml/standard"/>
         </section>
 
         <section class="content" id="content" tal:condition="php:controller=='module' | NULL">

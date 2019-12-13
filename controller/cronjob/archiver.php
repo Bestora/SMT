@@ -13,4 +13,4 @@ for ($i = 0; $i < count($result); $i++) {
 $db->getQuery("DELETE FROM psm_servers_uptime WHERE date NOT LIKE '%:00:%' && date NOT LIKE '%:30:%'", array(), True);
 
 die($i . ' Monitordaten verarbeiten');
-?>
+

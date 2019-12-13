@@ -24,13 +24,13 @@
                 <p>
                     ${server/bezeichnung}<br/>
                     ${server/ipadressen} <img tal:condition="php:server['prio'] > 0 | NULL"
-                                              src="${getPath}/assets/dist/img/${server/prio}.png"/><br/>
+                                              src="${getPath}/assets/dist/img/${server/prio | NULL}.png"/><br/>
                     <div class="progress xs" style="margin-top:-10px;">
                         <div class="progress-bar progress-bar-success" style="width: ${server/progress}%"></div>
                     </div>
                     <div style="margin-top:-20px;">
                         ${text/monitor_status_number_monitoring | NULL}:
-                        ${server/aktive_monitor_service}/${server/anzahl_monitor | NULL} (${server/progress}%)
+                        ${server/aktive_monitor_service | NULL}/${server/anzahl_monitor | NULL} (${server/progress | NULL}%)
                     </div>
                 </p>
             </a>
