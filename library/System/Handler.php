@@ -101,6 +101,15 @@ class Handler extends Texte
       if ($config[$i]['id'] == 'monitor_email_address') {
         $session->set('monitor_email_address', $config[$i]['value']);
       }
+      if ($config[$i]['id'] == 'starface_login_id') {
+        $session->set('starface_login_id', $config[$i]['value']);
+      }
+      if ($config[$i]['id'] == 'starface_login_pw') {
+        $session->set('starface_login_pw', $config[$i]['value']);
+      }
+      if ($config[$i]['id'] == 'starface_user_id') {
+        $session->set('starface_user_id', $config[$i]['value']);
+      }
       if ($config[$i]['id'] == 'controller') {
         Template::setText('configController', explode(',', $config[$i]['value']));
         $session->set('configController', explode(',', $config[$i]['value']));

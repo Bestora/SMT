@@ -2,7 +2,8 @@
 
 $wos = new Service();
 $year = date("Y");
-template::setText('user_liste', $user->listUsers());
+$userListe = $user->listUsers();
+template::setText('user_liste', $userListe);
 template::setText('StandbyJahre', array((date("Y")-1), date("Y"), (date("Y")+1)));
 
 if(isset($url['3']) && $url['2'] == 'show') {
@@ -21,24 +22,6 @@ if(isset($url['3']) && $url['2'] == 'report') {
   header("Location: " . $referr);
 }
 
-$standby = $adm->UpdateTableForStandby($year);
+$standby = $adm->UpdateTableForStandby($year, $userListe);
 
-for($i=0; $i<count($standby); $i++) {
-  $dat[$i]['KW'] = ($i+1);
-  $dat[$i]['id'] = $standby[$i]['id'];
-  $dat[$i]['username'] = $standby[$i]['username'];
-  $dat[$i]['report'] = $standby[$i]['report'];
-  $dat[$i]['lastupdate'] = $standby[$i]['lastupdate'];
-
-  // Start und Ende ermitteln und die Logfiles prüfen und einlesen
-  $dat[$i]['start'] = $adm->getStartDayforWeek($year, $dat[$i]['KW']);
-  $dat[$i]['ende']  = $adm->getLastDayforWeek($year, $dat[$i]['KW']);
-  $dat[$i]['logs'] = $wos->getLogDate($dat[$i]['start'] . ' 00:00:00', $dat[$i]['ende'] . ' 23:59:59');
-
-  // Lesbares deutsches Datum
-  $dat[$i]['start'] = $adm->getStartDayforWeek($year, $dat[$i]['KW'], 'de');
-  $dat[$i]['ende']  = $adm->getLastDayforWeek($year, $dat[$i]['KW'], 'de');
-}
-
-template::setText('data', $dat);
-
+template::setText('data', $standby);
