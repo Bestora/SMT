@@ -415,3 +415,7 @@ tr {
 .footer-copyright {
     cursor: pointer;
 }
+
+.email-sent-text {
+    display: none;
+}
