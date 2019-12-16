@@ -9,7 +9,8 @@ $loginID = base::get('Handler')->config['starface_login_id'];
 $loginPW = base::get('Handler')->config['starface_login_pw'];
 $userID = base::get('Handler')->config['starface_user_id'];
 
-if($mobileNumber){
+if($mobileNumber){    
+    require_once project_path . '/library/Module/starface/StarfaceApi.class.php';
     $starface = new StarfaceApi();
     $starface->login($loginID, $loginPW, $userID);
 
@@ -25,3 +26,5 @@ if($mobileNumber){
     // Activate given phone by number
     $starface->toggleFMCPhoneActive($mobileNumber);
 }
+
+die('Rufbereitschaft wurde aktualisiert');

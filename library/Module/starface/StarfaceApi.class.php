@@ -1,6 +1,8 @@
 <?php
 
-require_once(__DIR__ . '/../../../vendor/autoload.php');
+$dir_root = dirname(__FILE__);
+define('project_path', str_replace('controller' . DIRECTORY_SEPARATOR . 'administration' . DIRECTORY_SEPARATOR . 'ajax', '', $dir_root));
+require_once(project_vendor . '/autoload.php');
 
 // Custom Autoloader for loading DefaultApi and all dependencies
 spl_autoload_register(function ($class) {
@@ -17,7 +19,6 @@ use Swagger\Client\ApiException;
 use Swagger\Client\Model\FmcPhone;
 use Swagger\Client\Model\Login;
 
-
 class StarfaceApi
 {
     private $apiInstance;
@@ -33,6 +34,7 @@ class StarfaceApi
      * Initialize new Login Object
      */
     public function __construct() {
+    
         $this->apiInstance = new Swagger\Client\Api\DefaultApi(
             new GuzzleHttp\Client()
         );
