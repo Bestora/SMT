@@ -78,12 +78,12 @@ class Notifier
      $this->notifyByPushover($this->server['user']);
     }
 
-    if ($this->server['messagebird'] == 'yes' && $status_new == 'off'&& !empty($session->get('messsagebird_flowtoken'))) {
-      $query_standby = "SELECT * FROM wos_standby WHERE year=:year && kw=:kw";
-      $db->getQuery($query_standby, array(':year' => date('Y') , ':kw' => date('W')));
+    if ($this->server['messagebird'] == 'yes' && $status_new == 'off' && !empty($session->get('messsagebird_flowtoken'))) {
+      $query_standby = "SELECT * FROM wos_standby WHERE date = :date";
+      $db->getQuery($query_standby, array(':date' => date('Y-m-d')));
 
       $value_standby = $db->getValue();
-      $value_standby = $value_standby['0'];
+      $value_standby = $value_standby[0];
 
       if($db->getNumrows() == 1 && !empty($value_standby['username'])) {
         $this->server['user'] = $value_standby['username'];
