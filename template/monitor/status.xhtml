@@ -46,3 +46,55 @@
     </div>
 
 </tal:block>
+
+
+
+<tal:block metal:define-macro="overview">
+
+<script language="javascript" type="text/javascript" src="${getPath}/assets/dist/js/timer.js"/>
+<span tal:condition="page_reload | NULL">
+    <script type="text/javascript">
+      startTimer(${page_reload});
+    </script>
+    <meta http-equiv="refresh" content="${page_reload | NULL}; URL=${getPath}${getURL}"/>
+  </span>
+
+
+<div class="box no-padding">
+    <div class="box-header with-border">
+        <i class="fa fa-bullhorn"></i>
+        <h3 class="box-title">${text/monitor_overview_last_text | NULL} : ${psm_last_update/last_update | NULL} -
+            <span id="countdown">${page_reload | NULL}</span> ${text/monitior_overview_seconds | NULL}</h3>
+    </div>
+
+    <div class="box-body no-padding" style="display: flex; flex-wrap: wrap; background-color: #000000;">
+        <a style="width:190px; margin:2px;align-self: stretch;"
+           href="${getPath}/${server/serverart}/detail/${server/id | NULL}" tal:condition="server_liste | NULL"
+           tal:repeat="server server_liste" class="callout bg-${server/status | NULL}">
+            <b>${server/hostname}</b>
+            <p>
+                ${server/bezeichnung}<br/>
+                ${server/ipadressen} <img tal:condition="php:server['prio'] > 0 | NULL"
+                                          src="${getPath}/assets/dist/img/${server/prio | NULL}.png"/><br/>
+                <div class="progress xs" style="margin-top:-10px;">
+                    <div class="progress-bar progress-bar-success" style="width: ${server/progress}%"></div>
+                </div>
+                <div style="margin-top:-20px;">
+                    ${text/monitor_status_number_monitoring | NULL}:
+                    ${server/aktive_monitor_service | NULL}/${server/anzahl_monitor | NULL} (${server/progress | NULL}%)
+                </div>
+            </p>
+        </a>
+    </div>
+    <div class="box-footer">
+        <font class="text-green" style="font-weight:bold;margin-right:25px;">${text/monitor_overview_system_online | NULL}</font>
+        <font class="text-red" style="font-weight:bold;margin-right:25px;">${text/monitor_overview_system_offline | NULL}</font>
+        <font class="text-yellow" style="font-weight:bold;margin-right:25px;">${text/monitor_overview_one_of_its_depende | NULL}</font>
+        <font class="text-blue" style="font-weight:bold;margin-right:25px;">${text/monitor_overview_system_maintenance | NULL}</font>
+        <font class="text-gray" style="font-weight:bold;margin-right:25px;">${text/monitor_overview_unimportant_system | NULL}</font>
+    </div>
+
+</div>
+
+</tal:block>
+

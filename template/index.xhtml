@@ -45,10 +45,10 @@
 </body>
 
 
-<body class="hold-transition skin-blue sidebar-mini" tal:condition="php:controller=='moin' || controller=='overview'">
+<body class="hold-transition skin-blue sidebar-mini" tal:condition="php:controller=='moin' || controller=='overview'" style="background-color: #000000;">
 
 <section class="content" id="content">
-    <tal:block metal:use-macro="monitor/status.xhtml/standard"/>
+    <tal:block metal:use-macro="monitor/status.xhtml/overview"/>
 </section>
 
 <tal:block metal:use-macro="structure/javascript.xhtml/standard"/>
