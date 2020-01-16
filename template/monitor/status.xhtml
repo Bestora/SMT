@@ -67,7 +67,7 @@
             <span id="countdown">${page_reload | NULL}</span> ${text/monitior_overview_seconds | NULL}</h3>
     </div>
 
-    <div class="box-body no-padding" style="display: flex; flex-wrap: wrap; background-color: #000000;">
+    <div class="box-body no-padding" style="display: flex; flex-wrap: wrap;">
         <a style="width:190px; margin:2px;align-self: stretch;"
            href="${getPath}/${server/serverart}/detail/${server/id | NULL}" tal:condition="server_liste | NULL"
            tal:repeat="server server_liste" class="callout bg-${server/status | NULL}">
