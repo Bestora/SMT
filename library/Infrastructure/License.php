@@ -23,7 +23,7 @@
  * @copyright   Copyright (c) Werner Pallentin <werner.pallentin@outlook.de>
  * @license     http://www.gnu.org/licenses/gpl.txt GNU GPL v3
  * @version     Release: v2.1
- * @link        http://palle.zapto.org/
+ * @link        https://smt.palle.dev
  **/
 
 class License
