@@ -105,8 +105,8 @@ class Notifier
     $db = new Database('SMT-USER');
     $subject = $this->parse_msg($this->status_new, 'email_subject', $this->server);
 
-    $db->getQuery("SELECT * FROM db_user_private WHERE username=:username", array(':username' => $user));
-    $data = array("mitarbeiter" => $db->getValue('displayName'));
+    $db->getQuery("SELECT * FROM db_user_private JOIN db_user_contact USING(username) WHERE username=:username", array(':username' => $user));
+    $data = array("mitarbeiter" => $db->getValue('displayName'), 'mobilenumber' => $db->getValue('mobile'));
     $data_string = json_encode($data);
 
     $ch = curl_init('https://flows.messagebird.com/flows/'.$session->get('messsagebird_flowtoken').'/invoke');
