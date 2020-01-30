@@ -97,17 +97,16 @@ if(isset($_POST)){
         $returnData['success'] = true;
         $returnData['reports'] = $data;
     }elseif(isset($_POST['save-reports'])){
-        $reportData = $_POST['data'];
-        $hasReports = false;
-        foreach ($reportData as $report){
-            $date = date('Y-m-d', strtotime($report['date']));
-            $result = $db->getQuery("UPDATE wos_standby SET report = :report WHERE date = :date", ['report'=>$report['report'], 'date'=>$date], true);
-            if($report['report']){
-                $hasReports = true;
+        if(isset($_POST['data'])){
+            $reports = $_POST['data'];
+
+            foreach ($reports as $date => $report){
+                $date = DateTime::createFromFormat('d.m.Y', $date);
+                $date = $date->format('Y-m-d');
+                $result = $db->getQuery("UPDATE wos_standby SET report = :report WHERE date = :date", ['report'=>$report, 'date'=>$date], true);
             }
         }
         $returnData['success'] = true;
-        $returnData['hasReports'] = $hasReports;
     }elseif(isset($_POST['send-reports'])){
         $email_addresses = $_POST['email_addresses'];
         if($email_addresses){
@@ -179,6 +178,15 @@ if(isset($_POST)){
         $logs = $wos->getLogDate($start . ' 00:00:00', $ende . ' 23:59:59');
         $returnData['success'] = true;
         $returnData['logs'] = $logs;
+    }elseif(isset($_POST['get-report'])){
+        $date = DateTime::createFromFormat('d.m.Y', $_POST['date']);
+        $date = $date->format('Y-m-d');
+
+        $db->getQuery("SELECT * FROM `wos_standby` WHERE date = :date", ['date'=>$date], true);
+        $report = $db->getValue('report');
+
+        $returnData['success'] = true;
+        $returnData['report'] = $report;
     }
 
     header('Content-Type: application/json');

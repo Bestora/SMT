@@ -323,7 +323,7 @@ function setContent(field, content) {
                         firstElement = reportData;
                     }
                     $('#modal-report-list .day-select').append(`
-                        <option value="`+reportData.date+`" data-report="`+reportData.report+`">`+reportData.day+` den `+reportData.date+`</option>
+                        <option value="`+reportData.date+`">`+reportData.day+` den `+reportData.date+`</option>
                     `);
                 });
                 quill_editor.setHTML(firstElement.report);
@@ -347,6 +347,7 @@ function setContent(field, content) {
         return $('.ql-editor').html();
     };
 
+    var reports = {};
     // On editor text-change update the attributes on the selected option
     quill_editor.on('text-change', function(delta, oldDelta, source) {
         if (source === 'user') {
@@ -355,36 +356,44 @@ function setContent(field, content) {
             if(html === "<p><br></p>"){
                 html = "";
             }
-            option.attr('data-report', html);
+            reports[option.val()] = html;
         }
     });
 
     // Standby: Update Editor content on select change
     $(document).on('change', '.day-select', function () {
         var option = $('.day-select option:selected');
-        var report = option.attr('data-report');
-        quill_editor.setHTML(report);
+
+        if(reports[option.val()]){
+            quill_editor.setHTML(reports[option.val()]);
+        }else{
+            $.ajax({
+                type: "POST",
+                url: "/controller/administration/ajax/standby_ajax.php",
+                data: {
+                    'get-report': true,
+                    'date': option.val()
+                },
+                success: function (data) {
+                    if(data.success){
+                        quill_editor.setHTML(data.report);
+                    }
+                }
+            });
+        }
     });
 
     // Standby: Save reports
     $(document).on('click', '.save-reports', function () {
-        var options = $('.day-select option');
-        var optionDataArray = [];
-        options.each(function () {
-            optionDataArray.push({
-                'date': $(this).val(),
-                'report': $(this).attr('data-report')
-            });
-        });
-
         $.ajax({
             type: "POST",
             url: "/controller/administration/ajax/standby_ajax.php",
             data: {
                 'save-reports': true,
-                'data': optionDataArray
+                'data': reports
             },
             success: function (data) {
+                reports = {};
                 $('#modal-report-list').modal('hide');
             }
         });
