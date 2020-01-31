@@ -84,6 +84,7 @@ CREATE TABLE `psm_servers` (
   `email` enum('yes','no') NOT NULL DEFAULT 'yes',
   `pushover` enum('yes','no') NOT NULL DEFAULT 'yes',
   `messagebird` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `telegram` enum('yes','no') NOT NULL DEFAULT 'yes',
   `warning_threshold` mediumint(1) NOT NULL DEFAULT '1',
   `warning_threshold_counter` mediumint(1) NOT NULL,
   `description` text NOT NULL,

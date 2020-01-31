@@ -87,7 +87,10 @@ INSERT INTO `wos_config` (`id`, `value`, `field`, `textvalue`) VALUES
 ('starface_user_id', '', 'text', 'nein'),
 ('ticket_prio', 'ticket_prio_niedrig,ticket_prio_normal,ticket_prio_hoch', 'text', 'ja'),
 ('ticket_status', 'ticket_status_offen,ticket_status_planung,ticket_status_arbeit,ticket_status_feedback,ticket_status_fertig,ticket_status_geschlossen', 'text', 'ja'),
-('version', '2.1', 'hidden', 'nein');
+('version', '2.1', 'hidden', 'nein'),
+('telegram_api_key', '', 'text', 'nein'),
+('telegram_bot', '++', 'text', 'nein'),
+('telegram_chat_id', '', 'text', 'nein');
 
 
 --
@@ -560,4 +563,8 @@ INSERT INTO `wos_language_de` (`id`, `text_name`, `text_value`, `art`) VALUES
 (458, 'admin_text_none', 'Keine', 'sys'),
 (459, 'choose_day_min_one', 'Bitte mindestens einen Tag auswählen!', 'sys'),
 (460, 'timerange_logfiles', 'Logfile zum Zeitfenster', 'sys'),
-(461, 'show_write_report', 'Berichte anzeigen/schreiben', 'sys');
+(461, 'show_write_report', 'Berichte anzeigen/schreiben', 'sys'),
+(465, 'structure_telegram_on', 'Telegram Benachrichtigung ist eingeschalten', 'sys'),
+(464, 'monitor_service_telegram_off', 'Telegram ausschalten', 'sys'),
+(463, 'monitor_service_telegram_on', 'Telegram einschalten', 'sys'),
+(462, 'monitor_service_telegram', 'Telegram Benachrichtigung', 'sys');

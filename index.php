@@ -39,5 +39,10 @@ if (!file_exists(project_path . '/assets/config/' . $_SERVER['SERVER_NAME'] . '.
   include_once 'library/App.php';
 }
 
+/*
+echo '<pre>';
+print_r($_SESSION);
+echo '</pre>';
+*/
 
 ?>

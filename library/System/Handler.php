@@ -110,6 +110,15 @@ class Handler extends Texte
       if ($config[$i]['id'] == 'starface_user_id') {
         $session->set('starface_user_id', $config[$i]['value']);
       }
+      if ($config[$i]['id'] == 'telegram_api_key') {
+        $session->set('telegram_api_key', $config[$i]['value']);
+      }
+      if ($config[$i]['id'] == 'telegram_bot') {
+        $session->set('telegram_bot', $config[$i]['value']);
+      }
+      if ($config[$i]['id'] == 'telegram_chat_id') {
+        $session->set('telegram_chat_id', $config[$i]['value']);
+      }
       if ($config[$i]['id'] == 'controller') {
         Template::setText('configController', explode(',', $config[$i]['value']));
         $session->set('configController', explode(',', $config[$i]['value']));

@@ -219,6 +219,12 @@
                                   aria-hidden="true" title="${text/structure_messagebird_on | NULL}"
                                   tal:condition="php:liste['messagebird'] == 'yes' | NULL"/>
                         </span>
+
+                        <span tal:condition="php:_SESSION['telegram_api_key'] != '' | NULL">
+                            <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-phone"
+                                  aria-hidden="true" title="${text/structure_telegram_on | NULL}"
+                                  tal:condition="php:liste['telegram'] == 'yes' | NULL"/>
+                        </span>
                     </td>
                     <td style="width:15%; text-align:right;">
                         <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-refresh"

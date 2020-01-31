@@ -91,6 +91,15 @@ class Notifier
       }
     }
 
+    if($this->server['telegram'] == 'yes' && $status_new == 'off' && $session->get('telegram_api_key') != '') {
+      $error_message = "SMT Meldung: {$value['0']['label']} -> {$value['0']['ip']}:{$value['0']['port']} - - {$this->server['system']} hat Probleme";
+      urlencode($error_message);
+      $val = explode(',',$session->get('telegram_chat_id'));
+      for ($i = 0; $i < count($val); $i++) {
+        file_get_contents("https://api.telegram.org/".$session->get('telegram_bot').":".$session->get('telegram_api_key')."/sendMessage?chat_id=".$val[$i]."&text=$error_message");
+      }
+    }
+
     return $notify;
   }
 
