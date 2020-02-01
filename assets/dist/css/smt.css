@@ -275,67 +275,67 @@ tr {
 }
 
 
-
 .rounded {
-  border-radius: 0.25rem !important;
+    border-radius: 0.25rem !important;
 }
 
 .rounded-top {
-  border-top-left-radius: 0.25rem !important;
-  border-top-right-radius: 0.25rem !important;
+    border-top-left-radius: 0.25rem !important;
+    border-top-right-radius: 0.25rem !important;
 }
 
 .rounded-right {
-  border-top-right-radius: 0.25rem !important;
-  border-bottom-right-radius: 0.25rem !important;
+    border-top-right-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
 }
 
 .rounded-bottom {
-  border-bottom-right-radius: 0.25rem !important;
-  border-bottom-left-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
 }
 
 .rounded-left {
-  border-top-left-radius: 0.25rem !important;
-  border-bottom-left-radius: 0.25rem !important;
+    border-top-left-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
 }
 
 .rounded-circle {
-  border-radius: 50% !important;
+    border-radius: 50% !important;
 }
 
 .rounded-pill {
-  border-radius: 50rem !important;
+    border-radius: 50rem !important;
 }
 
 .rounded-0 {
-  border-radius: 0 !important;
+    border-radius: 0 !important;
 }
 
 .scroll-to-top {
-  position: fixed;
-  right: 15px;
-  bottom: 15px;
-  display: none;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  color: #eee;
-  background: rgba(52, 58, 64, 0.5);
-  line-height: 46px;
+    position: fixed;
+    right: 15px;
+    bottom: 15px;
+    display: none;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    color: #eee;
+    background: rgba(52, 58, 64, 0.5);
+    line-height: 46px;
 }
 
 .scroll-to-top:focus, .scroll-to-top:hover {
-  color: white;
+    color: white;
 }
 
 .scroll-to-top:hover {
-  background: #343a40;
+    background: #343a40;
 }
 
 .scroll-to-top i {
-  font-weight: 800;
+    font-weight: 800;
 }
+
 .standby-users span, .add-user, .checkbox div {
     color: white;
     border: 1px solid #aaa;
@@ -392,7 +392,7 @@ tr {
     color: black;
 }
 
-#modal-report-list .box-header:hover{
+#modal-report-list .box-header:hover {
     cursor: pointer;
 }
 
@@ -409,7 +409,7 @@ tr {
 }
 
 .select2-search__field {
-    width: auto!important;
+    width: auto !important;
 }
 
 .footer-copyright {

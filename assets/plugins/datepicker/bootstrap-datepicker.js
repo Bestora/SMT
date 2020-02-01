@@ -557,7 +557,7 @@
                 if (this.o.orientation.x === 'right')
                     left -= calendarWidth - width;
             }
-            // auto x orientation is best-placement: if it crosses a window
+                // auto x orientation is best-placement: if it crosses a window
             // edge, fudge it sideways
             else {
                 // Default to left

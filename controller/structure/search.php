@@ -22,20 +22,20 @@ $contract_treffer = '';
 
 // Referr prüfen und ggf. umleiten zur KB
 if (count($url) > 2) {
-  Session::set('sst', urldecode($url['2']));
-  Base::setRoute('inventory', 'search', TRUE);
+    Session::set('sst', urldecode($url['2']));
+    Base::setRoute('inventory', 'search', TRUE);
 }
 
 // Referr prüfen und ggf. umleiten zur KB
 if (NULL !== (filter_input(INPUT_POST, 'search'))) {
-  Session::set('sst', filter_input(INPUT_POST, 'search'));
+    Session::set('sst', filter_input(INPUT_POST, 'search'));
 
-  if (preg_match('/knowledge/i', $referr)) {
-    Base::setRoute('knowledge', 'index', TRUE);
-  }
+    if (preg_match('/knowledge/i', $referr)) {
+        Base::setRoute('knowledge', 'index', TRUE);
+    }
 
-  // Andernfalls die Suchseite neu laden
-  Base::setRoute('inventory', 'search', TRUE);
+    // Andernfalls die Suchseite neu laden
+    Base::setRoute('inventory', 'search', TRUE);
 }
 
 /*
@@ -48,27 +48,27 @@ $value = array(':sst' => '%' . Session::get('sst') . '%');
 $db->getQuery($query, $value, False, False);
 
 if ($db->getNumrows() >= 1) {
-  $sd = $db->getValue();
-  $sdst = '';
+    $sd = $db->getValue();
+    $sdst = '';
 
-  for ($i = 0; $i < count($sd); $i++) {
-    $sdst .= ' || id=' . $sd[$i]['systemid'];
-  }
+    for ($i = 0; $i < count($sd); $i++) {
+        $sdst .= ' || id=' . $sd[$i]['systemid'];
+    }
 
-  $query = "SELECT * FROM wos_server WHERE id LIKE :sst || ipadressen LIKE :sst || bezeichnung LIKE :sst || hostname LIKE :sst || aliase LIKE :sst || betriebssystem LIKE :sst || standort LIKE :sst || beschreibung LIKE :sst || verwendungszweck LIKE :sst || technischedaten LIKE :sst || standort LIKE :sst || aliase LIKE :sst $sdst ORDER BY bezeichnung";
-  $value = array(':sst' => '%' . Session::get('sst') . '%', ':controller' => Session::get('ssc'), ':id');
+    $query = "SELECT * FROM wos_server WHERE id LIKE :sst || ipadressen LIKE :sst || bezeichnung LIKE :sst || hostname LIKE :sst || aliase LIKE :sst || betriebssystem LIKE :sst || standort LIKE :sst || beschreibung LIKE :sst || verwendungszweck LIKE :sst || technischedaten LIKE :sst || standort LIKE :sst || aliase LIKE :sst $sdst ORDER BY bezeichnung";
+    $value = array(':sst' => '%' . Session::get('sst') . '%', ':controller' => Session::get('ssc'), ':id');
 } else {
-  $query = "SELECT * FROM wos_server WHERE id LIKE :sst || ipadressen LIKE :sst || bezeichnung LIKE :sst || hostname LIKE :sst || aliase LIKE :sst || betriebssystem LIKE :sst || standort LIKE :sst || beschreibung LIKE :sst || verwendungszweck LIKE :sst || technischedaten LIKE :sst || standort LIKE :sst || aliase LIKE :sst ORDER BY bezeichnung";
-  $value = array(':sst' => '%' . Session::get('sst') . '%', ':controller' => Session::get('ssc'));
+    $query = "SELECT * FROM wos_server WHERE id LIKE :sst || ipadressen LIKE :sst || bezeichnung LIKE :sst || hostname LIKE :sst || aliase LIKE :sst || betriebssystem LIKE :sst || standort LIKE :sst || beschreibung LIKE :sst || verwendungszweck LIKE :sst || technischedaten LIKE :sst || standort LIKE :sst || aliase LIKE :sst ORDER BY bezeichnung";
+    $value = array(':sst' => '%' . Session::get('sst') . '%', ':controller' => Session::get('ssc'));
 }
 
 $db->getQuery($query, $value, False, False);
 template::setText('server_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  $active = True;
-  $server_treffer = 'in active';
-  template::setText('server_liste', $db->getValue());
+    $active = True;
+    $server_treffer = 'in active';
+    template::setText('server_liste', $db->getValue());
 }
 
 
@@ -83,11 +83,11 @@ $db->getQuery($query, $value, False, False);
 template::setText('services_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $services_treffer = 'in active';
-  }
-  template::setText('services_liste', $db->getValue());
+    if ($active === False) {
+        $active = True;
+        $services_treffer = 'in active';
+    }
+    template::setText('services_liste', $db->getValue());
 }
 
 
@@ -102,17 +102,17 @@ $db->getQuery($query, $value, False, False);
 template::setText('hardware_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $hardware_treffer = 'in active';
-  }
+    if ($active === False) {
+        $active = True;
+        $hardware_treffer = 'in active';
+    }
 
-  $hardware = $db->getValue();
-  for ($i = 0; $i < count($hardware); $i++) {
-    ;
-    $hardware[$i]['kategorie'] = texte::getText($hardware[$i]['kategorie']);
-  }
-  template::setText('hardware_liste', $hardware);
+    $hardware = $db->getValue();
+    for ($i = 0; $i < count($hardware); $i++) {
+        ;
+        $hardware[$i]['kategorie'] = texte::getText($hardware[$i]['kategorie']);
+    }
+    template::setText('hardware_liste', $hardware);
 }
 
 
@@ -127,11 +127,11 @@ $db->getQuery($query, $value, False, False);
 template::setText('license_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1 && Session::get('admin') === True) {
-  if ($active === False) {
-    $active = True;
-    $license_treffer = 'in active';
-  }
-  template::setText('license_liste', $db->getValue());
+    if ($active === False) {
+        $active = True;
+        $license_treffer = 'in active';
+    }
+    template::setText('license_liste', $db->getValue());
 }
 
 
@@ -146,11 +146,11 @@ $db->getQuery($query, $value, False, False);
 template::setText('logfile_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $logfile_treffer = 'in active';
-  }
-  template::setText('logfile_liste', $db->getValue());
+    if ($active === False) {
+        $active = True;
+        $logfile_treffer = 'in active';
+    }
+    template::setText('logfile_liste', $db->getValue());
 }
 
 
@@ -165,11 +165,11 @@ $db->getQuery($query, $value, False, False);
 template::setText('knowledge_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $knowledge_treffer = 'in active';
-  }
-  template::setText('knowledge_liste', $db->getValue());
+    if ($active === False) {
+        $active = True;
+        $knowledge_treffer = 'in active';
+    }
+    template::setText('knowledge_liste', $db->getValue());
 }
 
 
@@ -185,19 +185,19 @@ template::setText('ticket_anzahl', $db->getNumrows());
 $ticket_liste = $db->getValue();
 
 for ($l = 0; $l < count($ticket_liste); $l++) {
-  $detail = $ticket->readTicket($ticket_liste[$l]['id']);
-  include(project_path . '/controller/ticket/ticket_details.php');;
+    $detail = $ticket->readTicket($ticket_liste[$l]['id']);
+    include(project_path . '/controller/ticket/ticket_details.php');;
 
-  $tmp[$l] = $detail;
-  unset($detail);
+    $tmp[$l] = $detail;
+    unset($detail);
 }
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $ticket_treffer = 'in active';
-  }
-  template::setText('ticket_liste', $tmp);
+    if ($active === False) {
+        $active = True;
+        $ticket_treffer = 'in active';
+    }
+    template::setText('ticket_liste', $tmp);
 }
 
 
@@ -212,13 +212,12 @@ $db->getQuery($query, $value, False, False);
 template::setText('password_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $password_treffer = 'in active';
-  }
-  template::setText('password_liste', $db->getValue());
+    if ($active === False) {
+        $active = True;
+        $password_treffer = 'in active';
+    }
+    template::setText('password_liste', $db->getValue());
 }
-
 
 
 /*
@@ -234,13 +233,13 @@ $db->getQuery($query, $value, False, False);
 template::setText('contract_anzahl', $db->getNumrows());
 
 if ($db->getNumrows() >= 1) {
-  if ($active === False) {
-    $active = True;
-    $contract_treffer = 'in active';
-  }
+    if ($active === False) {
+        $active = True;
+        $contract_treffer = 'in active';
+    }
 
-  $contract = $db->getValue();
-  template::setText('contract_liste', $contract);
+    $contract = $db->getValue();
+    template::setText('contract_liste', $contract);
 }
 
 template::setText('server_treffer', $server_treffer);

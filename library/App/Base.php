@@ -29,144 +29,144 @@
 class Base extends Content
 {
 
-  public function __construct()
-  {
-    parent::__construct();
-  }
-
-  /**
-   * Standardsetter der Anwendung
-   *
-   * @param <string> $sName
-   * @param <beliebig> $sValue
-   */
-  public function set($sName, $sValue, $text = False)
-  {
-    $this->$sName = $sValue;
-  }
-
-  /**
-   * Standardgetter der Anwendung
-   *
-   * @param <string> $sName
-   * @return <beliebig>
-   */
-  public function get($sName)
-  {
-    if (property_exists($this, $sName)) {
-      return $this->$sName;
-    } else {
-      return NULL;
-    }
-  }
-
-  /**
-   * INI Konfiguration oeffnen
-   *
-   * @param <string> $sFile
-   */
-  public function getConfig($sFile)
-  {
-    $aData = array();
-    $aData = parse_ini_file($sFile, TRUE);
-    $this->readConfig($aData);
-  }
-
-  /**
-   * Methode zum umleiten bzw.
-   * registrieren eines Controllers / Methode
-   *
-   * @param <type> $controller
-   * @param <type> $methode
-   * @param <type> $full
-   */
-  public function setRoute($controller, $methode, $full = TRUE)
-  {
-    if ($controller == '') {
-      $url = $this->get('url');
-
-      if (is_array($url)) {
-        $controller = $url ['0'];
-        $methode = $url ['1'];
-      } else {
-        $controller = 'home';
-        $methode = 'index';
-      }
+    public function __construct()
+    {
+        parent::__construct();
     }
 
-    if ($full === TRUE && $controller != 'content') {
-      die(header("Location: " . $this->get('getPath') . '/' . $controller . '/' . $methode));
-    } elseif ($full === TRUE && $controller == 'content') {
-      die(header("Location: " . $this->get('getPath') . '/' . $methode));
-    } else {
-      $this->set('controller', $controller);
-      $this->set('methode', $methode);
-    }
-  }
+    /**
+     * Erstellt einen beliebigen Zufallscode
+     *
+     * @staticvar <string> $code
+     * @param <integer> $iLength
+     * @return <string> code
+     */
+    public static function createCode($iLength = 8)
+    {
+        static $code = '';
 
-  /**
-   * Klasse dem System bereit stellen
-   *
-   * @param <type> $sClass
-   * @param <type> $bReturn
-   * @return <type> $gInstance
-   */
-  public function registerClass($sClass, $gInstance = False, $bReturn = False)
-  {
-    if ($gInstance === True) {
-      $this->set($sClass, True, False);
-    } else {
-      if ($gInstance === False) {
-        $this->set($sClass, new $sClass());
+        $zeichen = "qwertzupasdfghkyxcvbnm";
+        $zeichen .= "123456789";
+        $zeichen .= "WERTZUPLKJHGFDSAYXCVBNM";
 
-        if ($bReturn === TRUE) {
-          return $this->get($sClass);
+        srand((double)microtime() * 1000000);
+        for ($i = 0; $i < $iLength; $i++) {
+            $code .= substr($zeichen, (rand() % (strlen($zeichen))), 1);
         }
-      } else {
-        $this->set($gInstance, new $sClass($gInstance));
 
-        if ($bReturn === TRUE) {
-          return $this->get($gInstance);
+        return $code;
+    }
+
+    /**
+     * INI Konfiguration oeffnen
+     *
+     * @param <string> $sFile
+     */
+    public function getConfig($sFile)
+    {
+        $aData = array();
+        $aData = parse_ini_file($sFile, TRUE);
+        $this->readConfig($aData);
+    }
+
+    /**
+     * Konfigurationsdaten verabeiten und ueber
+     * den Standardgetter der Anwedung verarbeiten
+     *
+     * @param <array> $aData
+     */
+    public function readConfig($aData)
+    {
+        foreach ($aData as $name => $value) {
+            $this->set($name, $value);
         }
-      }
-    }
-  }
-
-  /**
-   * Erstellt einen beliebigen Zufallscode
-   *
-   * @staticvar <string> $code
-   * @param <integer> $iLength
-   * @return <string> code
-   */
-  public static function createCode($iLength = 8)
-  {
-    static $code = '';
-
-    $zeichen = "qwertzupasdfghkyxcvbnm";
-    $zeichen .= "123456789";
-    $zeichen .= "WERTZUPLKJHGFDSAYXCVBNM";
-
-    srand((double)microtime() * 1000000);
-    for ($i = 0; $i < $iLength; $i++) {
-      $code .= substr($zeichen, (rand() % (strlen($zeichen))), 1);
     }
 
-    return $code;
-  }
-
-  /**
-   * Konfigurationsdaten verabeiten und ueber
-   * den Standardgetter der Anwedung verarbeiten
-   *
-   * @param <array> $aData
-   */
-  public function readConfig($aData)
-  {
-    foreach ($aData as $name => $value) {
-      $this->set($name, $value);
+    /**
+     * Standardsetter der Anwendung
+     *
+     * @param <string> $sName
+     * @param <beliebig> $sValue
+     */
+    public function set($sName, $sValue, $text = False)
+    {
+        $this->$sName = $sValue;
     }
-  }
+
+    /**
+     * Methode zum umleiten bzw.
+     * registrieren eines Controllers / Methode
+     *
+     * @param <type> $controller
+     * @param <type> $methode
+     * @param <type> $full
+     */
+    public function setRoute($controller, $methode, $full = TRUE)
+    {
+        if ($controller == '') {
+            $url = $this->get('url');
+
+            if (is_array($url)) {
+                $controller = $url ['0'];
+                $methode = $url ['1'];
+            } else {
+                $controller = 'home';
+                $methode = 'index';
+            }
+        }
+
+        if ($full === TRUE && $controller != 'content') {
+            die(header("Location: " . $this->get('getPath') . '/' . $controller . '/' . $methode));
+        } elseif ($full === TRUE && $controller == 'content') {
+            die(header("Location: " . $this->get('getPath') . '/' . $methode));
+        } else {
+            $this->set('controller', $controller);
+            $this->set('methode', $methode);
+        }
+    }
+
+    /**
+     * Standardgetter der Anwendung
+     *
+     * @param <string> $sName
+     * @return <beliebig>
+     */
+    public function get($sName)
+    {
+        if (property_exists($this, $sName)) {
+            return $this->$sName;
+        } else {
+            return NULL;
+        }
+    }
+
+    /**
+     * Klasse dem System bereit stellen
+     *
+     * @param <type> $sClass
+     * @param <type> $bReturn
+     * @return <type> $gInstance
+     */
+    public function registerClass($sClass, $gInstance = False, $bReturn = False)
+    {
+        if ($gInstance === True) {
+            $this->set($sClass, True, False);
+        } else {
+            if ($gInstance === False) {
+                $this->set($sClass, new $sClass());
+
+                if ($bReturn === TRUE) {
+                    return $this->get($sClass);
+                }
+            } else {
+                $this->set($gInstance, new $sClass($gInstance));
+
+                if ($bReturn === TRUE) {
+                    return $this->get($gInstance);
+                }
+            }
+        }
+    }
 
 
 }

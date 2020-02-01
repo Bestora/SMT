@@ -66,14 +66,15 @@ class DefaultApi
 
     /**
      * @param ClientInterface $client
-     * @param Configuration   $config
-     * @param HeaderSelector  $selector
+     * @param Configuration $config
+     * @param HeaderSelector $selector
      */
     public function __construct(
         ClientInterface $client = null,
         Configuration $config = null,
         HeaderSelector $selector = null
-    ) {
+    )
+    {
         $this->client = $client ?: new Client();
         $this->config = $config ?: new Configuration();
         $this->headerSelector = $selector ?: new HeaderSelector();
@@ -92,12 +93,12 @@ class DefaultApi
      *
      * Assignes a phone to the User
      *
-     * @param  \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
+     * @param \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function assignPhone($phone_assignment, $user_id)
     {
@@ -109,12 +110,12 @@ class DefaultApi
      *
      * Assignes a phone to the User
      *
-     * @param  \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
+     * @param \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function assignPhoneWithHttpInfo($phone_assignment, $user_id)
     {
@@ -167,73 +168,13 @@ class DefaultApi
     }
 
     /**
-     * Operation assignPhoneAsync
-     *
-     * Assignes a phone to the User
-     *
-     * @param  \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function assignPhoneAsync($phone_assignment, $user_id)
-    {
-        return $this->assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation assignPhoneAsyncWithHttpInfo
-     *
-     * Assignes a phone to the User
-     *
-     * @param  \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
-    {
-        $returnType = '';
-        $request = $this->assignPhoneRequest($phone_assignment, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'assignPhone'
      *
-     * @param  \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
+     * @param \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function assignPhoneRequest($phone_assignment, $user_id)
     {
@@ -289,13 +230,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -342,15 +283,94 @@ class DefaultApi
     }
 
     /**
+     * Create http client option
+     *
+     * @return array of http client options
+     * @throws \RuntimeException on file opening failure
+     */
+    protected function createHttpClientOption()
+    {
+        $options = [];
+        if ($this->config->getDebug()) {
+            $options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
+            if (!$options[RequestOptions::DEBUG]) {
+                throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
+            }
+        }
+
+        return $options;
+    }
+
+    /**
+     * Operation assignPhoneAsync
+     *
+     * Assignes a phone to the User
+     *
+     * @param \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function assignPhoneAsync($phone_assignment, $user_id)
+    {
+        return $this->assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation assignPhoneAsyncWithHttpInfo
+     *
+     * Assignes a phone to the User
+     *
+     * @param \Swagger\Client\Model\PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
+    {
+        $returnType = '';
+        $request = $this->assignPhoneRequest($phone_assignment, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation createFunctionKey
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function createFunctionKey($fk_set_id, $function_key, $act_on_behalf_of = null)
     {
@@ -361,13 +381,13 @@ class DefaultApi
     /**
      * Operation createFunctionKeyWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function createFunctionKeyWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
     {
@@ -442,90 +462,14 @@ class DefaultApi
     }
 
     /**
-     * Operation createFunctionKeyAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function createFunctionKeyAsync($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        return $this->createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation createFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'createFunctionKey'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of = null)
     {
@@ -585,13 +529,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -638,15 +582,91 @@ class DefaultApi
     }
 
     /**
+     * Operation createFunctionKeyAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function createFunctionKeyAsync($fk_set_id, $function_key, $act_on_behalf_of = null)
+    {
+        return $this->createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation createFunctionKeyAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The new FunctionKey to create (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey';
+        $request = $this->createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation deleteAvatar
      *
      * Delete the Avatar
      *
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteAvatar($user_id)
     {
@@ -658,11 +678,11 @@ class DefaultApi
      *
      * Delete the Avatar
      *
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteAvatarWithHttpInfo($user_id)
     {
@@ -715,70 +735,12 @@ class DefaultApi
     }
 
     /**
-     * Operation deleteAvatarAsync
-     *
-     * Delete the Avatar
-     *
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteAvatarAsync($user_id)
-    {
-        return $this->deleteAvatarAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation deleteAvatarAsyncWithHttpInfo
-     *
-     * Delete the Avatar
-     *
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteAvatarAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->deleteAvatarRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'deleteAvatar'
      *
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function deleteAvatarRequest($user_id)
     {
@@ -825,13 +787,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -878,15 +840,73 @@ class DefaultApi
     }
 
     /**
+     * Operation deleteAvatarAsync
+     *
+     * Delete the Avatar
+     *
+     * @param int $user_id Id of the User thats avatar will be updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteAvatarAsync($user_id)
+    {
+        return $this->deleteAvatarAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteAvatarAsyncWithHttpInfo
+     *
+     * Delete the Avatar
+     *
+     * @param int $user_id Id of the User thats avatar will be updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteAvatarAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '';
+        $request = $this->deleteAvatarRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation deleteContact
      *
      * Delete a contact
      *
-     * @param  string $contact_id Id of the contact (required)
+     * @param string $contact_id Id of the contact (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteContact($contact_id)
     {
@@ -898,11 +918,11 @@ class DefaultApi
      *
      * Delete a contact
      *
-     * @param  string $contact_id Id of the contact (required)
+     * @param string $contact_id Id of the contact (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteContactWithHttpInfo($contact_id)
     {
@@ -955,70 +975,12 @@ class DefaultApi
     }
 
     /**
-     * Operation deleteContactAsync
-     *
-     * Delete a contact
-     *
-     * @param  string $contact_id Id of the contact (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteContactAsync($contact_id)
-    {
-        return $this->deleteContactAsyncWithHttpInfo($contact_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation deleteContactAsyncWithHttpInfo
-     *
-     * Delete a contact
-     *
-     * @param  string $contact_id Id of the contact (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteContactAsyncWithHttpInfo($contact_id)
-    {
-        $returnType = '';
-        $request = $this->deleteContactRequest($contact_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'deleteContact'
      *
-     * @param  string $contact_id Id of the contact (required)
+     * @param string $contact_id Id of the contact (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function deleteContactRequest($contact_id)
     {
@@ -1065,13 +1027,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -1118,16 +1080,74 @@ class DefaultApi
     }
 
     /**
+     * Operation deleteContactAsync
+     *
+     * Delete a contact
+     *
+     * @param string $contact_id Id of the contact (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteContactAsync($contact_id)
+    {
+        return $this->deleteContactAsyncWithHttpInfo($contact_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteContactAsyncWithHttpInfo
+     *
+     * Delete a contact
+     *
+     * @param string $contact_id Id of the contact (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteContactAsyncWithHttpInfo($contact_id)
+    {
+        $returnType = '';
+        $request = $this->deleteContactRequest($contact_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation deleteFmcPhone
      *
      * Delete a FmcPhone
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteFmcPhone($fmc_id, $user_id = null)
     {
@@ -1139,12 +1159,12 @@ class DefaultApi
      *
      * Delete a FmcPhone
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteFmcPhoneWithHttpInfo($fmc_id, $user_id = null)
     {
@@ -1197,73 +1217,13 @@ class DefaultApi
     }
 
     /**
-     * Operation deleteFmcPhoneAsync
-     *
-     * Delete a FmcPhone
-     *
-     * @param  string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteFmcPhoneAsync($fmc_id, $user_id = null)
-    {
-        return $this->deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation deleteFmcPhoneAsyncWithHttpInfo
-     *
-     * Delete a FmcPhone
-     *
-     * @param  string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->deleteFmcPhoneRequest($fmc_id, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'deleteFmcPhone'
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function deleteFmcPhoneRequest($fmc_id, $user_id = null)
     {
@@ -1318,13 +1278,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -1371,15 +1331,75 @@ class DefaultApi
     }
 
     /**
+     * Operation deleteFmcPhoneAsync
+     *
+     * Delete a FmcPhone
+     *
+     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteFmcPhoneAsync($fmc_id, $user_id = null)
+    {
+        return $this->deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteFmcPhoneAsyncWithHttpInfo
+     *
+     * Delete a FmcPhone
+     *
+     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
+    {
+        $returnType = '';
+        $request = $this->deleteFmcPhoneRequest($fmc_id, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation deleteFunctionKey
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null)
     {
@@ -1390,13 +1410,13 @@ class DefaultApi
     /**
      * Operation deleteFunctionKeyWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
     {
@@ -1471,90 +1491,14 @@ class DefaultApi
     }
 
     /**
-     * Operation deleteFunctionKeyAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        return $this->deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation deleteFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'deleteFunctionKey'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null)
     {
@@ -1619,13 +1563,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -1672,16 +1616,92 @@ class DefaultApi
     }
 
     /**
+     * Operation deleteFunctionKeyAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
+    {
+        return $this->deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteFunctionKeyAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey';
+        $request = $this->deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation deletePhoneAssignment
      *
      * Deletes the PhoneAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deletePhoneAssignment($user_id, $phone_id)
     {
@@ -1693,12 +1713,12 @@ class DefaultApi
      *
      * Deletes the PhoneAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deletePhoneAssignmentWithHttpInfo($user_id, $phone_id)
     {
@@ -1751,73 +1771,13 @@ class DefaultApi
     }
 
     /**
-     * Operation deletePhoneAssignmentAsync
-     *
-     * Deletes the PhoneAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deletePhoneAssignmentAsync($user_id, $phone_id)
-    {
-        return $this->deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation deletePhoneAssignmentAsyncWithHttpInfo
-     *
-     * Deletes the PhoneAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '';
-        $request = $this->deletePhoneAssignmentRequest($user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'deletePhoneAssignment'
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function deletePhoneAssignmentRequest($user_id, $phone_id)
     {
@@ -1878,13 +1838,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -1931,15 +1891,75 @@ class DefaultApi
     }
 
     /**
+     * Operation deletePhoneAssignmentAsync
+     *
+     * Deletes the PhoneAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deletePhoneAssignmentAsync($user_id, $phone_id)
+    {
+        return $this->deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deletePhoneAssignmentAsyncWithHttpInfo
+     *
+     * Deletes the PhoneAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+    {
+        $returnType = '';
+        $request = $this->deletePhoneAssignmentRequest($user_id, $phone_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation deleteUser
      *
      * Delete a user
      *
-     * @param  int $user_id Id of the User that will be deleted (required)
+     * @param int $user_id Id of the User that will be deleted (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteUser($user_id)
     {
@@ -1951,11 +1971,11 @@ class DefaultApi
      *
      * Delete a user
      *
-     * @param  int $user_id Id of the User that will be deleted (required)
+     * @param int $user_id Id of the User that will be deleted (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function deleteUserWithHttpInfo($user_id)
     {
@@ -2008,70 +2028,12 @@ class DefaultApi
     }
 
     /**
-     * Operation deleteUserAsync
-     *
-     * Delete a user
-     *
-     * @param  int $user_id Id of the User that will be deleted (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteUserAsync($user_id)
-    {
-        return $this->deleteUserAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation deleteUserAsyncWithHttpInfo
-     *
-     * Delete a user
-     *
-     * @param  int $user_id Id of the User that will be deleted (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function deleteUserAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->deleteUserRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'deleteUser'
      *
-     * @param  int $user_id Id of the User that will be deleted (required)
+     * @param int $user_id Id of the User that will be deleted (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function deleteUserRequest($user_id)
     {
@@ -2118,13 +2080,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -2171,15 +2133,73 @@ class DefaultApi
     }
 
     /**
+     * Operation deleteUserAsync
+     *
+     * Delete a user
+     *
+     * @param int $user_id Id of the User that will be deleted (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteUserAsync($user_id)
+    {
+        return $this->deleteUserAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteUserAsyncWithHttpInfo
+     *
+     * Delete a user
+     *
+     * @param int $user_id Id of the User that will be deleted (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function deleteUserAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '';
+        $request = $this->deleteUserRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getAvatar
      *
      * Fetch the Avatar
      *
-     * @param  int $user_id Id of the User thats avatar will be fetched (required)
+     * @param int $user_id Id of the User thats avatar will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getAvatar($user_id)
     {
@@ -2191,11 +2211,11 @@ class DefaultApi
      *
      * Fetch the Avatar
      *
-     * @param  int $user_id Id of the User thats avatar will be fetched (required)
+     * @param int $user_id Id of the User thats avatar will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getAvatarWithHttpInfo($user_id)
     {
@@ -2248,70 +2268,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getAvatarAsync
-     *
-     * Fetch the Avatar
-     *
-     * @param  int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getAvatarAsync($user_id)
-    {
-        return $this->getAvatarAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getAvatarAsyncWithHttpInfo
-     *
-     * Fetch the Avatar
-     *
-     * @param  int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getAvatarAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->getAvatarRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getAvatar'
      *
-     * @param  int $user_id Id of the User thats avatar will be fetched (required)
+     * @param int $user_id Id of the User thats avatar will be fetched (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getAvatarRequest($user_id)
     {
@@ -2358,13 +2320,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -2411,15 +2373,73 @@ class DefaultApi
     }
 
     /**
+     * Operation getAvatarAsync
+     *
+     * Fetch the Avatar
+     *
+     * @param int $user_id Id of the User thats avatar will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getAvatarAsync($user_id)
+    {
+        return $this->getAvatarAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getAvatarAsyncWithHttpInfo
+     *
+     * Fetch the Avatar
+     *
+     * @param int $user_id Id of the User thats avatar will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getAvatarAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '';
+        $request = $this->getAvatarRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getCalServices
      *
      * Retrive a list of all available call services
      *
-     * @param  string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
+     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\CallService[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getCalServices($type = null)
     {
@@ -2432,11 +2452,11 @@ class DefaultApi
      *
      * Retrive a list of all available call services
      *
-     * @param  string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
+     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\CallService[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getCalServicesWithHttpInfo($type = null)
     {
@@ -2511,84 +2531,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getCalServicesAsync
-     *
-     * Retrive a list of all available call services
-     *
-     * @param  string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getCalServicesAsync($type = null)
-    {
-        return $this->getCalServicesAsyncWithHttpInfo($type)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getCalServicesAsyncWithHttpInfo
-     *
-     * Retrive a list of all available call services
-     *
-     * @param  string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getCalServicesAsyncWithHttpInfo($type = null)
-    {
-        $returnType = '\Swagger\Client\Model\CallService[]';
-        $request = $this->getCalServicesRequest($type);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getCalServices'
      *
-     * @param  string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
+     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getCalServicesRequest($type = null)
     {
@@ -2625,13 +2573,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -2678,15 +2626,87 @@ class DefaultApi
     }
 
     /**
+     * Operation getCalServicesAsync
+     *
+     * Retrive a list of all available call services
+     *
+     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getCalServicesAsync($type = null)
+    {
+        return $this->getCalServicesAsyncWithHttpInfo($type)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getCalServicesAsyncWithHttpInfo
+     *
+     * Retrive a list of all available call services
+     *
+     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getCalServicesAsyncWithHttpInfo($type = null)
+    {
+        $returnType = '\Swagger\Client\Model\CallService[]';
+        $request = $this->getCalServicesRequest($type);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getCallService
      *
      * Fetch a CallService
      *
-     * @param  int $service_id Id of the CallService that will be fetched (required)
+     * @param int $service_id Id of the CallService that will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\CallService
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getCallService($service_id)
     {
@@ -2699,11 +2719,11 @@ class DefaultApi
      *
      * Fetch a CallService
      *
-     * @param  int $service_id Id of the CallService that will be fetched (required)
+     * @param int $service_id Id of the CallService that will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\CallService, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getCallServiceWithHttpInfo($service_id)
     {
@@ -2778,84 +2798,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getCallServiceAsync
-     *
-     * Fetch a CallService
-     *
-     * @param  int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getCallServiceAsync($service_id)
-    {
-        return $this->getCallServiceAsyncWithHttpInfo($service_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getCallServiceAsyncWithHttpInfo
-     *
-     * Fetch a CallService
-     *
-     * @param  int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getCallServiceAsyncWithHttpInfo($service_id)
-    {
-        $returnType = '\Swagger\Client\Model\CallService';
-        $request = $this->getCallServiceRequest($service_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getCallService'
      *
-     * @param  int $service_id Id of the CallService that will be fetched (required)
+     * @param int $service_id Id of the CallService that will be fetched (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getCallServiceRequest($service_id)
     {
@@ -2902,13 +2850,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -2955,16 +2903,88 @@ class DefaultApi
     }
 
     /**
+     * Operation getCallServiceAsync
+     *
+     * Fetch a CallService
+     *
+     * @param int $service_id Id of the CallService that will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getCallServiceAsync($service_id)
+    {
+        return $this->getCallServiceAsyncWithHttpInfo($service_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getCallServiceAsyncWithHttpInfo
+     *
+     * Fetch a CallService
+     *
+     * @param int $service_id Id of the CallService that will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getCallServiceAsyncWithHttpInfo($service_id)
+    {
+        $returnType = '\Swagger\Client\Model\CallService';
+        $request = $this->getCallServiceRequest($service_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getContact
      *
      * Fetch a contact
      *
-     * @param  string $contact_id Id of the contact that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $contact_id Id of the contact that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\Contact
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getContact($contact_id, $user_id = null)
     {
@@ -2977,12 +2997,12 @@ class DefaultApi
      *
      * Fetch a contact
      *
-     * @param  string $contact_id Id of the contact that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $contact_id Id of the contact that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\Contact, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getContactWithHttpInfo($contact_id, $user_id = null)
     {
@@ -3057,87 +3077,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getContactAsync
-     *
-     * Fetch a contact
-     *
-     * @param  string $contact_id Id of the contact that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getContactAsync($contact_id, $user_id = null)
-    {
-        return $this->getContactAsyncWithHttpInfo($contact_id, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getContactAsyncWithHttpInfo
-     *
-     * Fetch a contact
-     *
-     * @param  string $contact_id Id of the contact that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getContactAsyncWithHttpInfo($contact_id, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\Contact';
-        $request = $this->getContactRequest($contact_id, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getContact'
      *
-     * @param  string $contact_id Id of the contact that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $contact_id Id of the contact that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getContactRequest($contact_id, $user_id = null)
     {
@@ -3192,13 +3138,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -3245,21 +3191,95 @@ class DefaultApi
     }
 
     /**
+     * Operation getContactAsync
+     *
+     * Fetch a contact
+     *
+     * @param string $contact_id Id of the contact that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getContactAsync($contact_id, $user_id = null)
+    {
+        return $this->getContactAsyncWithHttpInfo($contact_id, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getContactAsyncWithHttpInfo
+     *
+     * Fetch a contact
+     *
+     * @param string $contact_id Id of the contact that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getContactAsyncWithHttpInfo($contact_id, $user_id = null)
+    {
+        $returnType = '\Swagger\Client\Model\Contact';
+        $request = $this->getContactRequest($contact_id, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getContactList
      *
      * Retrieve a list of ContactSummary-Objects
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $tags Ids of tags to filter for (optional)
-     * @param  string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param  string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param  string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $tags Ids of tags to filter for (optional)
+     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
+     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
      *
+     * @return \Swagger\Client\Model\ContactList
      * @throws \Swagger\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \Swagger\Client\Model\ContactList
      */
     public function getContactList($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
     {
@@ -3272,17 +3292,17 @@ class DefaultApi
      *
      * Retrieve a list of ContactSummary-Objects
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $tags Ids of tags to filter for (optional)
-     * @param  string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param  string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param  string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $tags Ids of tags to filter for (optional)
+     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
+     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
      *
+     * @return array of \Swagger\Client\Model\ContactList, HTTP status code, HTTP response headers (array of strings)
      * @throws \Swagger\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \Swagger\Client\Model\ContactList, HTTP status code, HTTP response headers (array of strings)
      */
     public function getContactListWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
     {
@@ -3357,102 +3377,18 @@ class DefaultApi
     }
 
     /**
-     * Operation getContactListAsync
-     *
-     * Retrieve a list of ContactSummary-Objects
-     *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $tags Ids of tags to filter for (optional)
-     * @param  string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param  string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param  string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getContactListAsync($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        return $this->getContactListAsyncWithHttpInfo($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getContactListAsyncWithHttpInfo
-     *
-     * Retrieve a list of ContactSummary-Objects
-     *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $tags Ids of tags to filter for (optional)
-     * @param  string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param  string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param  string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getContactListAsyncWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        $returnType = '\Swagger\Client\Model\ContactList';
-        $request = $this->getContactListRequest($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getContactList'
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $tags Ids of tags to filter for (optional)
-     * @param  string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param  string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param  string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $tags Ids of tags to filter for (optional)
+     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
+     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getContactListRequest($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
     {
@@ -3476,9 +3412,9 @@ class DefaultApi
         if (is_array($tags)) {
             $queryParams['tags'] = $tags;
         } else
-        if ($tags !== null) {
-            $queryParams['tags'] = ObjectSerializer::toQueryValue($tags);
-        }
+            if ($tags !== null) {
+                $queryParams['tags'] = ObjectSerializer::toQueryValue($tags);
+            }
         // query params
         if ($search_terms !== null) {
             $queryParams['searchTerms'] = ObjectSerializer::toQueryValue($search_terms);
@@ -3520,13 +3456,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -3573,16 +3509,100 @@ class DefaultApi
     }
 
     /**
+     * Operation getContactListAsync
+     *
+     * Retrieve a list of ContactSummary-Objects
+     *
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $tags Ids of tags to filter for (optional)
+     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
+     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getContactListAsync($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+    {
+        return $this->getContactListAsyncWithHttpInfo($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getContactListAsyncWithHttpInfo
+     *
+     * Retrieve a list of ContactSummary-Objects
+     *
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $tags Ids of tags to filter for (optional)
+     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
+     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getContactListAsyncWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+    {
+        $returnType = '\Swagger\Client\Model\ContactList';
+        $request = $this->getContactListRequest($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getFmcPhone
      *
      * Fetch a FmcPhone
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FmcPhone
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFmcPhone($fmc_id, $user_id = null)
     {
@@ -3595,12 +3615,12 @@ class DefaultApi
      *
      * Fetch a FmcPhone
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FmcPhone, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFmcPhoneWithHttpInfo($fmc_id, $user_id = null)
     {
@@ -3675,87 +3695,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getFmcPhoneAsync
-     *
-     * Fetch a FmcPhone
-     *
-     * @param  string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFmcPhoneAsync($fmc_id, $user_id = null)
-    {
-        return $this->getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFmcPhoneAsyncWithHttpInfo
-     *
-     * Fetch a FmcPhone
-     *
-     * @param  string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone';
-        $request = $this->getFmcPhoneRequest($fmc_id, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getFmcPhone'
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getFmcPhoneRequest($fmc_id, $user_id = null)
     {
@@ -3810,13 +3756,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -3863,15 +3809,89 @@ class DefaultApi
     }
 
     /**
+     * Operation getFmcPhoneAsync
+     *
+     * Fetch a FmcPhone
+     *
+     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFmcPhoneAsync($fmc_id, $user_id = null)
+    {
+        return $this->getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getFmcPhoneAsyncWithHttpInfo
+     *
+     * Fetch a FmcPhone
+     *
+     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
+    {
+        $returnType = '\Swagger\Client\Model\FmcPhone';
+        $request = $this->getFmcPhoneRequest($fmc_id, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getFmcPhones
      *
      * Retrieve a list of FmcPhones
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FmcPhone[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFmcPhones($user_id = null)
     {
@@ -3884,11 +3904,11 @@ class DefaultApi
      *
      * Retrieve a list of FmcPhones
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FmcPhone[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFmcPhonesWithHttpInfo($user_id = null)
     {
@@ -3965,84 +3985,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getFmcPhonesAsync
-     *
-     * Retrieve a list of FmcPhones
-     *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFmcPhonesAsync($user_id = null)
-    {
-        return $this->getFmcPhonesAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFmcPhonesAsyncWithHttpInfo
-     *
-     * Retrieve a list of FmcPhones
-     *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFmcPhonesAsyncWithHttpInfo($user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone[]';
-        $request = $this->getFmcPhonesRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getFmcPhones'
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getFmcPhonesRequest($user_id = null)
     {
@@ -4082,13 +4030,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -4136,15 +4084,87 @@ class DefaultApi
     }
 
     /**
+     * Operation getFmcPhonesAsync
+     *
+     * Retrieve a list of FmcPhones
+     *
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFmcPhonesAsync($user_id = null)
+    {
+        return $this->getFmcPhonesAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getFmcPhonesAsyncWithHttpInfo
+     *
+     * Retrieve a list of FmcPhones
+     *
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFmcPhonesAsyncWithHttpInfo($user_id = null)
+    {
+        $returnType = '\Swagger\Client\Model\FmcPhone[]';
+        $request = $this->getFmcPhonesRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getFunctionKey
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null)
     {
@@ -4155,13 +4175,13 @@ class DefaultApi
     /**
      * Operation getFunctionKeyWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
     {
@@ -4236,90 +4256,14 @@ class DefaultApi
     }
 
     /**
-     * Operation getFunctionKeyAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getFunctionKey'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null)
     {
@@ -4384,13 +4328,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -4437,14 +4381,90 @@ class DefaultApi
     }
 
     /**
+     * Operation getFunctionKeyAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
+    {
+        return $this->getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getFunctionKeyAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey';
+        $request = $this->getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getFunctionKeySet
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeySet($fk_set_id, $act_on_behalf_of = null)
     {
@@ -4455,12 +4475,12 @@ class DefaultApi
     /**
      * Operation getFunctionKeySetWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeySetWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
     {
@@ -4535,87 +4555,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getFunctionKeySetAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeySetAsync($fk_set_id, $act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeySetAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getFunctionKeySet'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of = null)
     {
@@ -4666,13 +4612,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -4719,15 +4665,89 @@ class DefaultApi
     }
 
     /**
+     * Operation getFunctionKeySetAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeySetAsync($fk_set_id, $act_on_behalf_of = null)
+    {
+        return $this->getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getFunctionKeySetAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey';
+        $request = $this->getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getFunctionKeySets
      *
      * Retrieve a list of FunctionKeySets
      *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKeySet[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeySets($act_on_behalf_of = null)
     {
@@ -4740,11 +4760,11 @@ class DefaultApi
      *
      * Retrieve a list of FunctionKeySets
      *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKeySet[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeySetsWithHttpInfo($act_on_behalf_of = null)
     {
@@ -4819,84 +4839,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getFunctionKeySetsAsync
-     *
-     * Retrieve a list of FunctionKeySets
-     *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeySetsAsync($act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeySetsAsyncWithHttpInfo
-     *
-     * Retrieve a list of FunctionKeySets
-     *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKeySet[]';
-        $request = $this->getFunctionKeySetsRequest($act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getFunctionKeySets'
      *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getFunctionKeySetsRequest($act_on_behalf_of = null)
     {
@@ -4933,13 +4881,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -4986,14 +4934,86 @@ class DefaultApi
     }
 
     /**
+     * Operation getFunctionKeySetsAsync
+     *
+     * Retrieve a list of FunctionKeySets
+     *
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeySetsAsync($act_on_behalf_of = null)
+    {
+        return $this->getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getFunctionKeySetsAsyncWithHttpInfo
+     *
+     * Retrieve a list of FunctionKeySets
+     *
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKeySet[]';
+        $request = $this->getFunctionKeySetsRequest($act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getFunctionKeys
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeys($fk_set_id, $act_on_behalf_of = null)
     {
@@ -5004,12 +5024,12 @@ class DefaultApi
     /**
      * Operation getFunctionKeysWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getFunctionKeysWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
     {
@@ -5084,87 +5104,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getFunctionKeysAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeysAsync($fk_set_id, $act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeysAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey[]';
-        $request = $this->getFunctionKeysRequest($fk_set_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getFunctionKeys'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getFunctionKeysRequest($fk_set_id, $act_on_behalf_of = null)
     {
@@ -5215,13 +5161,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -5268,14 +5214,88 @@ class DefaultApi
     }
 
     /**
+     * Operation getFunctionKeysAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeysAsync($fk_set_id, $act_on_behalf_of = null)
+    {
+        return $this->getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getFunctionKeysAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey[]';
+        $request = $this->getFunctionKeysRequest($fk_set_id, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getLogin
      *
      * Get a template Login-Object filled with loginType and nonce
      *
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\Login
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getLogin()
     {
@@ -5289,9 +5309,9 @@ class DefaultApi
      * Get a template Login-Object filled with loginType and nonce
      *
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\Login, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getLoginWithHttpInfo()
     {
@@ -5366,81 +5386,11 @@ class DefaultApi
     }
 
     /**
-     * Operation getLoginAsync
-     *
-     * Get a template Login-Object filled with loginType and nonce
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getLoginAsync()
-    {
-        return $this->getLoginAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getLoginAsyncWithHttpInfo
-     *
-     * Get a template Login-Object filled with loginType and nonce
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getLoginAsyncWithHttpInfo()
-    {
-        $returnType = '\Swagger\Client\Model\Login';
-        $request = $this->getLoginRequest();
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getLogin'
      *
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getLoginRequest()
     {
@@ -5451,7 +5401,6 @@ class DefaultApi
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
-
 
 
         // body params
@@ -5473,13 +5422,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -5526,16 +5475,86 @@ class DefaultApi
     }
 
     /**
+     * Operation getLoginAsync
+     *
+     * Get a template Login-Object filled with loginType and nonce
+     *
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getLoginAsync()
+    {
+        return $this->getLoginAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getLoginAsyncWithHttpInfo
+     *
+     * Get a template Login-Object filled with loginType and nonce
+     *
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getLoginAsyncWithHttpInfo()
+    {
+        $returnType = '\Swagger\Client\Model\Login';
+        $request = $this->getLoginRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getNumbersForAssignedPhone
      *
      * Fetches a list of NumberForPhoneAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are fetched (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\NumberForPhoneAssignment[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getNumbersForAssignedPhone($user_id, $phone_id)
     {
@@ -5548,12 +5567,12 @@ class DefaultApi
      *
      * Fetches a list of NumberForPhoneAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are fetched (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\NumberForPhoneAssignment[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getNumbersForAssignedPhoneWithHttpInfo($user_id, $phone_id)
     {
@@ -5628,87 +5647,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getNumbersForAssignedPhoneAsync
-     *
-     * Fetches a list of NumberForPhoneAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getNumbersForAssignedPhoneAsync($user_id, $phone_id)
-    {
-        return $this->getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getNumbersForAssignedPhoneAsyncWithHttpInfo
-     *
-     * Fetches a list of NumberForPhoneAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '\Swagger\Client\Model\NumberForPhoneAssignment[]';
-        $request = $this->getNumbersForAssignedPhoneRequest($user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getNumbersForAssignedPhone'
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are fetched (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getNumbersForAssignedPhoneRequest($user_id, $phone_id)
     {
@@ -5769,13 +5714,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -5822,16 +5767,90 @@ class DefaultApi
     }
 
     /**
+     * Operation getNumbersForAssignedPhoneAsync
+     *
+     * Fetches a list of NumberForPhoneAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getNumbersForAssignedPhoneAsync($user_id, $phone_id)
+    {
+        return $this->getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getNumbersForAssignedPhoneAsyncWithHttpInfo
+     *
+     * Fetches a list of NumberForPhoneAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
+    {
+        $returnType = '\Swagger\Client\Model\NumberForPhoneAssignment[]';
+        $request = $this->getNumbersForAssignedPhoneRequest($user_id, $phone_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getPhoneAssignment
      *
      * Fetches the PhoneAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneAssignment
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneAssignment($user_id, $phone_id)
     {
@@ -5844,12 +5863,12 @@ class DefaultApi
      *
      * Fetches the PhoneAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneAssignment, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneAssignmentWithHttpInfo($user_id, $phone_id)
     {
@@ -5924,87 +5943,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getPhoneAssignmentAsync
-     *
-     * Fetches the PhoneAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneAssignmentAsync($user_id, $phone_id)
-    {
-        return $this->getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getPhoneAssignmentAsyncWithHttpInfo
-     *
-     * Fetches the PhoneAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneAssignment';
-        $request = $this->getPhoneAssignmentRequest($user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getPhoneAssignment'
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getPhoneAssignmentRequest($user_id, $phone_id)
     {
@@ -6065,13 +6010,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -6118,15 +6063,89 @@ class DefaultApi
     }
 
     /**
+     * Operation getPhoneAssignmentAsync
+     *
+     * Fetches the PhoneAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneAssignmentAsync($user_id, $phone_id)
+    {
+        return $this->getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPhoneAssignmentAsyncWithHttpInfo
+     *
+     * Fetches the PhoneAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneAssignment';
+        $request = $this->getPhoneAssignmentRequest($user_id, $phone_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getPhoneConfig
      *
      * Fetch the PhoneConfig
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneConfig
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneConfig($user_id)
     {
@@ -6139,11 +6158,11 @@ class DefaultApi
      *
      * Fetch the PhoneConfig
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneConfig, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneConfigWithHttpInfo($user_id)
     {
@@ -6218,84 +6237,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getPhoneConfigAsync
-     *
-     * Fetch the PhoneConfig
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneConfigAsync($user_id)
-    {
-        return $this->getPhoneConfigAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getPhoneConfigAsyncWithHttpInfo
-     *
-     * Fetch the PhoneConfig
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneConfigAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneConfig';
-        $request = $this->getPhoneConfigRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getPhoneConfig'
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getPhoneConfigRequest($user_id)
     {
@@ -6342,13 +6289,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -6395,15 +6342,87 @@ class DefaultApi
     }
 
     /**
+     * Operation getPhoneConfigAsync
+     *
+     * Fetch the PhoneConfig
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneConfigAsync($user_id)
+    {
+        return $this->getPhoneConfigAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPhoneConfigAsyncWithHttpInfo
+     *
+     * Fetch the PhoneConfig
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneConfigAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneConfig';
+        $request = $this->getPhoneConfigRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getPhoneNumber
      *
      * Fetch a PhoneNumber
      *
-     * @param  int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneNumber
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumber($phone_number_id)
     {
@@ -6416,11 +6435,11 @@ class DefaultApi
      *
      * Fetch a PhoneNumber
      *
-     * @param  int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneNumber, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumberWithHttpInfo($phone_number_id)
     {
@@ -6495,84 +6514,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getPhoneNumberAsync
-     *
-     * Fetch a PhoneNumber
-     *
-     * @param  int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumberAsync($phone_number_id)
-    {
-        return $this->getPhoneNumberAsyncWithHttpInfo($phone_number_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getPhoneNumberAsyncWithHttpInfo
-     *
-     * Fetch a PhoneNumber
-     *
-     * @param  int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumberAsyncWithHttpInfo($phone_number_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumber';
-        $request = $this->getPhoneNumberRequest($phone_number_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getPhoneNumber'
      *
-     * @param  int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getPhoneNumberRequest($phone_number_id)
     {
@@ -6619,13 +6566,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -6672,16 +6619,88 @@ class DefaultApi
     }
 
     /**
+     * Operation getPhoneNumberAsync
+     *
+     * Fetch a PhoneNumber
+     *
+     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumberAsync($phone_number_id)
+    {
+        return $this->getPhoneNumberAsyncWithHttpInfo($phone_number_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPhoneNumberAsyncWithHttpInfo
+     *
+     * Fetch a PhoneNumber
+     *
+     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumberAsyncWithHttpInfo($phone_number_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneNumber';
+        $request = $this->getPhoneNumberRequest($phone_number_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getPhoneNumberAssignment
      *
      * Fetches the PhoneNumberAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneNumberAssignment
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumberAssignment($user_id, $phone_number_id)
     {
@@ -6694,12 +6713,12 @@ class DefaultApi
      *
      * Fetches the PhoneNumberAssignment
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneNumberAssignment, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumberAssignmentWithHttpInfo($user_id, $phone_number_id)
     {
@@ -6774,87 +6793,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getPhoneNumberAssignmentAsync
-     *
-     * Fetches the PhoneNumberAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumberAssignmentAsync($user_id, $phone_number_id)
-    {
-        return $this->getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getPhoneNumberAssignmentAsyncWithHttpInfo
-     *
-     * Fetches the PhoneNumberAssignment
-     *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment';
-        $request = $this->getPhoneNumberAssignmentRequest($user_id, $phone_number_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getPhoneNumberAssignment'
      *
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getPhoneNumberAssignmentRequest($user_id, $phone_number_id)
     {
@@ -6915,13 +6860,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -6968,15 +6913,89 @@ class DefaultApi
     }
 
     /**
+     * Operation getPhoneNumberAssignmentAsync
+     *
+     * Fetches the PhoneNumberAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumberAssignmentAsync($user_id, $phone_number_id)
+    {
+        return $this->getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPhoneNumberAssignmentAsyncWithHttpInfo
+     *
+     * Fetches the PhoneNumberAssignment
+     *
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment';
+        $request = $this->getPhoneNumberAssignmentRequest($user_id, $phone_number_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getPhoneNumberConfig
      *
      * Fetch the PhoneNumberConfig
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneNumberConfig
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumberConfig($user_id)
     {
@@ -6989,11 +7008,11 @@ class DefaultApi
      *
      * Fetch the PhoneNumberConfig
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneNumberConfig, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumberConfigWithHttpInfo($user_id)
     {
@@ -7068,84 +7087,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getPhoneNumberConfigAsync
-     *
-     * Fetch the PhoneNumberConfig
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumberConfigAsync($user_id)
-    {
-        return $this->getPhoneNumberConfigAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getPhoneNumberConfigAsyncWithHttpInfo
-     *
-     * Fetch the PhoneNumberConfig
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumberConfigAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberConfig';
-        $request = $this->getPhoneNumberConfigRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getPhoneNumberConfig'
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getPhoneNumberConfigRequest($user_id)
     {
@@ -7192,13 +7139,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -7245,16 +7192,88 @@ class DefaultApi
     }
 
     /**
+     * Operation getPhoneNumberConfigAsync
+     *
+     * Fetch the PhoneNumberConfig
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumberConfigAsync($user_id)
+    {
+        return $this->getPhoneNumberConfigAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPhoneNumberConfigAsyncWithHttpInfo
+     *
+     * Fetch the PhoneNumberConfig
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumberConfigAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneNumberConfig';
+        $request = $this->getPhoneNumberConfigRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getPhoneNumbers
      *
      * Retrive a list of all configured PhoneNumbers
      *
-     * @param  string $type filter for the type of the PhoneNumber (optional)
-     * @param  bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+     * @param string $type filter for the type of the PhoneNumber (optional)
+     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneNumber[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumbers($type = null, $assigned = null)
     {
@@ -7267,12 +7286,12 @@ class DefaultApi
      *
      * Retrive a list of all configured PhoneNumbers
      *
-     * @param  string $type filter for the type of the PhoneNumber (optional)
-     * @param  bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+     * @param string $type filter for the type of the PhoneNumber (optional)
+     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneNumber[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getPhoneNumbersWithHttpInfo($type = null, $assigned = null)
     {
@@ -7347,87 +7366,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getPhoneNumbersAsync
-     *
-     * Retrive a list of all configured PhoneNumbers
-     *
-     * @param  string $type filter for the type of the PhoneNumber (optional)
-     * @param  bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumbersAsync($type = null, $assigned = null)
-    {
-        return $this->getPhoneNumbersAsyncWithHttpInfo($type, $assigned)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getPhoneNumbersAsyncWithHttpInfo
-     *
-     * Retrive a list of all configured PhoneNumbers
-     *
-     * @param  string $type filter for the type of the PhoneNumber (optional)
-     * @param  bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getPhoneNumbersAsyncWithHttpInfo($type = null, $assigned = null)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumber[]';
-        $request = $this->getPhoneNumbersRequest($type, $assigned);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getPhoneNumbers'
      *
-     * @param  string $type filter for the type of the PhoneNumber (optional)
-     * @param  bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+     * @param string $type filter for the type of the PhoneNumber (optional)
+     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getPhoneNumbersRequest($type = null, $assigned = null)
     {
@@ -7468,13 +7413,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -7521,16 +7466,90 @@ class DefaultApi
     }
 
     /**
+     * Operation getPhoneNumbersAsync
+     *
+     * Retrive a list of all configured PhoneNumbers
+     *
+     * @param string $type filter for the type of the PhoneNumber (optional)
+     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumbersAsync($type = null, $assigned = null)
+    {
+        return $this->getPhoneNumbersAsyncWithHttpInfo($type, $assigned)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPhoneNumbersAsyncWithHttpInfo
+     *
+     * Retrive a list of all configured PhoneNumbers
+     *
+     * @param string $type filter for the type of the PhoneNumber (optional)
+     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getPhoneNumbersAsyncWithHttpInfo($type = null, $assigned = null)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneNumber[]';
+        $request = $this->getPhoneNumbersRequest($type, $assigned);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getRedirect
      *
      * Fetch a Redirection
      *
-     * @param  string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $redirect_id Id of the Redirection that will be fetched (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\Redirection
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getRedirect($redirect_id, $act_on_behalf_of = null)
     {
@@ -7543,12 +7562,12 @@ class DefaultApi
      *
      * Fetch a Redirection
      *
-     * @param  string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $redirect_id Id of the Redirection that will be fetched (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\Redirection, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getRedirectWithHttpInfo($redirect_id, $act_on_behalf_of = null)
     {
@@ -7623,87 +7642,13 @@ class DefaultApi
     }
 
     /**
-     * Operation getRedirectAsync
-     *
-     * Fetch a Redirection
-     *
-     * @param  string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getRedirectAsync($redirect_id, $act_on_behalf_of = null)
-    {
-        return $this->getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getRedirectAsyncWithHttpInfo
-     *
-     * Fetch a Redirection
-     *
-     * @param  string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection';
-        $request = $this->getRedirectRequest($redirect_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getRedirect'
      *
-     * @param  string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $redirect_id Id of the Redirection that will be fetched (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getRedirectRequest($redirect_id, $act_on_behalf_of = null)
     {
@@ -7758,13 +7703,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -7811,15 +7756,89 @@ class DefaultApi
     }
 
     /**
+     * Operation getRedirectAsync
+     *
+     * Fetch a Redirection
+     *
+     * @param string $redirect_id Id of the Redirection that will be fetched (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getRedirectAsync($redirect_id, $act_on_behalf_of = null)
+    {
+        return $this->getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getRedirectAsyncWithHttpInfo
+     *
+     * Fetch a Redirection
+     *
+     * @param string $redirect_id Id of the Redirection that will be fetched (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\Redirection';
+        $request = $this->getRedirectRequest($redirect_id, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getRedirects
      *
      * Retrieve a list of redirects
      *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\Redirection[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getRedirects($act_on_behalf_of = null)
     {
@@ -7832,11 +7851,11 @@ class DefaultApi
      *
      * Retrieve a list of redirects
      *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\Redirection[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getRedirectsWithHttpInfo($act_on_behalf_of = null)
     {
@@ -7911,84 +7930,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getRedirectsAsync
-     *
-     * Retrieve a list of redirects
-     *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getRedirectsAsync($act_on_behalf_of = null)
-    {
-        return $this->getRedirectsAsyncWithHttpInfo($act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getRedirectsAsyncWithHttpInfo
-     *
-     * Retrieve a list of redirects
-     *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getRedirectsAsyncWithHttpInfo($act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection[]';
-        $request = $this->getRedirectsRequest($act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getRedirects'
      *
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getRedirectsRequest($act_on_behalf_of = null)
     {
@@ -8029,13 +7976,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -8082,15 +8029,87 @@ class DefaultApi
     }
 
     /**
+     * Operation getRedirectsAsync
+     *
+     * Retrieve a list of redirects
+     *
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getRedirectsAsync($act_on_behalf_of = null)
+    {
+        return $this->getRedirectsAsyncWithHttpInfo($act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getRedirectsAsyncWithHttpInfo
+     *
+     * Retrieve a list of redirects
+     *
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getRedirectsAsyncWithHttpInfo($act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\Redirection[]';
+        $request = $this->getRedirectsRequest($act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getScheme
      *
      * Get the configured ContactsScheme
      *
-     * @param  string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\ContactsScheme
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getScheme($lang = null)
     {
@@ -8103,11 +8122,11 @@ class DefaultApi
      *
      * Get the configured ContactsScheme
      *
-     * @param  string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\ContactsScheme, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getSchemeWithHttpInfo($lang = null)
     {
@@ -8182,84 +8201,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getSchemeAsync
-     *
-     * Get the configured ContactsScheme
-     *
-     * @param  string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getSchemeAsync($lang = null)
-    {
-        return $this->getSchemeAsyncWithHttpInfo($lang)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getSchemeAsyncWithHttpInfo
-     *
-     * Get the configured ContactsScheme
-     *
-     * @param  string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getSchemeAsyncWithHttpInfo($lang = null)
-    {
-        $returnType = '\Swagger\Client\Model\ContactsScheme';
-        $request = $this->getSchemeRequest($lang);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getScheme'
      *
-     * @param  string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getSchemeRequest($lang = null)
     {
@@ -8296,13 +8243,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -8349,19 +8296,91 @@ class DefaultApi
     }
 
     /**
+     * Operation getSchemeAsync
+     *
+     * Get the configured ContactsScheme
+     *
+     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getSchemeAsync($lang = null)
+    {
+        return $this->getSchemeAsyncWithHttpInfo($lang)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getSchemeAsyncWithHttpInfo
+     *
+     * Get the configured ContactsScheme
+     *
+     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getSchemeAsyncWithHttpInfo($lang = null)
+    {
+        $returnType = '\Swagger\Client\Model\ContactsScheme';
+        $request = $this->getSchemeRequest($lang);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getTagList
      *
      * Retrieve a list of tags
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. (optional)
-     * @param  string $sort The fieldname to sort for. (optional)
-     * @param  string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. (optional)
+     * @param string $sort The fieldname to sort for. (optional)
+     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\Tag[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getTagList($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
     {
@@ -8374,15 +8393,15 @@ class DefaultApi
      *
      * Retrieve a list of tags
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. (optional)
-     * @param  string $sort The fieldname to sort for. (optional)
-     * @param  string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. (optional)
+     * @param string $sort The fieldname to sort for. (optional)
+     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\Tag[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getTagListWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
     {
@@ -8457,96 +8476,16 @@ class DefaultApi
     }
 
     /**
-     * Operation getTagListAsync
-     *
-     * Retrieve a list of tags
-     *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. (optional)
-     * @param  string $sort The fieldname to sort for. (optional)
-     * @param  string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getTagListAsync($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        return $this->getTagListAsyncWithHttpInfo($user_id, $page, $pagesize, $sort, $sortdirection)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getTagListAsyncWithHttpInfo
-     *
-     * Retrieve a list of tags
-     *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. (optional)
-     * @param  string $sort The fieldname to sort for. (optional)
-     * @param  string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getTagListAsyncWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        $returnType = '\Swagger\Client\Model\Tag[]';
-        $request = $this->getTagListRequest($user_id, $page, $pagesize, $sort, $sortdirection);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getTagList'
      *
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param  int $pagesize The page size to use. Default is 20. (optional)
-     * @param  string $sort The fieldname to sort for. (optional)
-     * @param  string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. (optional)
+     * @param string $sort The fieldname to sort for. (optional)
+     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getTagListRequest($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
     {
@@ -8603,13 +8542,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -8656,15 +8595,95 @@ class DefaultApi
     }
 
     /**
+     * Operation getTagListAsync
+     *
+     * Retrieve a list of tags
+     *
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. (optional)
+     * @param string $sort The fieldname to sort for. (optional)
+     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getTagListAsync($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+    {
+        return $this->getTagListAsyncWithHttpInfo($user_id, $page, $pagesize, $sort, $sortdirection)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getTagListAsyncWithHttpInfo
+     *
+     * Retrieve a list of tags
+     *
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
+     * @param int $pagesize The page size to use. Default is 20. (optional)
+     * @param string $sort The fieldname to sort for. (optional)
+     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getTagListAsyncWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+    {
+        $returnType = '\Swagger\Client\Model\Tag[]';
+        $request = $this->getTagListRequest($user_id, $page, $pagesize, $sort, $sortdirection);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getUser
      *
      * Fetch a user
      *
-     * @param  int $user_id Id of the User that will be fetched (required)
+     * @param int $user_id Id of the User that will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\User
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getUser($user_id)
     {
@@ -8677,11 +8696,11 @@ class DefaultApi
      *
      * Fetch a user
      *
-     * @param  int $user_id Id of the User that will be fetched (required)
+     * @param int $user_id Id of the User that will be fetched (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getUserWithHttpInfo($user_id)
     {
@@ -8756,84 +8775,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getUserAsync
-     *
-     * Fetch a user
-     *
-     * @param  int $user_id Id of the User that will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getUserAsync($user_id)
-    {
-        return $this->getUserAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getUserAsyncWithHttpInfo
-     *
-     * Fetch a user
-     *
-     * @param  int $user_id Id of the User that will be fetched (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getUserAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->getUserRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getUser'
      *
-     * @param  int $user_id Id of the User that will be fetched (required)
+     * @param int $user_id Id of the User that will be fetched (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getUserRequest($user_id)
     {
@@ -8880,13 +8827,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -8933,15 +8880,87 @@ class DefaultApi
     }
 
     /**
+     * Operation getUserAsync
+     *
+     * Fetch a user
+     *
+     * @param int $user_id Id of the User that will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getUserAsync($user_id)
+    {
+        return $this->getUserAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getUserAsyncWithHttpInfo
+     *
+     * Fetch a user
+     *
+     * @param int $user_id Id of the User that will be fetched (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getUserAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '\Swagger\Client\Model\User';
+        $request = $this->getUserRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation getUsers
      *
      * Retrieve a list of users
      *
-     * @param  string $search_term The searchTerm to query users. (optional)
+     * @param string $search_term The searchTerm to query users. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\User[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getUsers($search_term = null)
     {
@@ -8954,11 +8973,11 @@ class DefaultApi
      *
      * Retrieve a list of users
      *
-     * @param  string $search_term The searchTerm to query users. (optional)
+     * @param string $search_term The searchTerm to query users. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\User[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function getUsersWithHttpInfo($search_term = null)
     {
@@ -9033,84 +9052,12 @@ class DefaultApi
     }
 
     /**
-     * Operation getUsersAsync
-     *
-     * Retrieve a list of users
-     *
-     * @param  string $search_term The searchTerm to query users. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getUsersAsync($search_term = null)
-    {
-        return $this->getUsersAsyncWithHttpInfo($search_term)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getUsersAsyncWithHttpInfo
-     *
-     * Retrieve a list of users
-     *
-     * @param  string $search_term The searchTerm to query users. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function getUsersAsyncWithHttpInfo($search_term = null)
-    {
-        $returnType = '\Swagger\Client\Model\User[]';
-        $request = $this->getUsersRequest($search_term);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'getUsers'
      *
-     * @param  string $search_term The searchTerm to query users. (optional)
+     * @param string $search_term The searchTerm to query users. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function getUsersRequest($search_term = null)
     {
@@ -9147,13 +9094,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -9200,15 +9147,87 @@ class DefaultApi
     }
 
     /**
+     * Operation getUsersAsync
+     *
+     * Retrieve a list of users
+     *
+     * @param string $search_term The searchTerm to query users. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getUsersAsync($search_term = null)
+    {
+        return $this->getUsersAsyncWithHttpInfo($search_term)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getUsersAsyncWithHttpInfo
+     *
+     * Retrieve a list of users
+     *
+     * @param string $search_term The searchTerm to query users. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getUsersAsyncWithHttpInfo($search_term = null)
+    {
+        $returnType = '\Swagger\Client\Model\User[]';
+        $request = $this->getUsersRequest($search_term);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation listAssignedPhones
      *
      * Fetches a list of assigned phones
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneAssignment[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function listAssignedPhones($user_id)
     {
@@ -9221,11 +9240,11 @@ class DefaultApi
      *
      * Fetches a list of assigned phones
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneAssignment[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function listAssignedPhonesWithHttpInfo($user_id)
     {
@@ -9300,84 +9319,12 @@ class DefaultApi
     }
 
     /**
-     * Operation listAssignedPhonesAsync
-     *
-     * Fetches a list of assigned phones
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function listAssignedPhonesAsync($user_id)
-    {
-        return $this->listAssignedPhonesAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation listAssignedPhonesAsyncWithHttpInfo
-     *
-     * Fetches a list of assigned phones
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function listAssignedPhonesAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneAssignment[]';
-        $request = $this->listAssignedPhonesRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'listAssignedPhones'
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function listAssignedPhonesRequest($user_id)
     {
@@ -9424,13 +9371,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -9477,15 +9424,87 @@ class DefaultApi
     }
 
     /**
+     * Operation listAssignedPhonesAsync
+     *
+     * Fetches a list of assigned phones
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function listAssignedPhonesAsync($user_id)
+    {
+        return $this->listAssignedPhonesAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation listAssignedPhonesAsyncWithHttpInfo
+     *
+     * Fetches a list of assigned phones
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function listAssignedPhonesAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneAssignment[]';
+        $request = $this->listAssignedPhonesRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation listPhoneNumberAssignment
      *
      * Fetches a list of assigned phone numbers
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\PhoneNumberAssignment[]
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function listPhoneNumberAssignment($user_id)
     {
@@ -9498,11 +9517,11 @@ class DefaultApi
      *
      * Fetches a list of assigned phone numbers
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\PhoneNumberAssignment[], HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function listPhoneNumberAssignmentWithHttpInfo($user_id)
     {
@@ -9577,84 +9596,12 @@ class DefaultApi
     }
 
     /**
-     * Operation listPhoneNumberAssignmentAsync
-     *
-     * Fetches a list of assigned phone numbers
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function listPhoneNumberAssignmentAsync($user_id)
-    {
-        return $this->listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation listPhoneNumberAssignmentAsyncWithHttpInfo
-     *
-     * Fetches a list of assigned phone numbers
-     *
-     * @param  int $user_id Id of the User (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment[]';
-        $request = $this->listPhoneNumberAssignmentRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'listPhoneNumberAssignment'
      *
-     * @param  int $user_id Id of the User (required)
+     * @param int $user_id Id of the User (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function listPhoneNumberAssignmentRequest($user_id)
     {
@@ -9701,13 +9648,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -9754,11 +9701,83 @@ class DefaultApi
     }
 
     /**
+     * Operation listPhoneNumberAssignmentAsync
+     *
+     * Fetches a list of assigned phone numbers
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function listPhoneNumberAssignmentAsync($user_id)
+    {
+        return $this->listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation listPhoneNumberAssignmentAsyncWithHttpInfo
+     *
+     * Fetches a list of assigned phone numbers
+     *
+     * @param int $user_id Id of the User (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
+    {
+        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment[]';
+        $request = $this->listPhoneNumberAssignmentRequest($user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation login
      *
      * Login to the Rest-Service and get an AuthToken
      *
-     * @param  \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
+     * @param \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
      *
      * @throws \Swagger\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -9775,7 +9794,7 @@ class DefaultApi
      *
      * Login to the Rest-Service and get an AuthToken
      *
-     * @param  \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
+     * @param \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
      *
      * @throws \Swagger\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -9854,81 +9873,9 @@ class DefaultApi
     }
 
     /**
-     * Operation loginAsync
-     *
-     * Login to the Rest-Service and get an AuthToken
-     *
-     * @param  \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function loginAsync($login)
-    {
-        return $this->loginAsyncWithHttpInfo($login)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation loginAsyncWithHttpInfo
-     *
-     * Login to the Rest-Service and get an AuthToken
-     *
-     * @param  \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function loginAsyncWithHttpInfo($login)
-    {
-        $returnType = '\Swagger\Client\Model\AuthToken';
-        $request = $this->loginRequest($login);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'login'
      *
-     * @param  \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
+     * @param \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -9948,7 +9895,6 @@ class DefaultApi
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
-
 
 
         // body params
@@ -9973,13 +9919,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -10027,15 +9973,87 @@ class DefaultApi
     }
 
     /**
+     * Operation loginAsync
+     *
+     * Login to the Rest-Service and get an AuthToken
+     *
+     * @param \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function loginAsync($login)
+    {
+        return $this->loginAsyncWithHttpInfo($login)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation loginAsyncWithHttpInfo
+     *
+     * Login to the Rest-Service and get an AuthToken
+     *
+     * @param \Swagger\Client\Model\Login $login Login-Object with the user&#39;s secret. (required)
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function loginAsyncWithHttpInfo($login)
+    {
+        $returnType = '\Swagger\Client\Model\AuthToken';
+        $request = $this->loginRequest($login);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation logout
      *
      * Invalidate the provided authToken.
      *
-     * @param  string $auth_token The authToken to invalidate (required)
+     * @param string $auth_token The authToken to invalidate (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function logout($auth_token)
     {
@@ -10047,11 +10065,11 @@ class DefaultApi
      *
      * Invalidate the provided authToken.
      *
-     * @param  string $auth_token The authToken to invalidate (required)
+     * @param string $auth_token The authToken to invalidate (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function logoutWithHttpInfo($auth_token)
     {
@@ -10104,70 +10122,12 @@ class DefaultApi
     }
 
     /**
-     * Operation logoutAsync
-     *
-     * Invalidate the provided authToken.
-     *
-     * @param  string $auth_token The authToken to invalidate (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function logoutAsync($auth_token)
-    {
-        return $this->logoutAsyncWithHttpInfo($auth_token)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation logoutAsyncWithHttpInfo
-     *
-     * Invalidate the provided authToken.
-     *
-     * @param  string $auth_token The authToken to invalidate (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function logoutAsyncWithHttpInfo($auth_token)
-    {
-        $returnType = '';
-        $request = $this->logoutRequest($auth_token);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'logout'
      *
-     * @param  string $auth_token The authToken to invalidate (required)
+     * @param string $auth_token The authToken to invalidate (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function logoutRequest($auth_token)
     {
@@ -10210,13 +10170,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -10263,16 +10223,74 @@ class DefaultApi
     }
 
     /**
+     * Operation logoutAsync
+     *
+     * Invalidate the provided authToken.
+     *
+     * @param string $auth_token The authToken to invalidate (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function logoutAsync($auth_token)
+    {
+        return $this->logoutAsyncWithHttpInfo($auth_token)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation logoutAsyncWithHttpInfo
+     *
+     * Invalidate the provided authToken.
+     *
+     * @param string $auth_token The authToken to invalidate (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function logoutAsyncWithHttpInfo($auth_token)
+    {
+        $returnType = '';
+        $request = $this->logoutRequest($auth_token);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation postContact
      *
      * Create a new contact
      *
-     * @param  \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function postContact($contact, $user_id = null)
     {
@@ -10284,12 +10302,12 @@ class DefaultApi
      *
      * Create a new contact
      *
-     * @param  \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function postContactWithHttpInfo($contact, $user_id = null)
     {
@@ -10342,73 +10360,13 @@ class DefaultApi
     }
 
     /**
-     * Operation postContactAsync
-     *
-     * Create a new contact
-     *
-     * @param  \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function postContactAsync($contact, $user_id = null)
-    {
-        return $this->postContactAsyncWithHttpInfo($contact, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation postContactAsyncWithHttpInfo
-     *
-     * Create a new contact
-     *
-     * @param  \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function postContactAsyncWithHttpInfo($contact, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->postContactRequest($contact, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'postContact'
      *
-     * @param  \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function postContactRequest($contact, $user_id = null)
     {
@@ -10458,13 +10416,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -10511,16 +10469,76 @@ class DefaultApi
     }
 
     /**
+     * Operation postContactAsync
+     *
+     * Create a new contact
+     *
+     * @param \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function postContactAsync($contact, $user_id = null)
+    {
+        return $this->postContactAsyncWithHttpInfo($contact, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postContactAsyncWithHttpInfo
+     *
+     * Create a new contact
+     *
+     * @param \Swagger\Client\Model\Contact $contact User object to add to the addressbook (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function postContactAsyncWithHttpInfo($contact, $user_id = null)
+    {
+        $returnType = '';
+        $request = $this->postContactRequest($contact, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation postFmcPhone
      *
      * Create a new FmcPhone
      *
-     * @param  \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function postFmcPhone($fmc_phone, $user_id = null)
     {
@@ -10532,12 +10550,12 @@ class DefaultApi
      *
      * Create a new FmcPhone
      *
-     * @param  \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function postFmcPhoneWithHttpInfo($fmc_phone, $user_id = null)
     {
@@ -10590,73 +10608,13 @@ class DefaultApi
     }
 
     /**
-     * Operation postFmcPhoneAsync
-     *
-     * Create a new FmcPhone
-     *
-     * @param  \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function postFmcPhoneAsync($fmc_phone, $user_id = null)
-    {
-        return $this->postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation postFmcPhoneAsyncWithHttpInfo
-     *
-     * Create a new FmcPhone
-     *
-     * @param  \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->postFmcPhoneRequest($fmc_phone, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'postFmcPhone'
      *
-     * @param  \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function postFmcPhoneRequest($fmc_phone, $user_id = null)
     {
@@ -10706,13 +10664,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -10759,15 +10717,75 @@ class DefaultApi
     }
 
     /**
+     * Operation postFmcPhoneAsync
+     *
+     * Create a new FmcPhone
+     *
+     * @param \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function postFmcPhoneAsync($fmc_phone, $user_id = null)
+    {
+        return $this->postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postFmcPhoneAsyncWithHttpInfo
+     *
+     * Create a new FmcPhone
+     *
+     * @param \Swagger\Client\Model\FmcPhone $fmc_phone FmcPhone object to add (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id = null)
+    {
+        $returnType = '';
+        $request = $this->postFmcPhoneRequest($fmc_phone, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation postUser
      *
      * Create a new user
      *
-     * @param  \Swagger\Client\Model\User $user User object to add (required)
+     * @param \Swagger\Client\Model\User $user User object to add (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function postUser($user)
     {
@@ -10779,11 +10797,11 @@ class DefaultApi
      *
      * Create a new user
      *
-     * @param  \Swagger\Client\Model\User $user User object to add (required)
+     * @param \Swagger\Client\Model\User $user User object to add (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function postUserWithHttpInfo($user)
     {
@@ -10836,70 +10854,12 @@ class DefaultApi
     }
 
     /**
-     * Operation postUserAsync
-     *
-     * Create a new user
-     *
-     * @param  \Swagger\Client\Model\User $user User object to add (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function postUserAsync($user)
-    {
-        return $this->postUserAsyncWithHttpInfo($user)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation postUserAsyncWithHttpInfo
-     *
-     * Create a new user
-     *
-     * @param  \Swagger\Client\Model\User $user User object to add (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function postUserAsyncWithHttpInfo($user)
-    {
-        $returnType = '';
-        $request = $this->postUserRequest($user);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'postUser'
      *
-     * @param  \Swagger\Client\Model\User $user User object to add (required)
+     * @param \Swagger\Client\Model\User $user User object to add (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function postUserRequest($user)
     {
@@ -10916,7 +10876,6 @@ class DefaultApi
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
-
 
 
         // body params
@@ -10941,13 +10900,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -10994,18 +10953,76 @@ class DefaultApi
     }
 
     /**
+     * Operation postUserAsync
+     *
+     * Create a new user
+     *
+     * @param \Swagger\Client\Model\User $user User object to add (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function postUserAsync($user)
+    {
+        return $this->postUserAsyncWithHttpInfo($user)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation postUserAsyncWithHttpInfo
+     *
+     * Create a new user
+     *
+     * @param \Swagger\Client\Model\User $user User object to add (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function postUserAsyncWithHttpInfo($user)
+    {
+        $returnType = '';
+        $request = $this->postUserRequest($user);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation pressFunctionKey
      *
      * Performs the action assigned to the FunctionKey.
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function pressFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
     {
@@ -11017,14 +11034,14 @@ class DefaultApi
      *
      * Performs the action assigned to the FunctionKey.
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function pressFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
     {
@@ -11077,79 +11094,15 @@ class DefaultApi
     }
 
     /**
-     * Operation pressFunctionKeyAsync
-     *
-     * Performs the action assigned to the FunctionKey.
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function pressFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        return $this->pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of, $params)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation pressFunctionKeyAsyncWithHttpInfo
-     *
-     * Performs the action assigned to the FunctionKey.
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        $returnType = '';
-        $request = $this->pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of, $params);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'pressFunctionKey'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param  string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
     {
@@ -11181,9 +11134,9 @@ class DefaultApi
         if (is_array($params)) {
             $queryParams['params'] = $params;
         } else
-        if ($params !== null) {
-            $queryParams['params'] = ObjectSerializer::toQueryValue($params);
-        }
+            if ($params !== null) {
+                $queryParams['params'] = ObjectSerializer::toQueryValue($params);
+            }
 
         // path params
         if ($fk_set_id !== null) {
@@ -11221,13 +11174,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -11274,17 +11227,81 @@ class DefaultApi
     }
 
     /**
+     * Operation pressFunctionKeyAsync
+     *
+     * Performs the action assigned to the FunctionKey.
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function pressFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+    {
+        return $this->pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of, $params)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation pressFunctionKeyAsyncWithHttpInfo
+     *
+     * Performs the action assigned to the FunctionKey.
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+    {
+        $returnType = '';
+        $request = $this->pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of, $params);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation putContact
      *
      * Update a contact
      *
-     * @param  string $contact_id Id of the contact to update (required)
-     * @param  \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $contact_id Id of the contact to update (required)
+     * @param \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putContact($contact_id, $contact, $user_id = null)
     {
@@ -11296,13 +11313,13 @@ class DefaultApi
      *
      * Update a contact
      *
-     * @param  string $contact_id Id of the contact to update (required)
-     * @param  \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $contact_id Id of the contact to update (required)
+     * @param \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putContactWithHttpInfo($contact_id, $contact, $user_id = null)
     {
@@ -11355,76 +11372,14 @@ class DefaultApi
     }
 
     /**
-     * Operation putContactAsync
-     *
-     * Update a contact
-     *
-     * @param  string $contact_id Id of the contact to update (required)
-     * @param  \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putContactAsync($contact_id, $contact, $user_id = null)
-    {
-        return $this->putContactAsyncWithHttpInfo($contact_id, $contact, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation putContactAsyncWithHttpInfo
-     *
-     * Update a contact
-     *
-     * @param  string $contact_id Id of the contact to update (required)
-     * @param  \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putContactAsyncWithHttpInfo($contact_id, $contact, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->putContactRequest($contact_id, $contact, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'putContact'
      *
-     * @param  string $contact_id Id of the contact to update (required)
-     * @param  \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $contact_id Id of the contact to update (required)
+     * @param \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function putContactRequest($contact_id, $contact, $user_id = null)
     {
@@ -11488,13 +11443,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -11541,17 +11496,79 @@ class DefaultApi
     }
 
     /**
+     * Operation putContactAsync
+     *
+     * Update a contact
+     *
+     * @param string $contact_id Id of the contact to update (required)
+     * @param \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putContactAsync($contact_id, $contact, $user_id = null)
+    {
+        return $this->putContactAsyncWithHttpInfo($contact_id, $contact, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation putContactAsyncWithHttpInfo
+     *
+     * Update a contact
+     *
+     * @param string $contact_id Id of the contact to update (required)
+     * @param \Swagger\Client\Model\Contact $contact Contact-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putContactAsyncWithHttpInfo($contact_id, $contact, $user_id = null)
+    {
+        $returnType = '';
+        $request = $this->putContactRequest($contact_id, $contact, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation putFmcPhone
      *
      * Update a FmcPhone
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param  \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+     * @param \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FmcPhone
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putFmcPhone($fmc_id, $redirection, $user_id = null)
     {
@@ -11564,13 +11581,13 @@ class DefaultApi
      *
      * Update a FmcPhone
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param  \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+     * @param \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FmcPhone, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putFmcPhoneWithHttpInfo($fmc_id, $redirection, $user_id = null)
     {
@@ -11645,90 +11662,14 @@ class DefaultApi
     }
 
     /**
-     * Operation putFmcPhoneAsync
-     *
-     * Update a FmcPhone
-     *
-     * @param  string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param  \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putFmcPhoneAsync($fmc_id, $redirection, $user_id = null)
-    {
-        return $this->putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation putFmcPhoneAsyncWithHttpInfo
-     *
-     * Update a FmcPhone
-     *
-     * @param  string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param  \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone';
-        $request = $this->putFmcPhoneRequest($fmc_id, $redirection, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'putFmcPhone'
      *
-     * @param  string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param  \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param  string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+     * @param \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function putFmcPhoneRequest($fmc_id, $redirection, $user_id = null)
     {
@@ -11792,13 +11733,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -11847,16 +11788,92 @@ class DefaultApi
     }
 
     /**
+     * Operation putFmcPhoneAsync
+     *
+     * Update a FmcPhone
+     *
+     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+     * @param \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putFmcPhoneAsync($fmc_id, $redirection, $user_id = null)
+    {
+        return $this->putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation putFmcPhoneAsyncWithHttpInfo
+     *
+     * Update a FmcPhone
+     *
+     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+     * @param \Swagger\Client\Model\FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id = null)
+    {
+        $returnType = '\Swagger\Client\Model\FmcPhone';
+        $request = $this->putFmcPhoneRequest($fmc_id, $redirection, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation putPhoneConfig
      *
      * Update the PhoneConfig
      *
-     * @param  \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param  int $user_id Id of the User thats phoneConfig will be updated (required)
+     * @param \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putPhoneConfig($phone_config, $user_id)
     {
@@ -11868,12 +11885,12 @@ class DefaultApi
      *
      * Update the PhoneConfig
      *
-     * @param  \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param  int $user_id Id of the User thats phoneConfig will be updated (required)
+     * @param \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putPhoneConfigWithHttpInfo($phone_config, $user_id)
     {
@@ -11926,73 +11943,13 @@ class DefaultApi
     }
 
     /**
-     * Operation putPhoneConfigAsync
-     *
-     * Update the PhoneConfig
-     *
-     * @param  \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param  int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putPhoneConfigAsync($phone_config, $user_id)
-    {
-        return $this->putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation putPhoneConfigAsyncWithHttpInfo
-     *
-     * Update the PhoneConfig
-     *
-     * @param  \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param  int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
-    {
-        $returnType = '';
-        $request = $this->putPhoneConfigRequest($phone_config, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'putPhoneConfig'
      *
-     * @param  \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param  int $user_id Id of the User thats phoneConfig will be updated (required)
+     * @param \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function putPhoneConfigRequest($phone_config, $user_id)
     {
@@ -12048,13 +12005,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -12101,17 +12058,77 @@ class DefaultApi
     }
 
     /**
+     * Operation putPhoneConfigAsync
+     *
+     * Update the PhoneConfig
+     *
+     * @param \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putPhoneConfigAsync($phone_config, $user_id)
+    {
+        return $this->putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation putPhoneConfigAsyncWithHttpInfo
+     *
+     * Update the PhoneConfig
+     *
+     * @param \Swagger\Client\Model\PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
+    {
+        $returnType = '';
+        $request = $this->putPhoneConfigRequest($phone_config, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation putRedirect
      *
      * Update a Redirection
      *
-     * @param  string $redirect_id Id of the Redirection that will be updated (required)
-     * @param  \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $redirect_id Id of the Redirection that will be updated (required)
+     * @param \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\Redirection
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putRedirect($redirect_id, $redirection, $act_on_behalf_of = null)
     {
@@ -12124,13 +12141,13 @@ class DefaultApi
      *
      * Update a Redirection
      *
-     * @param  string $redirect_id Id of the Redirection that will be updated (required)
-     * @param  \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $redirect_id Id of the Redirection that will be updated (required)
+     * @param \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\Redirection, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putRedirectWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
     {
@@ -12205,90 +12222,14 @@ class DefaultApi
     }
 
     /**
-     * Operation putRedirectAsync
-     *
-     * Update a Redirection
-     *
-     * @param  string $redirect_id Id of the Redirection that will be updated (required)
-     * @param  \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putRedirectAsync($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        return $this->putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation putRedirectAsyncWithHttpInfo
-     *
-     * Update a Redirection
-     *
-     * @param  string $redirect_id Id of the Redirection that will be updated (required)
-     * @param  \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection';
-        $request = $this->putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'putRedirect'
      *
-     * @param  string $redirect_id Id of the Redirection that will be updated (required)
-     * @param  \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $redirect_id Id of the Redirection that will be updated (required)
+     * @param \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of = null)
     {
@@ -12352,13 +12293,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -12405,16 +12346,92 @@ class DefaultApi
     }
 
     /**
+     * Operation putRedirectAsync
+     *
+     * Update a Redirection
+     *
+     * @param string $redirect_id Id of the Redirection that will be updated (required)
+     * @param \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putRedirectAsync($redirect_id, $redirection, $act_on_behalf_of = null)
+    {
+        return $this->putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation putRedirectAsyncWithHttpInfo
+     *
+     * Update a Redirection
+     *
+     * @param string $redirect_id Id of the Redirection that will be updated (required)
+     * @param \Swagger\Client\Model\Redirection $redirection Redirection-Object with updated values that should be applied (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\Redirection';
+        $request = $this->putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation putUser
      *
      * Update a user
      *
-     * @param  int $user_id Id of the User that will be updated (required)
-     * @param  \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User that will be updated (required)
+     * @param \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\User
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putUser($user_id, $user)
     {
@@ -12427,12 +12444,12 @@ class DefaultApi
      *
      * Update a user
      *
-     * @param  int $user_id Id of the User that will be updated (required)
-     * @param  \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User that will be updated (required)
+     * @param \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function putUserWithHttpInfo($user_id, $user)
     {
@@ -12507,87 +12524,13 @@ class DefaultApi
     }
 
     /**
-     * Operation putUserAsync
-     *
-     * Update a user
-     *
-     * @param  int $user_id Id of the User that will be updated (required)
-     * @param  \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putUserAsync($user_id, $user)
-    {
-        return $this->putUserAsyncWithHttpInfo($user_id, $user)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation putUserAsyncWithHttpInfo
-     *
-     * Update a user
-     *
-     * @param  int $user_id Id of the User that will be updated (required)
-     * @param  \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function putUserAsyncWithHttpInfo($user_id, $user)
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->putUserRequest($user_id, $user);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'putUser'
      *
-     * @param  int $user_id Id of the User that will be updated (required)
-     * @param  \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
+     * @param int $user_id Id of the User that will be updated (required)
+     * @param \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function putUserRequest($user_id, $user)
     {
@@ -12643,13 +12586,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -12696,16 +12639,90 @@ class DefaultApi
     }
 
     /**
+     * Operation putUserAsync
+     *
+     * Update a user
+     *
+     * @param int $user_id Id of the User that will be updated (required)
+     * @param \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putUserAsync($user_id, $user)
+    {
+        return $this->putUserAsyncWithHttpInfo($user_id, $user)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation putUserAsyncWithHttpInfo
+     *
+     * Update a user
+     *
+     * @param int $user_id Id of the User that will be updated (required)
+     * @param \Swagger\Client\Model\User $user User-Object with updated values that should be applied (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function putUserAsyncWithHttpInfo($user_id, $user)
+    {
+        $returnType = '\Swagger\Client\Model\User';
+        $request = $this->putUserRequest($user_id, $user);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation setAvatar
      *
      * Set the Avatar
      *
-     * @param  \SplFileObject $avatar The new avatar of the user (required)
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
+     * @param \SplFileObject $avatar The new avatar of the user (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function setAvatar($avatar, $user_id)
     {
@@ -12717,12 +12734,12 @@ class DefaultApi
      *
      * Set the Avatar
      *
-     * @param  \SplFileObject $avatar The new avatar of the user (required)
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
+     * @param \SplFileObject $avatar The new avatar of the user (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function setAvatarWithHttpInfo($avatar, $user_id)
     {
@@ -12775,73 +12792,13 @@ class DefaultApi
     }
 
     /**
-     * Operation setAvatarAsync
-     *
-     * Set the Avatar
-     *
-     * @param  \SplFileObject $avatar The new avatar of the user (required)
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function setAvatarAsync($avatar, $user_id)
-    {
-        return $this->setAvatarAsyncWithHttpInfo($avatar, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation setAvatarAsyncWithHttpInfo
-     *
-     * Set the Avatar
-     *
-     * @param  \SplFileObject $avatar The new avatar of the user (required)
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function setAvatarAsyncWithHttpInfo($avatar, $user_id)
-    {
-        $returnType = '';
-        $request = $this->setAvatarRequest($avatar, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'setAvatar'
      *
-     * @param  \SplFileObject $avatar The new avatar of the user (required)
-     * @param  int $user_id Id of the User thats avatar will be updated (required)
+     * @param \SplFileObject $avatar The new avatar of the user (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function setAvatarRequest($avatar, $user_id)
     {
@@ -12899,13 +12856,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -12952,16 +12909,76 @@ class DefaultApi
     }
 
     /**
+     * Operation setAvatarAsync
+     *
+     * Set the Avatar
+     *
+     * @param \SplFileObject $avatar The new avatar of the user (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function setAvatarAsync($avatar, $user_id)
+    {
+        return $this->setAvatarAsyncWithHttpInfo($avatar, $user_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation setAvatarAsyncWithHttpInfo
+     *
+     * Set the Avatar
+     *
+     * @param \SplFileObject $avatar The new avatar of the user (required)
+     * @param int $user_id Id of the User thats avatar will be updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function setAvatarAsyncWithHttpInfo($avatar, $user_id)
+    {
+        $returnType = '';
+        $request = $this->setAvatarRequest($avatar, $user_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation updateFunctionKey
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function updateFunctionKey($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
     {
@@ -12972,14 +12989,14 @@ class DefaultApi
     /**
      * Operation updateFunctionKeyWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function updateFunctionKeyWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
     {
@@ -13054,93 +13071,15 @@ class DefaultApi
     }
 
     /**
-     * Operation updateFunctionKeyAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function updateFunctionKeyAsync($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        return $this->updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation updateFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'updateFunctionKey'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  string $key_id The Id of the FunctionKey (required)
-     * @param  \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
     {
@@ -13214,13 +13153,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -13267,15 +13206,93 @@ class DefaultApi
     }
 
     /**
+     * Operation updateFunctionKeyAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateFunctionKeyAsync($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+    {
+        return $this->updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation updateFunctionKeyAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param string $key_id The Id of the FunctionKey (required)
+     * @param \Swagger\Client\Model\FunctionKey $function_key The updated FunctionKey (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey';
+        $request = $this->updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation updateFunctionKeySet
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\FunctionKey
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function updateFunctionKeySet($fk_set_id, $function_key_set, $act_on_behalf_of = null)
     {
@@ -13286,13 +13303,13 @@ class DefaultApi
     /**
      * Operation updateFunctionKeySetWithHttpInfo
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function updateFunctionKeySetWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
     {
@@ -13367,90 +13384,14 @@ class DefaultApi
     }
 
     /**
-     * Operation updateFunctionKeySetAsync
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function updateFunctionKeySetAsync($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        return $this->updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation updateFunctionKeySetAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'updateFunctionKeySet'
      *
-     * @param  string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param  \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param  string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of = null)
     {
@@ -13510,13 +13451,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -13563,17 +13504,93 @@ class DefaultApi
     }
 
     /**
+     * Operation updateFunctionKeySetAsync
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateFunctionKeySetAsync($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+    {
+        return $this->updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation updateFunctionKeySetAsyncWithHttpInfo
+     *
+     *
+     *
+     * @param string $fk_set_id The Id of the FunctionKeySet (required)
+     * @param \Swagger\Client\Model\FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+    {
+        $returnType = '\Swagger\Client\Model\FunctionKey';
+        $request = $this->updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation updateNumbersForAssignedPhones
      *
      * Updates the list of NumberForPhoneAssignment
      *
-     * @param  \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are updated (required)
+     * @param \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return void
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function updateNumbersForAssignedPhones($number_for_phone_assignments, $user_id, $phone_id)
     {
@@ -13585,13 +13602,13 @@ class DefaultApi
      *
      * Updates the list of NumberForPhoneAssignment
      *
-     * @param  \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are updated (required)
+     * @param \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function updateNumbersForAssignedPhonesWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
     {
@@ -13644,76 +13661,14 @@ class DefaultApi
     }
 
     /**
-     * Operation updateNumbersForAssignedPhonesAsync
-     *
-     * Updates the list of NumberForPhoneAssignment
-     *
-     * @param  \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function updateNumbersForAssignedPhonesAsync($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        return $this->updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation updateNumbersForAssignedPhonesAsyncWithHttpInfo
-     *
-     * Updates the list of NumberForPhoneAssignment
-     *
-     * @param  \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        $returnType = '';
-        $request = $this->updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'updateNumbersForAssignedPhones'
      *
-     * @param  \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param  int $user_id Id of the User (required)
-     * @param  int $phone_id Id of the Phone thats number assignments are updated (required)
+     * @param \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id)
     {
@@ -13783,13 +13738,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -13836,12 +13791,74 @@ class DefaultApi
     }
 
     /**
+     * Operation updateNumbersForAssignedPhonesAsync
+     *
+     * Updates the list of NumberForPhoneAssignment
+     *
+     * @param \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateNumbersForAssignedPhonesAsync($number_for_phone_assignments, $user_id, $phone_id)
+    {
+        return $this->updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation updateNumbersForAssignedPhonesAsyncWithHttpInfo
+     *
+     * Updates the list of NumberForPhoneAssignment
+     *
+     * @param \Swagger\Client\Model\NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+     * @param int $user_id Id of the User (required)
+     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
+    {
+        $returnType = '';
+        $request = $this->updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
      * Operation usersMeGet
      *
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \Swagger\Client\Model\User
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function usersMeGet()
     {
@@ -13853,9 +13870,9 @@ class DefaultApi
      * Operation usersMeGetWithHttpInfo
      *
      *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \Swagger\Client\ApiException on non-2xx response
      */
     public function usersMeGetWithHttpInfo()
     {
@@ -13930,81 +13947,11 @@ class DefaultApi
     }
 
     /**
-     * Operation usersMeGetAsync
-     *
-     *
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function usersMeGetAsync()
-    {
-        return $this->usersMeGetAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation usersMeGetAsyncWithHttpInfo
-     *
-     *
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function usersMeGetAsyncWithHttpInfo()
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->usersMeGetRequest();
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
      * Create request for operation 'usersMeGet'
      *
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     protected function usersMeGetRequest()
     {
@@ -14015,7 +13962,6 @@ class DefaultApi
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
-
 
 
         // body params
@@ -14037,13 +13983,13 @@ class DefaultApi
             // $_tempBody is the method argument, if present
             $httpBody = $_tempBody;
 
-            if($headers['Content-Type'] === 'application/json') {
+            if ($headers['Content-Type'] === 'application/json') {
                 // \stdClass has no __toString(), so we should encode it manually
                 if ($httpBody instanceof \stdClass) {
                     $httpBody = \GuzzleHttp\json_encode($httpBody);
                 }
                 // array has no __toString(), so we should encode it manually
-                if(is_array($httpBody)) {
+                if (is_array($httpBody)) {
                     $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
                 }
             }
@@ -14090,21 +14036,72 @@ class DefaultApi
     }
 
     /**
-     * Create http client option
+     * Operation usersMeGetAsync
      *
-     * @throws \RuntimeException on file opening failure
-     * @return array of http client options
+     *
+     *
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
-    protected function createHttpClientOption()
+    public function usersMeGetAsync()
     {
-        $options = [];
-        if ($this->config->getDebug()) {
-            $options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
-            if (!$options[RequestOptions::DEBUG]) {
-                throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
-            }
-        }
+        return $this->usersMeGetAsyncWithHttpInfo()
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
 
-        return $options;
+    /**
+     * Operation usersMeGetAsyncWithHttpInfo
+     *
+     *
+     *
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
+     */
+    public function usersMeGetAsyncWithHttpInfo()
+    {
+        $returnType = '\Swagger\Client\Model\User';
+        $request = $this->usersMeGetRequest();
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    $responseBody = $response->getBody();
+                    if ($returnType === '\SplFileObject') {
+                        $content = $responseBody; //stream goes to serializer
+                    } else {
+                        $content = $responseBody->getContents();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        $response->getBody()
+                    );
+                }
+            );
     }
 }

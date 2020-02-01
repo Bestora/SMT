@@ -1,12 +1,12 @@
 {
-    "require": {
-        "phptal/phptal": "^1.4",
-        "php-pushover/php-pushover": "^1.0",
-        "messagebird/php-rest-api": "^1.16",
-        "ext-calendar": "*",
-        "ext-json": "*",
-        "ext-curl": "*",
-        "ext-mbstring": "*",
-        "guzzlehttp/guzzle": "^6.2"
-    }
+  "require": {
+    "phptal/phptal": "^1.4",
+    "php-pushover/php-pushover": "^1.0",
+    "messagebird/php-rest-api": "^1.16",
+    "ext-calendar": "*",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-mbstring": "*",
+    "guzzlehttp/guzzle": "^6.2"
+  }
 }

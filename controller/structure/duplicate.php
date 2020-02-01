@@ -5,8 +5,8 @@ $url = base::get('url');
 $sys = $url['2'];
 
 if (end($url) == 'save') {
-  $id = $wos->saveSystem($_POST);
-  base::setRoute(Base::get('controller'), 'detail/' . $id, TRUE);
+    $id = $wos->saveSystem($_POST);
+    base::setRoute(Base::get('controller'), 'detail/' . $id, TRUE);
 }
 
 template::setText('referr', $referr);

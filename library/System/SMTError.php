@@ -29,43 +29,43 @@
 class SMTError extends Exception
 {
 
-  public $ERROR_FILE = 'error.log';
+    public $ERROR_FILE = 'error.log';
 
-  public function __construct($logfile = '', $message)
-  {
-    if (!empty($logfile)) {
-      $this->ERROR_FILE = $logfile;
+    public function __construct($logfile = '', $message)
+    {
+        if (!empty($logfile)) {
+            $this->ERROR_FILE = $logfile;
+        }
+        $this->setError($message);
+
+        if (preg_match('/dev./', $_SERVER['SERVER_NAME'])) {
+            die($this->getError());
+        }
     }
-    $this->setError($message);
 
-    if (preg_match('/dev./', $_SERVER['SERVER_NAME'])) {
-      die($this->getError());
+    /**
+     * Methode zum schreiben eines Fehlers in die LogDatei
+     *
+     * @param <string> $message
+     */
+    public function setError($message)
+    {
+        $error_date = date("d.m.Y") . ' - ' . date("H:i") . 'Uhr: ';
+        $error_url = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        $message = $error_url . chr(10) . $message . chr(10) . $error_date;
+        $message .= "\r\n\r\n\r\n\r\n";
+
+        $file = 'assets/logfile/' . $this->ERROR_FILE;
+        $current = file_get_contents($file) . $message;
+        file_put_contents($file, $current);
     }
-  }
-
-  /**
-   * Methode zum schreiben eines Fehlers in die LogDatei
-   *
-   * @param <string> $message
-   */
-  public function setError($message)
-  {
-    $error_date = date("d.m.Y") . ' - ' . date("H:i") . 'Uhr: ';
-    $error_url = filter_input(INPUT_SERVER, 'REQUEST_URI');
-    $message = $error_url . chr(10) . $message . chr(10) . $error_date;
-    $message .= "\r\n\r\n\r\n\r\n";
-
-    $file = 'assets/logfile/' . $this->ERROR_FILE;
-    $current = file_get_contents($file) . $message;
-    file_put_contents($file, $current);
-  }
 
 
-  public function getError()
-  {
-    $file = 'assets/logfile/' . $this->ERROR_FILE;
-    echo '<pre>' . file_get_contents($file) . '</pre>';
-  }
+    public function getError()
+    {
+        $file = 'assets/logfile/' . $this->ERROR_FILE;
+        echo '<pre>' . file_get_contents($file) . '</pre>';
+    }
 
 }
 

@@ -131,7 +131,8 @@
                     <td>${text/inventory_hardware_attachment_list | NULL}</td>
                     <td>
                         <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
-                            <a title="${anhang/attachment}" href="${getPath}${getURL}/download/${anhang/attachment | NULL}">
+                            <a title="${anhang/attachment}"
+                               href="${getPath}${getURL}/download/${anhang/attachment | NULL}">
                                 <img style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
                             </a>
                         </div>

@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($_SESSION['rechte']) || $_SESSION['rechte'] != 'adm') {
-  base::setRoute('home', 'index', TRUE);
+    base::setRoute('home', 'index', TRUE);
 }
 
 template::setText('admin_page', $url['2']);

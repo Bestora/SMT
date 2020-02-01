@@ -152,9 +152,13 @@
                     <tr>
                         <td style="width:25%;">Erlaubte Controller</td>
                         <td style="width:75%;">
-                            <select name="limitController[]" class="form-control select2 select2-hidden-accessible" data-placeholder="Leer lassen für alle Controller" multiple="" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                            <select name="limitController[]" class="form-control select2 select2-hidden-accessible"
+                                    data-placeholder="Leer lassen für alle Controller" multiple="" style="width: 100%;"
+                                    tabindex="-1" aria-hidden="true">
                                 <span tal:condition="configController | NULL">
-                                <option tal:repeat="controller configController" tal:attributes="selected php:in_array(controller, explode(',', daten['secure']['limitController'])) | NULL" value="${controller}">${controller}</option>
+                                <option tal:repeat="controller configController"
+                                        tal:attributes="selected php:in_array(controller, explode(',', daten['secure']['limitController'])) | NULL"
+                                        value="${controller}">${controller}</option>
                             </span>
                             </select>
                         </td>
@@ -163,7 +167,6 @@
             </div>
         </div>
     </div>
-
 
 
 </tal:block>

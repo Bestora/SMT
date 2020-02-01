@@ -29,45 +29,45 @@
 class Language extends Base
 {
 
-  public function __construct()
-  {
-    $session = Session::getInstance();
-    $language = $session->get('language');
+    public function __construct()
+    {
+        $session = Session::getInstance();
+        $language = $session->get('language');
 
-    if (!isset($language) || $language == '') {
-      $this->setLanguage();
-      header("Refresh:0");
+        if (!isset($language) || $language == '') {
+            $this->setLanguage();
+            header("Refresh:0");
+        }
+
+        parent::__construct();
     }
 
-    parent::__construct();
-  }
+    /**
+     * Methode zum setzen einer Sprache
+     * @param string $language
+     */
+    public function setLanguage($language = '')
+    {
+        $session = Session::getInstance();
 
-  /**
-   * Methode zum setzen einer Sprache
-   * @param string $language
-   */
-  public function setLanguage($language = '')
-  {
-    $session = Session::getInstance();
-
-    if (empty($language)) {
-      $this->set('language', $this->get('language'));
-      $session->set('language', $this->get('language'));
-    } else {
-      $this->set('language', $language);
-      $session->set('language', $language);
+        if (empty($language)) {
+            $this->set('language', $this->get('language'));
+            $session->set('language', $this->get('language'));
+        } else {
+            $this->set('language', $language);
+            $session->set('language', $language);
+        }
     }
-  }
 
-  /**
-   * Methode zum lesen der aktuelle Sprache
-   * @return string
-   */
-  public function getLanguage()
-  {
-    $session = Session::getInstance();
-    return $session->get('language');
-  }
+    /**
+     * Methode zum lesen der aktuelle Sprache
+     * @return string
+     */
+    public function getLanguage()
+    {
+        $session = Session::getInstance();
+        return $session->get('language');
+    }
 
 }
 

@@ -4,8 +4,12 @@
         <div class="box-header no-border">
             <h3 class="box-title">Logfile Meldungen zu fehlerhaften DNS Einträgen</h3>
             <div class="box-tools pull-right">
-                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-globe" aria-hidden="true" title="${text/inventory_license_update_dns | NULL}" href="${getPath}${getURL}/dnsreload"/>
-                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-tasks" aria-hidden="true" title="${text/inventory_license_new_dns_test}" href="${getPath}/cronjob/checkdns/update"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-globe"
+                   aria-hidden="true" title="${text/inventory_license_update_dns | NULL}"
+                   href="${getPath}${getURL}/dnsreload"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-tasks"
+                   aria-hidden="true" title="${text/inventory_license_new_dns_test}"
+                   href="${getPath}/cronjob/checkdns/update"/>
             </div>
         </div>
 
@@ -18,7 +22,10 @@
                     <td>${structure liste/meldung | NULL}</td>
                     <td>
                       <span tal:condition="aSession/admin | NULL">
-                          <a style="float:right;" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-edit" aria-hidden="true" title="${text/vmware_detail_edit | NULL}" href="${getPath}/${liste/serverart | NULL}/edit/${liste/sid}"/>
+                          <a style="float:right;" type="button" aria-label="Left Align"
+                             class="btn btn-default glyphicon glyphicon-edit" aria-hidden="true"
+                             title="${text/vmware_detail_edit | NULL}"
+                             href="${getPath}/${liste/serverart | NULL}/edit/${liste/sid}"/>
                       </span>
                     </td>
                 </tr>

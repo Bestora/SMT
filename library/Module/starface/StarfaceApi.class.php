@@ -8,7 +8,7 @@ spl_autoload_register(function ($class) {
         $filepath_a = explode("\\", $class);
         array_shift($filepath_a);
         array_shift($filepath_a);
-        $filepath = __DIR__."/".implode("/", $filepath_a).".php";
+        $filepath = __DIR__ . "/" . implode("/", $filepath_a) . ".php";
         require_once($filepath);
     }
 });
@@ -31,8 +31,9 @@ class StarfaceApi
      * Initialize new Api Client using GuzzleHttp
      * Initialize new Login Object
      */
-    public function __construct() {
-    
+    public function __construct()
+    {
+
         $this->apiInstance = new Swagger\Client\Api\DefaultApi(
             new GuzzleHttp\Client()
         );
@@ -51,7 +52,8 @@ class StarfaceApi
      * @return string
      * @throws ApiException
      */
-    public function login($username, $password, $userID){
+    public function login($username, $password, $userID)
+    {
         /**
          * Set Login Data
          */
@@ -65,7 +67,7 @@ class StarfaceApi
         try {
             $loginResult = $this->apiInstance->getLogin();
         } catch (Exception $e) {
-            return 'Exception when calling login->getLogin: '.$e->getMessage();
+            return 'Exception when calling login->getLogin: ' . $e->getMessage();
         }
         $nonce = $loginResult['nonce'];
 
@@ -75,7 +77,7 @@ class StarfaceApi
         $loginID = $this->apiInstance->getConfig()->getUsername();
         $password = $this->apiInstance->getConfig()->getPassword();
         $passwordHash = hash('sha512', $password);
-        $secret = $loginID.":".hash('sha512', $loginID.$nonce.$passwordHash);
+        $secret = $loginID . ":" . hash('sha512', $loginID . $nonce . $passwordHash);
 
         $this->login->setLoginType('Internal');
         $this->login->setNonce($nonce);
@@ -92,12 +94,36 @@ class StarfaceApi
     }
 
     /**
+     * Disable all phones, then enable the one with the given number
+     *
+     * @param $mobileNumber
+     * @throws ApiException
+     */
+    public function switchToNumber($mobileNumber)
+    {
+        if ($mobileNumber) {
+            // Disable all active Phones
+            $phones = $this->apiInstance->getFMCPhones();
+            foreach ($phones as $phone) {
+                if ($phone->getActive()) {
+                    $response = $this->toggleFMCPhoneActive($phone->getNumber());
+
+                }
+            }
+
+            // Activate given phone by number
+            $this->toggleFMCPhoneActive($mobileNumber);
+        }
+    }
+
+    /**
      * Toggle Active Status for given FMC Phone
      *
      * @param $number
      * @return string|FmcPhone|null
      */
-    public function toggleFMCPhoneActive($number){
+    public function toggleFMCPhoneActive($number)
+    {
         $foundPhone = '';
         try {
             /**
@@ -105,17 +131,17 @@ class StarfaceApi
              */
             $phones = $this->getFMCPhones();
             foreach ($phones as $phone) {
-                if($phone->getNumber() === $number){
-                    if($phone->getActive()){
+                if ($phone->getNumber() === $number) {
+                    if ($phone->getActive()) {
                         $phone->setActive(false);
-                    }else{
+                    } else {
                         $phone->setActive(true);
                     }
 
                     try {
                         /**
-                        * Update found FMC Phone
-                        */
+                         * Update found FMC Phone
+                         */
                         $this->apiInstance->putFmcPhone($phone->getId(), $phone, $this->userID);
                     } catch (Exception $e) {
                         print_r("<pre>");
@@ -139,33 +165,12 @@ class StarfaceApi
      * @param $userID
      * @return string|FmcPhone[]
      */
-    public function getFMCPhones(){
+    public function getFMCPhones()
+    {
         try {
             return $this->apiInstance->getFmcPhones($this->userID);
         } catch (Exception $e) {
-            return 'Exception when calling getFMCPhones: '.$e->getMessage();
-        }
-    }
-
-    /**
-     * Disable all phones, then enable the one with the given number
-     *
-     * @param $mobileNumber
-     * @throws ApiException
-     */
-    public function switchToNumber($mobileNumber){
-        if($mobileNumber){
-            // Disable all active Phones
-            $phones = $this->apiInstance->getFMCPhones();
-            foreach ($phones as $phone){
-                if($phone->getActive()){
-                    $response = $this->toggleFMCPhoneActive($phone->getNumber());
-
-                }
-            }
-
-            // Activate given phone by number
-            $this->toggleFMCPhoneActive($mobileNumber);
+            return 'Exception when calling getFMCPhones: ' . $e->getMessage();
         }
     }
 }

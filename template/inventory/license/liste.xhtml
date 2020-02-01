@@ -10,7 +10,9 @@
                     <th class="sorting" aria-controls="table">${text/inventory_license_list_key | NULL}</th>
                     <th class="sorting" aria-controls="table">${text/inventory_hardware_assignment | NULL}</th>
                     <th style="width:75px;">
-                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" tal:condition="aSession/admin | NULL" title="${text/structure_new_license | NULL}" href="${getPath}/inventory/license/new"/>
+                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align"
+                           class="btn btn-default glyphicon glyphicon-plus" tal:condition="aSession/admin | NULL"
+                           title="${text/structure_new_license | NULL}" href="${getPath}/inventory/license/new"/>
                     </th>
                 </tr>
                 </thead>

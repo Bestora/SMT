@@ -11,10 +11,10 @@ template::setText('news_content', Base::get('Handler')->loadNews(Base::get('cont
 template::setText('psm_last_update', Base::get('Handler')->getLastUpdate());
 
 if (in_array('refresh', $url)) {
-  $update = new Updater();
-  $update->update(end($url));
+    $update = new Updater();
+    $update->update(end($url));
 
-  header("Location: " . $referr);
+    header("Location: " . $referr);
 }
 
 require_once base::getSubcontroller();

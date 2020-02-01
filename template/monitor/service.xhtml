@@ -167,8 +167,11 @@
                                     data-placeholder="${text/monitor_service_user_notification | NULL}"
                                     style="width: 100%;" tabindex="-1" aria-hidden="true">
                   <span tal:condition="user_liste | NULL">
-                    <option tal:condition="not:service_detail | NULL" tal:repeat="user user_liste" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
-                    <option tal:condition="service_detail | NULL" tal:repeat="user user_liste" tal:attributes="selected php:in_array(user['username'], explode(',', service_detail['user'])) | NULL" value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
+                    <option tal:condition="not:service_detail | NULL" tal:repeat="user user_liste"
+                            value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
+                    <option tal:condition="service_detail | NULL" tal:repeat="user user_liste"
+                            tal:attributes="selected php:in_array(user['username'], explode(',', service_detail['user'])) | NULL"
+                            value="${user/username | NULL}">${user/lastname}, ${user/firstname}</option>
                   </span>
                             </select>
                         </td>
@@ -178,10 +181,12 @@
                         <td>${text/monitor_service_push_notification | NULL}</td>
                         <td>
                             <select class="form-control" name="pushover" size="1">
-                                <option value="yes"  tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'yes'">
+                                <option value="yes"
+                                        tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'yes'">
                                     ${text/monitor_service_push_on | NULL}
                                 </option>
-                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'no'">
+                                <option value="no"
+                                        tal:attributes="selected php:_SESSION['service_detail']['pushover'] == 'no'">
                                     ${text/monitor_service_push_off | NULL}
                                 </option>
                             </select>
@@ -192,10 +197,12 @@
                         <td>${text/monitor_service_push_mail | NULL}</td>
                         <td>
                             <select class="form-control" name="email" size="1">
-                                <option value="yes" tal:attributes="selected php:_SESSION['service_detail']['email'] == 'yes'">
+                                <option value="yes"
+                                        tal:attributes="selected php:_SESSION['service_detail']['email'] == 'yes'">
                                     ${text/monitor_service_push_mail_on}
                                 </option>
-                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['email'] == 'no'">
+                                <option value="no"
+                                        tal:attributes="selected php:_SESSION['service_detail']['email'] == 'no'">
                                     ${text/monitor_service_push_mail_off | NULL}
                                 </option>
                             </select>
@@ -206,10 +213,12 @@
                         <td>${text/monitor_service_messagebird | NULL}</td>
                         <td>
                             <select class="form-control" name="messagebird" size="1">
-                                <option value="yes" tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'yes'">
+                                <option value="yes"
+                                        tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'yes'">
                                     ${text/monitor_service_messagebird_on | NULL}
                                 </option>
-                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'no'">
+                                <option value="no"
+                                        tal:attributes="selected php:_SESSION['service_detail']['messagebird'] == 'no'">
                                     ${text/monitor_service_messagebird_off | NULL}
                                 </option>
                             </select>
@@ -220,10 +229,12 @@
                         <td>${text/monitor_service_telegram | NULL}</td>
                         <td>
                             <select class="form-control" name="telegram" size="1">
-                                <option value="yes" tal:attributes="selected php:_SESSION['service_detail']['telegram'] == 'yes'">
+                                <option value="yes"
+                                        tal:attributes="selected php:_SESSION['service_detail']['telegram'] == 'yes'">
                                     ${text/monitor_service_telegram_on | NULL}
                                 </option>
-                                <option value="no" tal:attributes="selected php:_SESSION['service_detail']['telegram'] == 'no'">
+                                <option value="no"
+                                        tal:attributes="selected php:_SESSION['service_detail']['telegram'] == 'no'">
                                     ${text/monitor_service_telegram_off | NULL}
                                 </option>
                             </select>
@@ -276,7 +287,9 @@
                 </div>
             </div>
             <div class="box-body">
-                <select name="service_relations[]" class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="${text/monitor_service_user_notification | NULL}" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                <select name="service_relations[]" class="form-control select2 select2-hidden-accessible" multiple=""
+                        data-placeholder="${text/monitor_service_user_notification | NULL}" style="width: 100%;"
+                        tabindex="-1" aria-hidden="true">
                   <span tal:condition="user_liste | NULL">
                     <option tal:repeat="service all_services" value="${service/server_id}">${service/label}</option>
                   </span>

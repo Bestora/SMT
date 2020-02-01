@@ -1,19 +1,26 @@
 <tal:block metal:define-macro="standard">
 
-    <li class="treeview ${active_inventory| NULL}" tal:condition="php:in_array('inventory', _SESSION['limitController']) | NULL">
+    <li class="treeview ${active_inventory| NULL}"
+        tal:condition="php:in_array('inventory', _SESSION['limitController']) | NULL">
         <a href="#"><i class="fa fa-archive"></i> <span>${text/home_fourth_nav | NULL}</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
         <ul class="treeview-menu">
-            <li class="${active_inventory_index | NULL}"><a href="${getPath}/inventory/index">${text/nav_inventar_index | NULL}</a></li>
-            <li class="${active_inventory_license | NULL}"><a href="${getPath}/inventory/license">${text/nav_inventar_license | NULL}</a></li>
-            <li class="${active_inventory_hardware | NULL}"><a href="${getPath}/inventory/hardware">${text/nav_inventar_hardware | NULL}</a></li>
-            <li class="${active_inventory_password | NULL}"><a href="${getPath}/inventory/password">${text/nav_inventar_password | NULL}</a></li>
-            <li class="${active_inventory_contract | NULL}"><a href="${getPath}/inventory/contract">${text/nav_inventar_contract | NULL}</a></li>
+            <li class="${active_inventory_index | NULL}"><a href="${getPath}/inventory/index">${text/nav_inventar_index | NULL}</a>
+            </li>
+            <li class="${active_inventory_license | NULL}"><a href="${getPath}/inventory/license">${text/nav_inventar_license | NULL}</a>
+            </li>
+            <li class="${active_inventory_hardware | NULL}"><a href="${getPath}/inventory/hardware">${text/nav_inventar_hardware | NULL}</a>
+            </li>
+            <li class="${active_inventory_password | NULL}"><a href="${getPath}/inventory/password">${text/nav_inventar_password | NULL}</a>
+            </li>
+            <li class="${active_inventory_contract | NULL}"><a href="${getPath}/inventory/contract">${text/nav_inventar_contract | NULL}</a>
+            </li>
             <!--<li class="${active_inventory_inventur | NULL}"><a href="#">${text/nav_inventur}</a></li>-->
-            <li class="${active_inventory_services | NULL}"><a href="${getPath}/inventory/services">${text/nav_inventar_services | NULL}</a></li>
+            <li class="${active_inventory_services | NULL}"><a href="${getPath}/inventory/services">${text/nav_inventar_services | NULL}</a>
+            </li>
 
         </ul>
     </li>

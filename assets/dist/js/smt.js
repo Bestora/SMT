@@ -91,42 +91,42 @@ function setContent(field, content) {
     document.getElementById(field).innerHTML = content;
 }
 
-(function($) {
-  "use strict"; // Start of use strict
+(function ($) {
+    "use strict"; // Start of use strict
 
-  // Toggle the side navigation
-  $("#sidebarToggle").on('click', function(e) {
-    e.preventDefault();
-    $("body").toggleClass("sidebar-toggled");
-    $(".sidebar").toggleClass("toggled");
-  });
+    // Toggle the side navigation
+    $("#sidebarToggle").on('click', function (e) {
+        e.preventDefault();
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+    });
 
-  // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
-  $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
-    if ($(window).width() > 768) {
-      var e0 = e.originalEvent,
-        delta = e0.wheelDelta || -e0.detail;
-      this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-      e.preventDefault();
-    }
-  });
+    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+    $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function (e) {
+        if ($(window).width() > 768) {
+            var e0 = e.originalEvent,
+                delta = e0.wheelDelta || -e0.detail;
+            this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+            e.preventDefault();
+        }
+    });
 
-  // Scroll to top button appear
-  $(document).on('scroll', function() {
-    var scrollDistance = $(this).scrollTop();
-    if (scrollDistance > 100) {
-      $('.scroll-to-top').fadeIn();
-    } else {
-      $('.scroll-to-top').fadeOut();
-    }
-  });
+    // Scroll to top button appear
+    $(document).on('scroll', function () {
+        var scrollDistance = $(this).scrollTop();
+        if (scrollDistance > 100) {
+            $('.scroll-to-top').fadeIn();
+        } else {
+            $('.scroll-to-top').fadeOut();
+        }
+    });
 
-  // Smooth scrolling using jQuery easing
-  $(document).on('click', 'a.scroll-to-top', function(event) {
-    $('html').stop().animate({
-        'scrollTop': 0
-    }, 500, 'swing');
-  });
+    // Smooth scrolling using jQuery easing
+    $(document).on('click', 'a.scroll-to-top', function (event) {
+        $('html').stop().animate({
+            'scrollTop': 0
+        }, 500, 'swing');
+    });
 
     var removedSelectOption = [];
     // Standby: Add days to modal on add user click
@@ -140,12 +140,12 @@ function setContent(field, content) {
                 <div>
                     <label>
                         <input type="checkbox" checked/>
-                        <span>`+$(this).text()+`</span>
+                        <span>` + $(this).text() + `</span>
                     </label>
                 </div>
             `);
         });
-        if(days.length === 0){
+        if (days.length === 0) {
             $('.days-checkbox').append(`
                 Keine freien Tage vorhanden!
             `);
@@ -163,7 +163,7 @@ function setContent(field, content) {
         var options = $('#add-user').find('select').children();
         options.each(function () {
             var username = $(this).val();
-            if(userArray.includes(username)){
+            if (userArray.includes(username)) {
                 removedSelectOption.push($(this));
                 $(this).remove();
             }
@@ -200,7 +200,7 @@ function setContent(field, content) {
 
         var days = el.closest('tr').find('.kw_entry_day_user');
         days.each(function () {
-            if($(this).attr('data-user') === username){
+            if ($(this).attr('data-user') === username) {
                 $(this).removeAttr('data-user');
                 $(this).removeClass('kw_entry_day_user');
                 $(this).addClass('kw_entry_day_no_user');
@@ -208,7 +208,7 @@ function setContent(field, content) {
         });
 
         users.append(`
-            <option value="`+username+`">`+displayName+`</option>
+            <option value="` + username + `">` + displayName + `</option>
         `);
 
         $.ajax({
@@ -217,9 +217,9 @@ function setContent(field, content) {
             data: {
                 'remove-user-standby': true,
                 'username': username,
-                'kw' : kw,
-                'start' : start,
-                'end' : end
+                'kw': kw,
+                'start': start,
+                'end': end
             },
             success: function (data) {
                 el.tooltip('destroy');
@@ -235,20 +235,20 @@ function setContent(field, content) {
         var checkboxes = $('#add-user').find('.days-checkbox input');
         var selectElement = $('#add-user').find('.select2-container');
 
-        if(selectedUser && selectedUser.indexOf("-") >= 0){
+        if (selectedUser && selectedUser.indexOf("-") >= 0) {
             var hasCheckedAtLeastOne = false;
             var days = [];
             checkboxes.each(function () {
-                if($(this).is(':checked')){
+                if ($(this).is(':checked')) {
                     $('.days-checkbox-warning').hide();
                     hasCheckedAtLeastOne = true;
                     var el = $(this).parent().find('span').text();
                     days.push(el);
                 }
             });
-            if(!hasCheckedAtLeastOne){
+            if (!hasCheckedAtLeastOne) {
                 $('.days-checkbox-warning').show();
-            }else{
+            } else {
                 $('#add-user').modal('hide');
                 $.ajax({
                     type: "POST",
@@ -256,20 +256,20 @@ function setContent(field, content) {
                     data: {
                         'add-user-standby': true,
                         'username': selectedUser,
-                        'days' : days
+                        'days': days
                     },
                     success: function (data) {
                         var kw_id = $('.add-user-confirm').attr('data-kw-id');
-                        var el = $('.kw_entry_'+kw_id);
+                        var el = $('.kw_entry_' + kw_id);
                         el.find('.standby-users').append(`
-                        <span data-kw="`+kw_id+`" data-user="`+selectedUser+`" data-toggle="tooltip" title="" data-original-title="`+data.dayString+`" data-html="true">
+                        <span data-kw="` + kw_id + `" data-user="` + selectedUser + `" data-toggle="tooltip" title="" data-original-title="` + data.dayString + `" data-html="true">
                             <i class="fa fa-times remove-user" aria-hidden="true"></i>
-                            `+selectedUserName+`
+                            ` + selectedUserName + `
                         </span>
                         `);
                         var daysSelect = el.closest('tr').find('.kw_entry_day_no_user');
                         daysSelect.each(function () {
-                            if(jQuery.inArray( $(this).text(), days ) >= 0){
+                            if (jQuery.inArray($(this).text(), days) >= 0) {
                                 $(this).attr('data-user', selectedUser);
                                 $(this).addClass('kw_entry_day_user');
                                 $(this).removeClass('kw_entry_day_no_user');
@@ -279,7 +279,7 @@ function setContent(field, content) {
                 });
             }
             selectElement.css('border', 'none');
-        }else{
+        } else {
             selectElement.css('border', '1px solid red');
         }
     });
@@ -287,12 +287,12 @@ function setContent(field, content) {
     // Standby: Save modal and add user to selected date in DB
     $(document).on('click', '.days-checkbox-multi-select label', function () {
         var checkboxes = $('#add-user').find('input[type=checkbox]');
-        if($(this).text() === "Alle"){
-            checkboxes.each(function(){
+        if ($(this).text() === "Alle") {
+            checkboxes.each(function () {
                 $(this).prop('checked', true);
             });
-        }else if($(this).text() === "Keine"){
-            checkboxes.each(function(){
+        } else if ($(this).text() === "Keine") {
+            checkboxes.each(function () {
                 $(this).prop('checked', false);
             });
         }
@@ -311,19 +311,19 @@ function setContent(field, content) {
             data: {
                 'get-reports': true,
                 'year': year,
-                'kw' : kw
+                'kw': kw
             },
             success: function (data) {
                 $('#modal-report-list .day-select').empty();
                 var first = true;
                 var firstElement = "";
                 data.reports.forEach(function (reportData, key) {
-                    if (first){
+                    if (first) {
                         first = false;
                         firstElement = reportData;
                     }
                     $('#modal-report-list .day-select').append(`
-                        <option value="`+reportData.date+`">`+reportData.day+` den `+reportData.date+`</option>
+                        <option value="` + reportData.date + `">` + reportData.day + ` den ` + reportData.date + `</option>
                     `);
                 });
                 quill_editor.setHTML(firstElement.report);
@@ -349,11 +349,11 @@ function setContent(field, content) {
 
     var reports = {};
     // On editor text-change update the attributes on the selected option
-    quill_editor.on('text-change', function(delta, oldDelta, source) {
+    quill_editor.on('text-change', function (delta, oldDelta, source) {
         if (source === 'user') {
             var html = quill_editor.getHTML();
             var option = $('.day-select option:selected');
-            if(html === "<p><br></p>"){
+            if (html === "<p><br></p>") {
                 html = "";
             }
             reports[option.val()] = html;
@@ -364,9 +364,9 @@ function setContent(field, content) {
     $(document).on('change', '.day-select', function () {
         var option = $('.day-select option:selected');
 
-        if(reports[option.val()]){
+        if (reports[option.val()]) {
             quill_editor.setHTML(reports[option.val()]);
-        }else{
+        } else {
             $.ajax({
                 type: "POST",
                 url: "/controller/administration/ajax/standby_ajax.php",
@@ -375,7 +375,7 @@ function setContent(field, content) {
                     'date': option.val()
                 },
                 success: function (data) {
-                    if(data.success){
+                    if (data.success) {
                         quill_editor.setHTML(data.report);
                     }
                 }
@@ -424,12 +424,12 @@ function setContent(field, content) {
                 'month': month
             },
             success: function (data) {
-                if(!data.success){
+                if (!data.success) {
                     $('#send-report-emails').next().css('border', '1px solid red');
-                }else{
+                } else {
                     $('#send-report-emails').next().css('border', 'none');
-                    $('.email-sent-text').fadeIn('slow', function(){
-                        setTimeout(function(){
+                    $('.email-sent-text').fadeIn('slow', function () {
+                        setTimeout(function () {
                             $('.email-sent-text').fadeOut();
                         }, 500);
                     });
@@ -455,9 +455,9 @@ function setContent(field, content) {
                 $.each(data.logs.result, function (key, data) {
                     $('.log-table').find('tbody').append(`
                     <tr style="height:34px;">
-                        <td>`+data.type+`</td>
-                        <td>`+data.message+`</td>
-                        <td><span style="float:right;">`+data.datetime+`</span></td>
+                        <td>` + data.type + `</td>
+                        <td>` + data.message + `</td>
+                        <td><span style="float:right;">` + data.datetime + `</span></td>
                     </tr>
                     `);
                 });
@@ -468,18 +468,18 @@ function setContent(field, content) {
 
     var rotated = false;
     $(document).on('click', '.footer-copyright', function () {
-        if(!rotated){
+        if (!rotated) {
             AnimateRotate($('html'), 0, 180);
-        }else{
+        } else {
             AnimateRotate($('html'), 180, 0);
         }
         rotated = !rotated;
     });
 
-    function AnimateRotate(elem, from, to){
+    function AnimateRotate(elem, from, to) {
         $({deg: from}).animate({deg: to}, {
             duration: 2000,
-            step: function(now){
+            step: function (now) {
                 elem.css({
                     transform: "rotate(" + now + "deg)"
                 });

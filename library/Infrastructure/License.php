@@ -29,81 +29,81 @@
 class License
 {
 
-  /**
-   * Methode zum auslesen aller Services eines bestimmten Systems
-   *
-   * @param type $iId
-   * @return type
-   */
-  public function getAll()
-  {
-    $db = new Database('SMT-ADMIN');
+    /**
+     * Methode zum auslesen aller Services eines bestimmten Systems
+     *
+     * @param type $iId
+     * @return type
+     */
+    public function getAll()
+    {
+        $db = new Database('SMT-ADMIN');
 
-    return $db->getQuery("SELECT * FROM wos_license ORDER BY hersteller", array(), True);
-  }
-
-  /**
-   * Methode zum auslesen aller Services eines bestimmten Systems
-   *
-   * @param type $iId
-   * @return type
-   */
-  public function getDetail($id)
-  {
-    $db = new Database('SMT-ADMIN');
-    $file = new File;
-    $result = $db->getQuery("SELECT * FROM wos_license WHERE id=:id", array(':id' => $id), True);
-    $result['0']['anhang'] = $file->getAttachment('license', $id);
-
-    return $result['0'];
-  }
-
-  /**
-   * Löschen einer Lizenz
-   * @param type $id
-   */
-  public function delLicense($id)
-  {
-    $db = new Database('SMT-ADMIN');
-
-    $query = "DELETE FROM wos_license WHERE id=:id";
-    $db->getQuery($query, array(':id' => $id));
-  }
-
-  /**
-   * Methode zum speichern von Lizenzen
-   * @param type $post
-   * @return type
-   */
-  public function saveLicense($post)
-  {
-    $db = new Database('SMT-ADMIN');
-
-    $db->getQuery("INSERT INTO wos_license (anzahl,vmware) VALUES (:anzahl,:vmware)", array(':anzahl' => 1, ':vmware' => 0));
-    $id = $db->getLastID();
-    $this->updateLicense($id, $post);
-
-    return $id;
-  }
-
-  /**
-   * Methode zum speichern von Lizenzen
-   * @param type $post
-   * @return type
-   */
-  public function updateLicense($id, $post)
-  {
-    $db = new Database('SMT-ADMIN');
-
-    foreach ($post as $key => $value) {
-      if ($value != '') {
-        $query = "UPDATE wos_license SET $key=:value WHERE id=:id";
-        $value = array(':value' => $value, ':id' => $id);
-
-        $db->getQuery($query, $value);
-      }
+        return $db->getQuery("SELECT * FROM wos_license ORDER BY hersteller", array(), True);
     }
-  }
+
+    /**
+     * Methode zum auslesen aller Services eines bestimmten Systems
+     *
+     * @param type $iId
+     * @return type
+     */
+    public function getDetail($id)
+    {
+        $db = new Database('SMT-ADMIN');
+        $file = new File;
+        $result = $db->getQuery("SELECT * FROM wos_license WHERE id=:id", array(':id' => $id), True);
+        $result['0']['anhang'] = $file->getAttachment('license', $id);
+
+        return $result['0'];
+    }
+
+    /**
+     * Löschen einer Lizenz
+     * @param type $id
+     */
+    public function delLicense($id)
+    {
+        $db = new Database('SMT-ADMIN');
+
+        $query = "DELETE FROM wos_license WHERE id=:id";
+        $db->getQuery($query, array(':id' => $id));
+    }
+
+    /**
+     * Methode zum speichern von Lizenzen
+     * @param type $post
+     * @return type
+     */
+    public function saveLicense($post)
+    {
+        $db = new Database('SMT-ADMIN');
+
+        $db->getQuery("INSERT INTO wos_license (anzahl,vmware) VALUES (:anzahl,:vmware)", array(':anzahl' => 1, ':vmware' => 0));
+        $id = $db->getLastID();
+        $this->updateLicense($id, $post);
+
+        return $id;
+    }
+
+    /**
+     * Methode zum speichern von Lizenzen
+     * @param type $post
+     * @return type
+     */
+    public function updateLicense($id, $post)
+    {
+        $db = new Database('SMT-ADMIN');
+
+        foreach ($post as $key => $value) {
+            if ($value != '') {
+                $query = "UPDATE wos_license SET $key=:value WHERE id=:id";
+                $value = array(':value' => $value, ':id' => $id);
+
+                $db->getQuery($query, $value);
+            }
+        }
+    }
 
 }
 

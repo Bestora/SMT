@@ -1,12 +1,16 @@
 <tal:block metal:define-macro="standard">
 
-    <form id="newlicense" name="newlicense" method="post" action="${getPath}${getURL}/save" multipart="" enctype="multipart/form-data">
+    <form id="newlicense" name="newlicense" method="post" action="${getPath}${getURL}/save" multipart=""
+          enctype="multipart/form-data">
         <div class="box box-primary">
             <div class="box-header no-border">
                 <h3 class="box-title">${text/inventory_license_license_data | NULL}</h3>
                 <div class="box-tools pull-right">
-                    <button type="submit" aria-label="Left Align" title="${text/inventory_license_new_save | NULL}" class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
-                    <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}" class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true" href="javascript:history.back();"/>
+                    <button type="submit" aria-label="Left Align" title="${text/inventory_license_new_save | NULL}"
+                            class="btn btn-default glyphicon glyphicon-ok" aria-hidden="true"/>
+                    <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                       class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                       href="javascript:history.back();"/>
                 </div>
             </div>
 
@@ -15,7 +19,9 @@
                     <tbody>
                     <tr>
                         <td style="width:25%;">${text/inventory_license_barcode | NULL}</td>
-                        <td style="width:75%;"><input type="text" name="barcode" id="contactEmail" class="form-control" value="${detail/barcode | NULL}" placeholder="${text/inventory_license_placeholder | NULL}"/></td>
+                        <td style="width:75%;"><input type="text" name="barcode" id="contactEmail" class="form-control"
+                                                      value="${detail/barcode | NULL}"
+                                                      placeholder="${text/inventory_license_placeholder | NULL}"/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -33,18 +39,23 @@
                     <tr>
                         <td style="width:25%;">${text/inventory_hardware_manufacturer | NULL}</td>
                         <td style="width:75%;">
-                            <input type="text" name="hersteller" id="hersteller" minlength="2" class="form-control" value="${detail/hersteller | NULL}" placeholder="${text/inventory_license_software | NULL}"/>
+                            <input type="text" name="hersteller" id="hersteller" minlength="2" class="form-control"
+                                   value="${detail/hersteller | NULL}"
+                                   placeholder="${text/inventory_license_software | NULL}"/>
                         </td>
                     </tr>
 
                     <tr>
                         <td>${text/inventory_license_list_product | NULL}</td>
-                        <td><input type="text" name="produkt" id="produkt" minlength="2" value="${detail/produkt | NULL}" class="form-control" placeholder="${text/inventory_license_new_workspace | NULL}"/></td>
+                        <td><input type="text" name="produkt" id="produkt" minlength="2"
+                                   value="${detail/produkt | NULL}" class="form-control"
+                                   placeholder="${text/inventory_license_new_workspace | NULL}"/></td>
                     </tr>
 
                     <tr>
                         <td>${text/inventory_license_version | NULL}</td>
-                        <td><input type="text" name="version" value="${detail/version | NULL}" class="form-control" placeholder="${text/inventory_license_new_version | NULL}"/></td>
+                        <td><input type="text" name="version" value="${detail/version | NULL}" class="form-control"
+                                   placeholder="${text/inventory_license_new_version | NULL}"/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -61,12 +72,14 @@
                     <tbody>
                     <tr>
                         <td style="width:25%;">${text/inventory_license_licensekey | NULL}</td>
-                        <td style="width:75%;"><input type="text" name="licensekey" id="licensekey" value="${detail/licensekey | NULL}" class="form-control"/></td>
+                        <td style="width:75%;"><input type="text" name="licensekey" id="licensekey"
+                                                      value="${detail/licensekey | NULL}" class="form-control"/></td>
                     </tr>
 
                     <tr>
                         <td>${text/inventory_license_list_number | NULL}</td>
-                        <td><input type="text" name="anzahl" id="anzahl" value="${detail/anzahl | NULL}" class="form-control"/></td>
+                        <td><input type="text" name="anzahl" id="anzahl" value="${detail/anzahl | NULL}"
+                                   class="form-control"/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -83,15 +96,19 @@
                     <tbody>
                     <tr>
                         <td style="width:25%;">${text/inventory_license_new_user | NULL}</td>
-                        <td style="width:75%;"><input type="text" name="zuordnung" value="${detail/zuordnung | NULL}" class="form-control"/></td>
+                        <td style="width:75%;"><input type="text" name="zuordnung" value="${detail/zuordnung | NULL}"
+                                                      class="form-control"/></td>
                     </tr>
 
                     <tr>
                         <td>${text/inventory_license_mapping_image | NULL}</td>
                         <td>
-                            <select name="vmware" class="form-control select2 select2-hidden-accessible" data-placeholder="${text/monitor_service_user_notification | NULL}" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                            <select name="vmware" class="form-control select2 select2-hidden-accessible"
+                                    data-placeholder="${text/monitor_service_user_notification | NULL}"
+                                    style="width: 100%;" tabindex="-1" aria-hidden="true">
                                 <option>${text/inventory_license_mapping_image | NULL}</option>
-                                <option tal:condition="detail | NULL" tal:repeat="liste images" value="${liste/id}" tal:attributes="selected php:detail['vmware'] == liste['id'] | NULL">
+                                <option tal:condition="detail | NULL" tal:repeat="liste images" value="${liste/id}"
+                                        tal:attributes="selected php:detail['vmware'] == liste['id'] | NULL">
                                     ${liste/bezeichnung}
                                 </option>
                                 <option tal:condition="not:detail | NULL" tal:repeat="liste images" value="${liste/id}">
@@ -120,14 +137,16 @@
                     <tbody>
                     <tr>
                         <td style="width:25%;">${text/inventory_hardware_attachment_new | NULL}</td>
-                        <td style="width:75%;"><input type="file" name="filesToUpload[]" id="filesToUpload" multiple="multiple"/></td>
+                        <td style="width:75%;"><input type="file" name="filesToUpload[]" id="filesToUpload"
+                                                      multiple="multiple"/></td>
                     </tr>
 
                     <tr style="height:72px;" tal:condition="detail/anhang | NULL">
                         <td>${text/inventory_hardware_attachment_list | NULL}</td>
                         <td>
                             <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
-                                <a title="${anhang}" href="${getPath}/download/${anhang | NULL}"><img style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
+                                <a title="${anhang}" href="${getPath}/download/${anhang | NULL}"><img
+                                        style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
                                 </a>
                             </div>
                         </td>
@@ -140,7 +159,8 @@
 
         <div class="box" style="margin-top: 20px;">
             <div class="box-body" style="padding: 15px;">
-                <textarea name="beschreibung" class="textarea" id="editor" style="width: 100%; height: 500px; " placeholder="${text/inventory_license_comment | NULL}">${detail/beschreibung | NULL}</textarea>
+                <textarea name="beschreibung" class="textarea" id="editor" style="width: 100%; height: 500px; "
+                          placeholder="${text/inventory_license_comment | NULL}">${detail/beschreibung | NULL}</textarea>
             </div>
         </div>
 

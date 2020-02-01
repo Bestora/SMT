@@ -33,10 +33,10 @@ spl_autoload_register('App\SMT');
 class App extends \Config
 {
 
-  public function __construct()
-  {
-    parent::__construct();
-  }
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
 }
 
@@ -48,48 +48,48 @@ $App = new App ();
  */
 function SMT($class)
 {
-  // Erlabute folder für Klassen
-  $allowed = array(
-    'App',
-    'ServerService',
-    'Infrastructure',
-    'Module',
-    'System',
-    'TicketSystem');
+    // Erlabute folder für Klassen
+    $allowed = array(
+        'App',
+        'ServerService',
+        'Infrastructure',
+        'Module',
+        'System',
+        'TicketSystem');
 
-  // Aktuellen folder einlesen
-  $folder = scandir(dirname(__FILE__));
+    // Aktuellen folder einlesen
+    $folder = scandir(dirname(__FILE__));
 
-  for ($i = 0; $i < count($folder); $i++) {
-    if (!strstr($folder [$i], '.')) {
-      $class_folder [$i] = scandir(dirname(__FILE__) . '/' . $folder [$i]);
-      for ($c = 0; $c < count($class_folder [$i]); $c++) {
-        if (is_dir(dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c])) {
-          $sub_class_folder [$i] = scandir(dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c]);
-          for ($s = 0; $s < count($sub_class_folder [$i]); $s++) {
-            $ClassName = str_replace('.php', '', $sub_class_folder [$i] [$s]);
-            if ($ClassName == $class) {
-              require_once dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c] . '/' . $sub_class_folder [$i] [$s];
+    for ($i = 0; $i < count($folder); $i++) {
+        if (!strstr($folder [$i], '.')) {
+            $class_folder [$i] = scandir(dirname(__FILE__) . '/' . $folder [$i]);
+            for ($c = 0; $c < count($class_folder [$i]); $c++) {
+                if (is_dir(dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c])) {
+                    $sub_class_folder [$i] = scandir(dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c]);
+                    for ($s = 0; $s < count($sub_class_folder [$i]); $s++) {
+                        $ClassName = str_replace('.php', '', $sub_class_folder [$i] [$s]);
+                        if ($ClassName == $class) {
+                            require_once dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c] . '/' . $sub_class_folder [$i] [$s];
+                        }
+                    }
+                }
+
+                if (strstr($class_folder [$i] [$c], '.php')) {
+                    $ClassName = str_replace('.php', '', $class_folder [$i] [$c]);
+                    if ($ClassName == $class) {
+                        require_once dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c];
+                    }
+                }
             }
-          }
         }
 
-        if (strstr($class_folder [$i] [$c], '.php')) {
-          $ClassName = str_replace('.php', '', $class_folder [$i] [$c]);
-          if ($ClassName == $class) {
-            require_once dirname(__FILE__) . '/' . $folder [$i] . '/' . $class_folder [$i] [$c];
-          }
+        if (strstr($folder [$i], '.php')) {
+            $ClassName = str_replace('.php', '', $folder [$i]);
+            if ($ClassName == $class) {
+                require_once dirname(__FILE__) . '/' . $folder [$i];
+            }
         }
-      }
     }
-
-    if (strstr($folder [$i], '.php')) {
-      $ClassName = str_replace('.php', '', $folder [$i]);
-      if ($ClassName == $class) {
-        require_once dirname(__FILE__) . '/' . $folder [$i];
-      }
-    }
-  }
 }
 
 ?>

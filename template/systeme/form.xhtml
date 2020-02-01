@@ -21,7 +21,10 @@
                     <tbody>
                     <tr>
                         <td style="width:25%;">
-                            ${text/structure_form_priority | NULL} <i data-toggle="popover" title="${text/titel_priority | NULL}" data-content="${text/text_priority | NULL}" class="btn btn-box-tool fa fa-question-circle smt-helper"></i>
+                            ${text/structure_form_priority | NULL} <i data-toggle="popover"
+                                                                      title="${text/titel_priority | NULL}"
+                                                                      data-content="${text/text_priority | NULL}"
+                                                                      class="btn btn-box-tool fa fa-question-circle smt-helper"></i>
                         </td>
                         <td style="width:75%;">
                             <select class="form-control" name="prio" size="1" tal:condition="server_detail | NULL">

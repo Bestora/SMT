@@ -30,7 +30,8 @@
                     </div>
                     <div style="margin-top:-20px;">
                         ${text/monitor_status_number_monitoring | NULL}:
-                        ${server/aktive_monitor_service | NULL}/${server/anzahl_monitor | NULL} (${server/progress | NULL}%)
+                        ${server/aktive_monitor_service | NULL}/${server/anzahl_monitor | NULL}
+                        (${server/progress | NULL}%)
                     </div>
                 </p>
             </a>
@@ -46,7 +47,6 @@
     </div>
 
 </tal:block>
-
 
 
 <tal:block metal:define-macro="overview">

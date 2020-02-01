@@ -10,7 +10,10 @@
                     <th>${text/inventory_ip | NULL}</th>
                     <th>${text/structure_details_location | NULL}</th>
                     <th style="width:80px;">
-                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" tal:condition="php:controller!='inventory' && isset(aSession['admin']) | NULL" href="${getPath}/${aSession/controller}/new"/>
+                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align"
+                           class="btn btn-default glyphicon glyphicon-plus"
+                           tal:condition="php:controller!='inventory' && isset(aSession['admin']) | NULL"
+                           href="${getPath}/${aSession/controller}/new"/>
                     </th>
                 </tr>
                 </thead>

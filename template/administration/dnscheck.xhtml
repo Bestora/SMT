@@ -1,7 +1,9 @@
 <tal:block metal:define-macro="standard">
 
     <div id="check_menue_main">
-    <span tal:repeat="ip scanarea" class="btn btn-success btn-lrg ajax" id="check_start_button_dns_8" style="margin-right: 20px;" onclick="post_ajax_dns(1, 254, '${ip}'); document.getElementById('scanner').style.display='block'; document.getElementById('list').style.display='none'; return false;">
+    <span tal:repeat="ip scanarea" class="btn btn-success btn-lrg ajax" id="check_start_button_dns_8"
+          style="margin-right: 20px;"
+          onclick="post_ajax_dns(1, 254, '${ip}'); document.getElementById('scanner').style.display='block'; document.getElementById('list').style.display='none'; return false;">
       ${text/inventory_license_scan | NULL} (${ip})
     </span> (Für eine vollständige Statistik den Scan durchlaufen lassen)
         <br/><br/>

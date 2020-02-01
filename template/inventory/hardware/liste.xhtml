@@ -5,26 +5,48 @@
             <table id="table" class="table table-striped dataTable" role="grid">
                 <thead tal:condition="not:showSearch | NULL">
                 <tr>
-                    <th class="sorting" aria-controls="table" style="width:25%;">${text/inventory_hardware_designation | NULL}</th>
-                    <th class="sorting" aria-controls="table" style="width:10%;">${text/inventory_hardware_category | NULL}</th>
-                    <th class="sorting" aria-controls="table" style="width:10%;">${text/inventory_hardware_manufacturer | NULL}</th>
-                    <th class="sorting" aria-controls="table" style="width:15%;">${text/inventory_hardware_model | NULL}</th>
-                    <th class="sorting" aria-controls="table" style="width:10%;">${text/inventory_hardware_inventory | NULL}</th>
-                    <th class="sorting" aria-controls="table" style="width:10%">${text/inventory_hardware_assignment | NULL}</th>
-                    <th class="sorting" aria-controls="table" style="width:10%;">${text/inventory_hardware_date_purchase | NULL}</th>
+                    <th class="sorting" aria-controls="table" style="width:25%;">
+                        ${text/inventory_hardware_designation | NULL}
+                    </th>
+                    <th class="sorting" aria-controls="table" style="width:10%;">
+                        ${text/inventory_hardware_category | NULL}
+                    </th>
+                    <th class="sorting" aria-controls="table" style="width:10%;">
+                        ${text/inventory_hardware_manufacturer | NULL}
+                    </th>
+                    <th class="sorting" aria-controls="table" style="width:15%;">
+                        ${text/inventory_hardware_model | NULL}
+                    </th>
+                    <th class="sorting" aria-controls="table" style="width:10%;">
+                        ${text/inventory_hardware_inventory | NULL}
+                    </th>
+                    <th class="sorting" aria-controls="table" style="width:10%">
+                        ${text/inventory_hardware_assignment | NULL}
+                    </th>
+                    <th class="sorting" aria-controls="table" style="width:10%;">
+                        ${text/inventory_hardware_date_purchase | NULL}
+                    </th>
                     <tH style="width:75px;">
-                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-plus" tal:condition="aSession/admin | NULL" title="${text/structure_new_license | NULL}" href="${getPath}/inventory/hardware/new"/>
+                        <a style="float:right; margin-right: 5px;" type="button" aria-label="Left Align"
+                           class="btn btn-default glyphicon glyphicon-plus" tal:condition="aSession/admin | NULL"
+                           title="${text/structure_new_license | NULL}" href="${getPath}/inventory/hardware/new"/>
                     </tH>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr tal:condition="hardware_liste | NULL" tal:repeat="list hardware_liste" class="clickable-row" data-href="${getPath}/${controller}/hardware/edit/${list/id}">
-                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/bezeichnung | NULL}</a></td>
-                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/kategorie | NULL}</a></td>
-                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/hersteller | NULL}</a></td>
+                <tr tal:condition="hardware_liste | NULL" tal:repeat="list hardware_liste" class="clickable-row"
+                    data-href="${getPath}/${controller}/hardware/edit/${list/id}">
+                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/bezeichnung | NULL}</a>
+                    </td>
+                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/kategorie | NULL}</a>
+                    </td>
+                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/hersteller | NULL}</a>
+                    </td>
                     <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/modell | NULL}</a></td>
-                    <td><a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/inventarnummer | NULL}</a></td>
+                    <td>
+                        <a href="${getPath}/inventory/hardware/detail/${list/id | NULL}">${list/inventarnummer | NULL}</a>
+                    </td>
                     <td>${list/zuordnung | NULL}</td>
                     <td>${list/kaufdatum | NULL}</td>
                     <td>

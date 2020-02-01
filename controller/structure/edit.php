@@ -5,8 +5,8 @@ $url = base::get('url');
 $sys = $url['2'];
 
 if (end($url) == 'save') {
-  $wos->updateSystem($sys, $_POST);
-  header("Location: " . $_POST['referr']);
+    $wos->updateSystem($sys, $_POST);
+    header("Location: " . $_POST['referr']);
 }
 
 template::setText('referr', $referr);

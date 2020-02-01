@@ -6,8 +6,12 @@
         <div class="box-header no-border">
             <h3 class="box-title">${text/inventory_hardware_info | NULL}</h3>
             <div class="box-tools pull-right">
-                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-pencil" aria-hidden="true" tal:condition="php:_SESSION['rechte'] != 'usr' | NULL" href="${getPath}/${controller}/${methode}/edit/${detail/contract/0/id | NULL}"/>
-                <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}" class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true" href="javascript:history.back();"/>
+                <a type="button" aria-label="Left Align" class="btn btn-default glyphicon glyphicon-pencil"
+                   aria-hidden="true" tal:condition="php:_SESSION['rechte'] != 'usr' | NULL"
+                   href="${getPath}/${controller}/${methode}/edit/${detail/contract/0/id | NULL}"/>
+                <a type="button" aria-label="Left Align" title="${text/system_cancel | NULL}"
+                   class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true"
+                   href="javascript:history.back();"/>
             </div>
         </div>
 
@@ -93,7 +97,8 @@
                     <td>
                         <div style="float: left; padding: 5px; width: 50%;" tal:repeat="anhang detail/anhang">
                             <img style="width:24px;" border="0" src="${getPath}/assets/dist/img/document.png"/>${anhang/attachment | NULL}
-                            (<a title="${anhang/attachment | NULL}" href="${getPath}${getURL}/download/${anhang/attachment | NULL}">download</a>)
+                            (<a title="${anhang/attachment | NULL}"
+                                href="${getPath}${getURL}/download/${anhang/attachment | NULL}">download</a>)
                         </div>
                     </td>
                 </tr>

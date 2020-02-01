@@ -4,7 +4,8 @@
     <tal:block metal:use-macro="structure/metatags.xhtml/standard"/>
 </head>
 
-<body id="page-top" class="hold-transition skin-blue sidebar-mini" tal:condition="php:controller!='moin' && controller!='overview'">
+<body id="page-top" class="hold-transition skin-blue sidebar-mini"
+      tal:condition="php:controller!='moin' && controller!='overview'">
 <div class="wrapper" tal:condition="aSession/username | NULL">
 
     <header class="main-header">
@@ -18,8 +19,10 @@
     <div class="content-wrapper">
 
         <section class="content" id="content" tal:condition="php:controller!='module' | NULL">
-            <tal:block condition="php:controller!='server' && controller != 'vmware' | NULL" metal:use-macro="${controller}/${methode}.xhtml/standard"/>
-            <tal:block condition="php:controller=='server' || controller == 'vmware' | NULL" metal:use-macro="systeme/${methode}.xhtml/standard"/>
+            <tal:block condition="php:controller!='server' && controller != 'vmware' | NULL"
+                       metal:use-macro="${controller}/${methode}.xhtml/standard"/>
+            <tal:block condition="php:controller=='server' || controller == 'vmware' | NULL"
+                       metal:use-macro="systeme/${methode}.xhtml/standard"/>
         </section>
 
         <section class="content" id="content" tal:condition="php:controller=='module' | NULL">

@@ -34,9 +34,9 @@ define('smt_cookie_domain', project_base);
 define('smt_cookie_secret', 'kivg75cdaqg4iafaa9pd918t76Hdi48s');
 
 if (!file_exists(project_path . '/assets/config/' . $_SERVER['SERVER_NAME'] . '.ini')) {
-  include_once 'install/install.php';
+    include_once 'install/install.php';
 } else {
-  include_once 'library/App.php';
+    include_once 'library/App.php';
 }
 
 /*

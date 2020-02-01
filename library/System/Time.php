@@ -29,40 +29,40 @@
 class Time
 {
 
-  /**
-   * pluralize
-   *
-   * @param <string> $count
-   * @param <beliebig> $text
-   */
-  public function pluralize($count, $text)
-  {
-    $v = $count . (($count == 1) ? (" $text") : (" ${text}en"));
-    return str_replace("een", "en", $v);
-  }
+    /**
+     * Anzeige der letzten Updateaktion
+     * @param <string> $datetime
+     */
+    public function ago($datetime)
+    {
+        $interval = date_create('now')->diff($datetime);
+        $suffix = ($interval->invert ? texte::getText('time_ago_vor') . ' ' : '');
 
-  /**
-   * Anzeige der letzten Updateaktion
-   * @param <string> $datetime
-   */
-  public function ago($datetime)
-  {
-    $interval = date_create('now')->diff($datetime);
-    $suffix = ($interval->invert ? texte::getText('time_ago_vor') . ' ' : '');
+        if ($interval->y >= 1)
+            return $suffix . $this->pluralize($interval->y, texte::getText('time_ago_jahr'));
+        if ($interval->m >= 1)
+            return $suffix . $this->pluralize($interval->m, texte::getText('time_ago_monat'));
+        if ($interval->d >= 1)
+            return $suffix . $this->pluralize($interval->d, texte::getText('time_ago_tag'));
+        if ($interval->h >= 1)
+            return $suffix . $this->pluralize($interval->h, texte::getText('time_ago_stunde'));
+        if ($interval->i >= 1)
+            return $suffix . $this->pluralize($interval->i, texte::getText('time_ago_minute'));
 
-    if ($interval->y >= 1)
-      return $suffix . $this->pluralize($interval->y, texte::getText('time_ago_jahr'));
-    if ($interval->m >= 1)
-      return $suffix . $this->pluralize($interval->m, texte::getText('time_ago_monat'));
-    if ($interval->d >= 1)
-      return $suffix . $this->pluralize($interval->d, texte::getText('time_ago_tag'));
-    if ($interval->h >= 1)
-      return $suffix . $this->pluralize($interval->h, texte::getText('time_ago_stunde'));
-    if ($interval->i >= 1)
-      return $suffix . $this->pluralize($interval->i, texte::getText('time_ago_minute'));
+        return $suffix . $this->pluralize($interval->s, texte::getText('time_ago_sekunde'));
+    }
 
-    return $suffix . $this->pluralize($interval->s, texte::getText('time_ago_sekunde'));
-  }
+    /**
+     * pluralize
+     *
+     * @param <string> $count
+     * @param <beliebig> $text
+     */
+    public function pluralize($count, $text)
+    {
+        $v = $count . (($count == 1) ? (" $text") : (" ${text}en"));
+        return str_replace("een", "en", $v);
+    }
 
 }
 

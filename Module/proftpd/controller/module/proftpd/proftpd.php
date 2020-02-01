@@ -24,9 +24,9 @@ include_once project_path . '/controller/' . base::get('controller') . '/' . bas
  * AB HIER NICHTS MEHR ÄNDERN
  */
 for ($m = 0; $m < $i; $m++) {
-  if ($url['2'] == substr($menu[$m]['link'], -strlen($url['2']))) {
-    $menu[$m]['aktiv'] = 'active';
-  }
+    if ($url['2'] == substr($menu[$m]['link'], -strlen($url['2']))) {
+        $menu[$m]['aktiv'] = 'active';
+    }
 }
 
 /**
