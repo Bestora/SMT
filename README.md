@@ -31,8 +31,8 @@ Currently the tool offers the following features:
 * Server / V-SERVER Integration
 
 
-![Screenshot](http://palle.zapto.org/bilder/config.png)
-SMT configuration
+![Screenshot](https://smt.palle.dev/home/chrome_Y6qp2bGt6j.png)
+Overview Infrastructure
  
-![Screenshot](http://palle.zapto.org/bilder/texte.png)
-edit & change texte
+![Screenshot](https://smt.palle.dev/home/chrome_Z7p8tOGdKp.png)
+Health Status (overview)
