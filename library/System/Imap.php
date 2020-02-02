@@ -3,7 +3,7 @@
 /**
  * Klasse zur Verbindung via IMAP und E-Mail Funktionen
  *
- * @author    Werner Pallentin <werner.pallentin@outlook.de>
+ * @author    Werner Pallentin <wpa@palle.de>
  * @package   Module
  */
 class Imap

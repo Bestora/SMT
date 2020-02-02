@@ -3,7 +3,7 @@
 /**
  * Klasse zur Verwaltung der FTP Accounts KGU
  *
- * @author    Werner Pallentin <werner.pallentin@outlook.de>
+ * @author    Werner Pallentin <wpa@palle.de>
  * @package   Module
  */
 class Proftpd

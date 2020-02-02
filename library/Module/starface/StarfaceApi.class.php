@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../vendor/autoload.php');
+require_once(project_vendor.'/autoload.php');
 
 // Custom Autoloader for loading DefaultApi and all dependencies
 spl_autoload_register(function ($class) {

@@ -21,8 +21,8 @@ declare(strict_types=1);
  * along with PHP SMT by palle.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package     SMT
- * @author      Werner Pallentin <werner.pallentin@outlook.de>
- * @copyright   Copyright (c) Werner Pallentin <werner.pallentin@outlook.de>
+ * @author      Werner Pallentin <wpa@palle.de>
+ * @copyright   Copyright (c) Werner Pallentin <wpa@palle.de>
  * @license     http://www.gnu.org/licenses/gpl.txt GNU GPL v3
  * @version     Release: v2.1
  * @link        https://smt.palle.dev

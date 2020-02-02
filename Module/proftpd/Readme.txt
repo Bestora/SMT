@@ -21,6 +21,7 @@ Die Config Datei im Verzeichnis /assets/config/ wie folgt erg�nzen und anpasse
  db_user = username
  db_pass = "password"
  db_base = database
+ db_port = 3306
  db_charset=utf8
 
 Die drei Ordner "controller", "library" und "template" in die Hauptstruktur kopieren
