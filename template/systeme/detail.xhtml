@@ -195,12 +195,12 @@
                         <img tal:condition="php:liste['active'] == 'yes' | NULL" border="0"
                              style="width:20px;height:20px;" src="${getPath}/assets/dist/img/${liste/status}.png"/>
                     </td>
-                    <td style="width:40%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
+                    <td style="width:35%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
                     </td>
                     <td style="width:10%;">${liste/type | NULL}</td>
                     <td style="width:10%;">${liste/port | NULL}</td>
                     <td style="width:15%;">${liste/last_online | NULL}</td>
-                    <td style="width:10%;">
+                    <td style="width:15%;">
                         <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-eye-open"
                               aria-hidden="true" title="${text/structure_activ_monitoring | NULL}"
                               tal:condition="php:liste['active'] == 'yes' | NULL"/>
@@ -265,12 +265,12 @@
                              style="width:20px;height:20px;"
                              src="${getPath}/assets/dist/img/${liste/status | NULL}.png"/>
                     </td>
-                    <td style="width:35%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
+                    <td style="width:30%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
                     </td>
                     <td style="width:10%;">${liste/type | NULL}</td>
                     <td style="width:10%;">${liste/port | NULL}</td>
                     <td style="width:15%;">${liste/last_online | NULL}</td>
-                    <td style="width:15%;">
+                    <td style="width:20%;">
                         <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-eye-open"
                               aria-hidden="true" title="${text/structure_activ_monitoring | NULL}"
                               tal:condition="php:liste['active'] == 'yes' | NULL"/>
