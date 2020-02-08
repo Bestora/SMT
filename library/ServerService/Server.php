@@ -480,7 +480,8 @@ class Server extends Service
             $value['port'] = $db->getValue('port');
             $value['label'] = explode("/", $db->getValue('bezeichnung'));
             $value['label'] = $value['label']['0'];
-            $parent::saveService($value);
+
+            parent::saveService($value);
         }
     }
 
