@@ -265,12 +265,12 @@
                              style="width:20px;height:20px;"
                              src="${getPath}/assets/dist/img/${liste/status | NULL}.png"/>
                     </td>
-                    <td style="width:40%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
+                    <td style="width:35%;"><a href="${getPath}/monitor/detail/${liste/server_id | NULL}">${liste/label | NULL}</a>
                     </td>
                     <td style="width:10%;">${liste/type | NULL}</td>
                     <td style="width:10%;">${liste/port | NULL}</td>
                     <td style="width:15%;">${liste/last_online | NULL}</td>
-                    <td style="width:10%;">
+                    <td style="width:15%;">
                         <span aria-label="Left Align" class="btn btn-box-tool glyphicon glyphicon-eye-open"
                               aria-hidden="true" title="${text/structure_activ_monitoring | NULL}"
                               tal:condition="php:liste['active'] == 'yes' | NULL"/>
@@ -312,17 +312,24 @@
             </div>
         </div>
 
-        <div class="box-body">
-            <table id="table" class="table table-striped dataTable" role="grid">
-                <tbody>
-                <tr tal:repeat="port server_detail/ports" style="height: 35px;">
-                    <td>${port/port | NULL}</td>
-                    <td>${structure port/bezeichnung | NULL}</td>
-                    <td style="text-align: right;">${port/lastcheck | NULL}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <form name="newservices" method="post" action="${getPath}${getURL}">
+            <div class="box-body">
+                <table id="table" class="table table-striped dataTable" role="grid">
+                    <tbody>
+                        <tr tal:repeat="port server_detail/ports" style="height: 35px;">
+                            <td><input type="checkbox" name="service[]" value="${port/id | NULL}"/></td>
+                            <td>${port/port | NULL}</td>
+                            <td>${structure port/bezeichnung | NULL}</td>
+                            <td style="text-align: right;">${port/lastcheck | NULL}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="4"><input type="submit" class="btn btn-success send-report-btn" value="Markierte Servcies eintragen" style="margin-top: 10px;"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
 
     </div>
 

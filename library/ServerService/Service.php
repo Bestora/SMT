@@ -314,6 +314,7 @@ class Service
             if ($key != 'home_system') {
                 $query = "UPDATE psm_servers SET $key=:value WHERE server_id=:id";
                 $value = array(':value' => $value, ':id' => $id);
+
                 $db->getQuery($query, $value);
             }
         }

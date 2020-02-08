@@ -465,6 +465,23 @@ class Server extends Service
         $db->getQuery($query, array(':id' => $id, ':monitor' => $ns));
     }
 
+
+    public function saveMultipleServices($post, $sys)  {
+        $value['user'] = $_SESSION['username'];
+        $value['home_system'] = $sys;
+        $value['type'] = 'service';
+
+        $db = new Database('SMT-ADMIN');
+
+        for($i=0; $i<count($post['service']); $i++) {
+            $db->getQuery("SELECT * FROM wos_server_ports WHERE id=:id", array(':id' => $post['service'][$i]));
+            $value['ip'] = $db->getValue('ipadresse');
+            $value['post'] = $db->getValue('port');
+            $value['label'] = $db->getValue('bezeichnung');
+            parent::saveService($value);
+        }
+    }
+
 }
 
 ?>
