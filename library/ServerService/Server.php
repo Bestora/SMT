@@ -478,8 +478,7 @@ class Server extends Service
             $db->getQuery("SELECT * FROM wos_server_ports WHERE id=:id", array(':id' => $service[$i]));
             $value['ip'] = $db->getValue('ipadresse');
             $value['port'] = $db->getValue('port');
-            $value['label'] = explode("/", $db->getValue('bezeichnung'));
-            $value['label'] = $value['label']['0'];
+            $value['label'] = $db->getValue('bezeichnung');
 
             parent::saveService($value);
         }
