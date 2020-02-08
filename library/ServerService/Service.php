@@ -290,7 +290,7 @@ class Service
         /**
          * Prüfung auf System und Port
          */
-        $db->getQuery("SELECT * FROM psm_servers WHERE home_system=:home_system && port=:port", array(':home_system' => $sys, ':port' => $post['port']));
+        $db->getQuery("SELECT * FROM psm_servers WHERE home_system=:home_system && port=:port", array(':home_system' => $post['home_system'], ':port' => $post['port']));
         if($db->getNumrows() > 0) {
             $error = True;
         }
