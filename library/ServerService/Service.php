@@ -283,11 +283,19 @@ class Service
      */
     public function saveService($post)
     {
+        $error = False;
         $db = new Database('SMT-MONITOR');
         $up = new Updater();
         $post['user'] = implode(',', $post['user']);
+        /**
+         * Prüfung auf System und Port
+         */
+        $db->getQuery("SELECT * FROM psm_servers WHERE home_system=:home_system && port=:port", array(':home_system' => $sys, ':port' => $post['port']));
+        if($db->getNumrows() > 0) {
+            $error = True;
+        }
 
-        if (isset($post['home_system'])) {
+        if (isset($post['home_system']) && $error === False) {
             $return = $post['home_system'];
 
             $query = "INSERT INTO psm_servers (home_system) VALUE (:home_system)";
@@ -300,8 +308,10 @@ class Service
             $id = $post['server_id'];
         }
 
-        $this->updateService($id, $post);
-        $up->update($id);
+        if($error === False) {
+            $this->updateService($id, $post);
+            $up->update($id);
+        }
 
         return $return;
     }
