@@ -489,7 +489,7 @@ class Server extends Service
     public function checkHost($ip) {
 
         $db = new Database('SMT-ADMIN');
-        $db->getQuery("SELECT * FROM wos_server WHERE ipadressen=:ip", array(':ip' => $ip));
+        $db->getQuery("SELECT * FROM wos_server WHERE ipadressen LIKE :ip", array(':ip' => '%'.$ip.'%'));
 
         if($db->getNumrows() > 0) {
             $returnValue = 'on';
