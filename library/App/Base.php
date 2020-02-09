@@ -29,8 +29,7 @@
 class Base extends Content
 {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
@@ -41,8 +40,7 @@ class Base extends Content
      * @param <integer> $iLength
      * @return <string> code
      */
-    public static function createCode($iLength = 8)
-    {
+    public static function createCode($iLength = 8) {
         static $code = '';
 
         $zeichen = "qwertzupasdfghkyxcvbnm";
@@ -62,8 +60,7 @@ class Base extends Content
      *
      * @param <string> $sFile
      */
-    public function getConfig($sFile)
-    {
+    public function getConfig($sFile) {
         $aData = array();
         $aData = parse_ini_file($sFile, TRUE);
         $this->readConfig($aData);
@@ -75,8 +72,7 @@ class Base extends Content
      *
      * @param <array> $aData
      */
-    public function readConfig($aData)
-    {
+    public function readConfig($aData) {
         foreach ($aData as $name => $value) {
             $this->set($name, $value);
         }
@@ -88,8 +84,7 @@ class Base extends Content
      * @param <string> $sName
      * @param <beliebig> $sValue
      */
-    public function set($sName, $sValue, $text = False)
-    {
+    public function set($sName, $sValue, $text = False) {
         $this->$sName = $sValue;
     }
 
@@ -101,8 +96,7 @@ class Base extends Content
      * @param <type> $methode
      * @param <type> $full
      */
-    public function setRoute($controller, $methode, $full = TRUE)
-    {
+    public function setRoute($controller, $methode, $full = TRUE) {
         if ($controller == '') {
             $url = $this->get('url');
 
@@ -131,8 +125,7 @@ class Base extends Content
      * @param <string> $sName
      * @return <beliebig>
      */
-    public function get($sName)
-    {
+    public function get($sName) {
         if (property_exists($this, $sName)) {
             return $this->$sName;
         } else {
@@ -147,8 +140,7 @@ class Base extends Content
      * @param <type> $bReturn
      * @return <type> $gInstance
      */
-    public function registerClass($sClass, $gInstance = False, $bReturn = False)
-    {
+    public function registerClass($sClass, $gInstance = False, $bReturn = False) {
         if ($gInstance === True) {
             $this->set($sClass, True, False);
         } else {
@@ -167,8 +159,4 @@ class Base extends Content
             }
         }
     }
-
-
 }
-
-?>

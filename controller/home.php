@@ -2,7 +2,6 @@
 
 $db = new Database('SMT-ADMIN');
 $time = new Time();
-template::setText('news_content', Base::get('Handler')->loadNews(Base::get('controller')));
 template::setText('psm_last_update', Base::get('Handler')->getLastUpdate());
 
 

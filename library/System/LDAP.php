@@ -53,6 +53,7 @@ class LDAP
      * @param type $user
      * @param type $pass
      * @param type $conf
+     * @throws Exception
      */
     public function __construct($user, $pass, $conf)
     {
@@ -123,6 +124,7 @@ class LDAP
      * @param type $group
      * @param type $search
      * @return boolean
+     * @throws Exception
      */
     public function ldapGroupSearch($group, $search)
     {
@@ -172,8 +174,9 @@ class LDAP
     /**
      * Auslesen der Email Adresse zu einem Benutzerkürzel
      * @param type $field
-     * @param type $search
+     * @param $sUser
      * @return type
+     * @throws Exception
      */
     public function ldapSearch($field, $sUser)
     {
@@ -185,5 +188,3 @@ class LDAP
     }
 
 }
-
-?>

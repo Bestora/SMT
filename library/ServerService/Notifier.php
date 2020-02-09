@@ -316,5 +316,3 @@ class Notifier
     }
 
 }
-
-?>

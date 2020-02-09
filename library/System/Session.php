@@ -34,15 +34,14 @@ class Session
     private static $instance;
     private $sessionState = self::SESSION_NOT_STARTED;
 
-    public function __construct()
-    {
+    public function __construct() {
 
     }
 
     /**
      * Methode zum instanzieren
      *
-     * @return type
+     * @return Session
      */
     public static function getInstance()
     {
@@ -57,7 +56,7 @@ class Session
     /**
      * Session starten
      *
-     * @return <string>
+     * @return bool
      */
     public function startSession()
     {
@@ -88,11 +87,7 @@ class Session
      */
     public static function get($name)
     {
-        if (isset($_SESSION [$name])) {
-            return $_SESSION [$name];
-        } else {
-            return False;
-        }
+        return isset($_SESSION [$name]) ? $_SESSION [$name] : False;
     }
 
     /**
@@ -134,5 +129,3 @@ class Session
     }
 
 }
-
-?>

@@ -32,6 +32,7 @@ class Time
     /**
      * Anzeige der letzten Updateaktion
      * @param <string> $datetime
+     * @return string
      */
     public function ago($datetime)
     {
@@ -57,6 +58,7 @@ class Time
      *
      * @param <string> $count
      * @param <beliebig> $text
+     * @return string|string[]
      */
     public function pluralize($count, $text)
     {

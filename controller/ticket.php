@@ -31,7 +31,6 @@ if (in_array('download', $url)) {
 }
 
 // Standardabfragen ins Template übergeben
-template::setText('news_content', Base::get('Handler')->loadNews(Base::get('controller')));
 template::setText('erledigt', array('0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100'));
 
 // Bei NEU oder EDIT Server und Userdaten ins Template übergeben

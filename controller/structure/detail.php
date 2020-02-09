@@ -6,7 +6,7 @@ $sys = $url['2'];
 $usr = Base::get('Handler')->user;
 $pas = new Password();
 
-if(isset($_POST['service']) && count($_POST['service']) > 0) {
+if (isset($_POST['service']) && count($_POST['service']) > 0) {
     $wos->saveMultipleServices($_POST, $sys);
     header("Location: " . base::get('getPath') . "/" . base::get('controller') . "/detail/" . $sys);
 }

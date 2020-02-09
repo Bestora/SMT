@@ -32,8 +32,7 @@ class Config extends Language
     /**
      * Konstruktor, Config setzen und Autoloader starten
      * */
-    public function __construct()
-    {
+    public function __construct() {
         $this->set('url', explode('/', substr(filter_input(INPUT_SERVER, 'REQUEST_URI'), 1)));
 
         $this->loadConfig();
@@ -67,8 +66,7 @@ class Config extends Language
     /**
      * Einlesen der Konfiguration
      * */
-    public function loadConfig()
-    {
+    public function loadConfig() {
         $url = $this->get('url');
 
         if (strlen(filter_input(INPUT_SERVER, 'REQUEST_URI')) > 1) {
@@ -98,8 +96,7 @@ class Config extends Language
     /**
      * Konstruktor, Config setzen und authentifizieren
      * */
-    public function autoLoader()
-    {
+    public function autoLoader() {
         if (!is_null($this->get('loader'))) {
             $class = explode(',', $this->get('loader'));
 
@@ -114,8 +111,7 @@ class Config extends Language
     /**
      * Methode zum einlesen der Module
      */
-    public function loadModule()
-    {
+    public function loadModule() {
         $file = new File;
         $list = $file->readDir('/controller/module/');
         $menu = array();
@@ -135,5 +131,3 @@ class Config extends Language
     }
 
 }
-
-?>

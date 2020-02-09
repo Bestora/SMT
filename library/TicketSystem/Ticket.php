@@ -42,7 +42,8 @@ class Ticket
 
     /**
      * Methode zum auflisten aller Tickets
-     * @return array
+     * @param string $sUsername
+     * @return string
      */
     public function listTickets($sUsername = '')
     {
@@ -132,5 +133,3 @@ class Ticket
     }
 
 }
-
-?>

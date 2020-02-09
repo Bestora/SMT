@@ -291,7 +291,7 @@ class Service
          * Prüfung auf System und Port
          */
         $db->getQuery("SELECT * FROM psm_servers WHERE home_system=:home_system && port=:port", array(':home_system' => $post['home_system'], ':port' => $post['port']));
-        if($db->getNumrows() > 0) {
+        if ($db->getNumrows() > 0) {
             $error = True;
         }
 
@@ -308,7 +308,7 @@ class Service
             $id = $post['server_id'];
         }
 
-        if($error === False) {
+        if ($error === False) {
             $this->updateService($id, $post);
             $up->update($id);
         }
@@ -341,5 +341,3 @@ class Service
     }
 
 }
-
-?>

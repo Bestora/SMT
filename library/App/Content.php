@@ -29,8 +29,7 @@
 class Content extends Template
 {
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->loadController();
         parent::__construct();
     }
@@ -40,8 +39,7 @@ class Content extends Template
      * wenn kein Controller gefunden wird
      * wird der Content Controller geladen
      */
-    private function loadController()
-    {
+    private function loadController() {
         $session = Session::getInstance();
 
         if (is_object($this->get('Handler'))) {
@@ -81,8 +79,7 @@ class Content extends Template
     /**
      * Methode zum einlesen und Ã¼bergeben des Subcontroller
      */
-    public function getSubcontroller()
-    {
+    public function getSubcontroller() {
         $subcontroller = project_path . '/controller/' . $this->get('controller') . '/' . $this->get('methode') . '.php';
 
 
@@ -98,5 +95,3 @@ class Content extends Template
     }
 
 }
-
-?>

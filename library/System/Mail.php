@@ -30,7 +30,14 @@ define('CLRF', "\n");
 
 class Mail
 {
-
+    /**
+     * Methode zum versenden von Emails
+     * @param $to
+     * @param $from
+     * @param $subject
+     * @param $utf8Html
+     * @return bool
+     */
     public function sendMail($to, $from, $subject, $utf8Html)
     {
         $mailHeader = 'From: ' . $from . CLRF;
@@ -42,5 +49,3 @@ class Mail
     }
 
 }
-
-?>

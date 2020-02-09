@@ -33,6 +33,7 @@ class UptimeArchiver
      * Build a archive
      * @param int $server_id
      * @return boolean
+     * @throws Exception
      */
     public function archive($server_id = null)
     {
@@ -116,5 +117,3 @@ class UptimeArchiver
     }
 
 }
-
-?>

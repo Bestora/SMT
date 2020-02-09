@@ -52,7 +52,7 @@ function main($ajxData)
         $query = "INSERT INTO wos_server_dnsip (ip,port,hostname) VALUE (:ip,:port,:hostname)";
         $value = array(':ip' => $ajxData['ip'] . '.' . $ajxData['port'], ':port' => $port, ':hostname' => $dns);
 
-        if($db->getNumrows() == 0) {
+        if ($db->getNumrows() == 0) {
             $db->getQuery($query, $value);
         }
     }

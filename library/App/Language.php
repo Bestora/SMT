@@ -29,8 +29,7 @@
 class Language extends Base
 {
 
-    public function __construct()
-    {
+    public function __construct() {
         $session = Session::getInstance();
         $language = $session->get('language');
 
@@ -46,8 +45,7 @@ class Language extends Base
      * Methode zum setzen einer Sprache
      * @param string $language
      */
-    public function setLanguage($language = '')
-    {
+    public function setLanguage($language = '') {
         $session = Session::getInstance();
 
         if (empty($language)) {
@@ -63,12 +61,9 @@ class Language extends Base
      * Methode zum lesen der aktuelle Sprache
      * @return string
      */
-    public function getLanguage()
-    {
+    public function getLanguage() {
         $session = Session::getInstance();
         return $session->get('language');
     }
 
 }
-
-?>

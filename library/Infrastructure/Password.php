@@ -115,6 +115,4 @@ class Password
 
         return $db->getQuery($query, $value, True);
     }
-
-
 }

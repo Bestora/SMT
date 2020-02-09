@@ -316,16 +316,17 @@
             <div class="box-body">
                 <table id="table" class="table table-striped dataTable" role="grid">
                     <tbody>
-                        <tr tal:repeat="port server_detail/ports" style="height: 35px;">
-                            <td><input type="checkbox" name="service[]" value="${port/id | NULL}"/></td>
-                            <td>${port/port | NULL}</td>
-                            <td>${structure port/bezeichnung | NULL}</td>
-                            <td style="text-align: right;">${port/lastcheck | NULL}</td>
-                        </tr>
+                    <tr tal:repeat="port server_detail/ports" style="height: 35px;">
+                        <td><input type="checkbox" name="service[]" value="${port/id | NULL}"/></td>
+                        <td>${port/port | NULL}</td>
+                        <td>${structure port/bezeichnung | NULL}</td>
+                        <td style="text-align: right;">${port/lastcheck | NULL}</td>
+                    </tr>
 
-                        <tr>
-                            <td colspan="4"><input type="submit" class="btn btn-success send-report-btn" value="Markierte Servcies eintragen" style="margin-top: 10px;"/></td>
-                        </tr>
+                    <tr>
+                        <td colspan="4"><input type="submit" class="btn btn-success send-report-btn"
+                                               value="Markierte Servcies eintragen" style="margin-top: 10px;"/></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

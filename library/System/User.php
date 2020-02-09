@@ -109,6 +109,13 @@ class User
         return false;
     }
 
+    /**
+     * Auslesen der Benutzerinformationen
+     * @param $tabelle
+     * @param $username
+     * @param string $feld
+     * @return string
+     */
     public function getUserDaten($tabelle, $username, $feld = '*')
     {
         $db = new Database('SMT-USER');
@@ -125,6 +132,9 @@ class User
         }
     }
 
+    /**
+     * Methode zum erzeugen eines Cookies
+     */
     private function createCookie()
     {
         $db = new Database('SMT-USER');
@@ -170,6 +180,11 @@ class User
         unset($session->status);
     }
 
+    /**
+     * Prüfung ob der User Admin ist
+     * @param string $sUsername
+     * @return bool
+     */
     public function isAdmin($sUsername = '')
     {
         if (empty($sUsername)) {
@@ -279,6 +294,9 @@ class User
 
     }
 
+    /**
+     *
+     */
     public function setLimitController()
     {
         $session = Session::getInstance();
@@ -298,6 +316,7 @@ class User
      *
      * @param array $aPost
      * @param string $sDatabase
+     * @return string
      */
     public function createUser($aPost)
     {
@@ -347,6 +366,7 @@ class User
      * @param array $aPost
      * @param string $sUsername
      * @param string $sDatabase
+     * @return string
      */
     public function saveUserdata($aPost, $sUsername = '')
     {
@@ -397,7 +417,6 @@ class User
      *
      * @param string $sPasswort
      * @param string $sUsername
-     * @param string $sDatabase
      */
     public function changePasswort($sPasswort, $sUsername)
     {
@@ -410,7 +429,9 @@ class User
     }
 
     /**
-     * Methode zum einlesen aller Daten zum Benutzer
+     * Alle Userdaten zur Verfügung stellen
+     * @param string $sUser
+     * @return array
      */
     public function getUser($sUser = '')
     {
@@ -460,6 +481,10 @@ class User
         $_SESSION['Security'] = $management;
     }
 
+    /**
+     * Erzeugen eines Authentifizierungscode
+     * @return mixed
+     */
     public function createAuthcode()
     {
         $database = new Database('SMT-USER');
@@ -472,6 +497,10 @@ class User
         return $authCode;
     }
 
+    /**
+     * Benutzer löschen
+     * @param $sUsername
+     */
     public function delUser($sUsername)
     {
         $db = new Database('SMT-USER');
@@ -491,6 +520,11 @@ class User
         $db->getQuery($query_favorite, array(':username' => $sUsername), False);
     }
 
+    /**
+     * Favorit prüfen
+     * @param $sys
+     * @return bool
+     */
     public function checkFavorite($sys)
     {
         $db = new Database('SMT-USER');
@@ -509,8 +543,7 @@ class User
     /**
      * Neuen Benutzer in den Standardtabellen anlegen
      *
-     * @param array $aPost
-     * @param string $sDatabase
+     * @param $sys
      */
     public function Favorite($sys)
     {
@@ -529,6 +562,10 @@ class User
         $db->getQuery($query, $value);
     }
 
+    /**
+     * Methode zum einlesen einer Benutzerliste
+     * @return Exception
+     */
     public function listUsers()
     {
         $db = new Database('SMT-USER');
@@ -539,5 +576,3 @@ class User
     }
 
 }
-
-?>

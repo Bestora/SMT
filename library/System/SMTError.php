@@ -68,5 +68,3 @@ class SMTError extends Exception
     }
 
 }
-
-?>

@@ -467,7 +467,8 @@ class Server extends Service
     }
 
 
-    public function saveMultipleServices($post, $sys)  {
+    public function saveMultipleServices($post, $sys)
+    {
         $db = new Database('SMT-ADMIN');
         $service = $post['service'];
 
@@ -475,7 +476,7 @@ class Server extends Service
         $value['home_system'] = $sys;
         $value['type'] = 'service';
 
-        for($i=0; $i<count($service); $i++) {
+        for ($i = 0; $i < count($service); $i++) {
             $db->getQuery("SELECT * FROM wos_server_ports WHERE id=:id", array(':id' => $service[$i]));
             $value['ip'] = $db->getValue('ipadresse');
             $value['port'] = $db->getValue('port');
@@ -486,12 +487,13 @@ class Server extends Service
     }
 
 
-    public function checkHost($ip) {
+    public function checkHost($ip)
+    {
 
         $db = new Database('SMT-ADMIN');
-        $db->getQuery("SELECT * FROM wos_server WHERE ipadressen LIKE :ip", array(':ip' => '%'.$ip.'%'));
+        $db->getQuery("SELECT * FROM wos_server WHERE ipadressen LIKE :ip", array(':ip' => '%' . $ip . '%'));
 
-        if($db->getNumrows() > 0) {
+        if ($db->getNumrows() > 0) {
             $returnValue = 'on';
         } else {
             $returnValue = 'off';
@@ -501,5 +503,3 @@ class Server extends Service
     }
 
 }
-
-?>

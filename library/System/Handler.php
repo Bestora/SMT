@@ -117,6 +117,10 @@ class Handler extends Texte
         }
     }
 
+    /**
+     * Methode zum prüfen der Version
+     * @param $check
+     */
     public function checkVersion($check)
     {
         Template::setText('SMTVERSION', $this->config['version']);
@@ -125,31 +129,6 @@ class Handler extends Texte
             if ($v['0'] != $this->config['version']) {
                 Template::setText('SMTUPDATE', $v['0']);
             }
-        }
-    }
-
-    /**
-     * News einlesen
-     * @param type $controller
-     * @return type
-     */
-    public function loadNews($controller)
-    {
-        $db = new Database('SMT-ADMIN');
-
-        $query = "SELECT *, DATE_FORMAT(datum,'%d.%m.%Y %H:%i') AS niceDatum FROM wos_news WHERE controller=:controller || controller=:keineangabe ORDER BY id DESC";
-        $db->getQuery($query, array(':controller' => $controller, ':keineangabe' => ''));
-
-        $news = $db->getValue();
-        for ($i = 0; $i < count($news); $i++) {
-            $news_content[$i]['titel'] = $news[$i]['titel'];
-            $news_content[$i]['nachricht'] = $news[$i]['nachricht'];
-            $news_content[$i]['datum'] = $news[$i]['niceDatum'];
-            $news_content[$i]['author'] = $news[$i]['author'];
-        }
-
-        if ($db->getNumrows() > 0) {
-            return $news_content;
         }
     }
 
@@ -167,5 +146,3 @@ class Handler extends Texte
     }
 
 }
-
-?>

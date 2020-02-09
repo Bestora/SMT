@@ -36,6 +36,11 @@ class File
     public $UPLOAD = 'assets/uploads/';
 
 
+    /**
+     * @param $controller
+     * @param $id
+     * @return string
+     */
     public function getAttachment($controller, $id)
     {
         $error = False;
@@ -56,7 +61,7 @@ class File
      * Metohde zum auslesen eines Verzeichnisses
      *
      * @param <string> $sFolder
-     * @return boolean
+     * @return array
      */
     public function readDir($sFolder)
     {
@@ -243,5 +248,3 @@ class File
     }
 
 }
-
-?>

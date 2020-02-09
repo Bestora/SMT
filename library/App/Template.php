@@ -29,8 +29,7 @@
 class Template
 {
 
-    public function __construct()
-    {
+    public function __construct() {
         require project_vendor . '/phptal/phptal/classes/PHPTAL.php';
         $this->vorlage = project_path . '/template/index.xhtml';
         $this->setText('page_title', $this->get('page_title'));
@@ -38,8 +37,7 @@ class Template
         $this->showOuput();
     }
 
-    public function setText($sName, $sValue)
-    {
+    public function setText($sName, $sValue) {
         $tpl = $this->get('tpl');
         $number = @count($tpl);
 
@@ -72,8 +70,7 @@ class Template
     /**
      * Methode zur Ausgabe der Seite
      */
-    public function showOuput()
-    {
+    public function showOuput() {
         $this->setText('getPath', $this->get('getPath'));
         $this->setText('getPathUrl', $this->get('getPath'));
 
@@ -130,11 +127,8 @@ class Template
     /**
      * Template ausfuehren / anzeigen
      */
-    public function showTemplate()
-    {
+    public function showTemplate() {
         $this->get('phptal')->execute();
     }
 
 }
-
-?>

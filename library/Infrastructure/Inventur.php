@@ -97,5 +97,3 @@ class Inventur
     }
 
 }
-
-?>

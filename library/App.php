@@ -33,8 +33,7 @@ spl_autoload_register('App\SMT');
 class App extends \Config
 {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
@@ -91,5 +90,3 @@ function SMT($class)
         }
     }
 }
-
-?>

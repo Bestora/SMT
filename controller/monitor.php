@@ -7,7 +7,6 @@ $service = new Service;
 $server = new Server;
 $user = Base::get('Handler')->user;
 
-template::setText('news_content', Base::get('Handler')->loadNews(Base::get('controller')));
 template::setText('psm_last_update', Base::get('Handler')->getLastUpdate());
 
 if (in_array('refresh', $url)) {
