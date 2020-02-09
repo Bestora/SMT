@@ -50,7 +50,7 @@ class Database
      * Methode zum auslesen der Ergebnisse
      *
      * @param string $sName
-     * @param int $iPosition
+     * @param string $iPosition
      * @return string oder array
      */
     public function getValue($sName = '', $iPosition = '')
@@ -99,6 +99,9 @@ class Database
 
     /**
      * Eine SQL Datei in die DB importieren
+     * @param $sqlfile
+     * @return bool
+     * @throws Exception
      */
     public function importSQL($sqlfile)
     {
@@ -124,6 +127,9 @@ class Database
 
     /**
      * Methode zum parsen eines SQL Datei
+     * @param $sqlfile
+     * @return array
+     * @throws Exception
      */
     private function getQueriesFromSQLFile($sqlfile)
     {
@@ -167,7 +173,7 @@ class Database
      *
      * @param type $table
      * @param array $data
-     * @return \PDOStatement
+     * @return bool
      * @see insert()
      */
     public function insertMultiple($table, array $data)
@@ -236,7 +242,10 @@ class Database
      * Methode zum ausführen einer MySql Query
      *
      * @param string $query
+     * @param string $value
      * @param bool $return
+     * @param bool $blaetter
+     * @return Exception
      */
     public function getQuery($query, $value = '', $return = FALSE, $blaetter = False)
     {

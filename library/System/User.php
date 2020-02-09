@@ -202,6 +202,11 @@ class User
 
     /**
      * Der Benutzer wird eingeloggt
+     * @param $sUser
+     * @param $sPass
+     * @param $conf
+     * @return bool
+     * @throws Exception
      */
     public function loginUser($sUser, $sPass, $conf)
     {
@@ -315,7 +320,6 @@ class User
      * Neuen Benutzer in den Standardtabellen anlegen
      *
      * @param array $aPost
-     * @param string $sDatabase
      * @return string
      */
     public function createUser($aPost)
@@ -365,7 +369,6 @@ class User
      *
      * @param array $aPost
      * @param string $sUsername
-     * @param string $sDatabase
      * @return string
      */
     public function saveUserdata($aPost, $sUsername = '')

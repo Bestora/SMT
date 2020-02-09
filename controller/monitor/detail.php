@@ -8,10 +8,16 @@ $sys = end($url);
 template::setText('detail', $wos->getServiceDetail($sys, True, True));
 
 $arc = new UptimeArchiver;
-$arc->archive($sys);
+try {
+    $arc->archive($sys);
+} catch (Exception $e) {
+}
 
 $h = new HistoryGraph;
-$g = $h->createHTML($sys);
+try {
+    $g = $h->createHTML($sys);
+} catch (Exception $e) {
+}
 
 $dataPointMin = array();
 $dataPointAvg = array();

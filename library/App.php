@@ -28,9 +28,11 @@
 
 namespace App;
 
+use Config;
+
 spl_autoload_register('App\SMT');
 
-class App extends \Config
+class App extends Config
 {
 
     public function __construct() {

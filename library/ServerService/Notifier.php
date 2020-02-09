@@ -108,7 +108,7 @@ class Notifier
      * This functions performs the email notifications
      *
      * @param array $users
-     * @return boolean
+     * @return void
      */
     protected function notifyByEmail($users)
     {
@@ -134,7 +134,7 @@ class Notifier
      *
      * @param boolean $status
      * @param string $type is either 'sms' or 'email'
-     * @param array $server information about the server which may be placed in a message: %KEY% will be replaced by your value
+     * @param $vars
      * @return string parsed message
      */
     function parse_msg($status, $type, $vars)
@@ -173,7 +173,7 @@ class Notifier
     /**
      * Load config from the database to the $GLOBALS['sm_config'] variable
      *
-     * @return boolean
+     * @return void
      * @global object $db
      * @see psm_get_conf()
      */
@@ -200,7 +200,9 @@ class Notifier
      * everything should have been handled when calling this function
      *
      * @param string $server_id
+     * @param $type
      * @param string $message
+     * @param $user
      */
     public function add_log($server_id, $type, $message, $user)
     {
@@ -215,7 +217,7 @@ class Notifier
      * This functions performs the pushover notifications
      *
      * @param array $users
-     * @return boolean
+     * @return void
      */
     protected function notifyByPushover($users)
     {

@@ -33,8 +33,8 @@ class Hardware
      * Hardwaredaten einlesen, ohne ID werden alle Datensätze gelesen
      * mit ID nur die Details zu einem Datensatz
      *
-     * @param int $id
-     * @return array
+     * @param string $id
+     * @return string
      */
     public function getHardware($id = '')
     {
@@ -62,6 +62,8 @@ class Hardware
     /**
      * Methode zum speichern der Daten
      * Aufruf und Übergabe der Daten an die update Funktion
+     * @param $post
+     * @return |null
      */
     public function saveHardware($post)
     {
@@ -80,6 +82,7 @@ class Hardware
     /**
      *
      * @param type $id
+     * @param $post
      */
     public function updateHardware($id, $post)
     {

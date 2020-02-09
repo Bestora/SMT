@@ -29,52 +29,6 @@
 
 class Administration
 {
-    /**
-     * Methode zum ermitteln der Anzahl der Kalenderwochen zum übergebenen Jahr
-     * @param $year
-     * @return int
-     * @throws Exception
-     */
-    public function getIsoWeeksInYear($year)
-    {
-        $date = new DateTime;
-        $date->setISODate($year, 53);
-        return ($date->format("W") === "53" ? 53 : 52);
-    }
-
-    /**
-     * Methode zur Ermittlung des ersten Tages der Kalenderwoche (Montag)
-     * @param $year
-     * @param $kw
-     * @param string $format
-     * @return false|string
-     */
-    public function getStartDayforWeek($year, $kw, $format = '')
-    {
-        if ($format == "de") {
-            $date = date("d.m.Y", strtotime($year . 'W' . str_pad($kw, 2, '0', STR_PAD_LEFT)));
-        } else {
-            $date = date("Y.m.d", strtotime($year . 'W' . str_pad($kw, 2, '0', STR_PAD_LEFT)));
-        }
-        return $date;
-    }
-
-    /**
-     * Methode zur Ermittlung des letzten Tages der Kalenderwoche (Sonntag)
-     * @param $year
-     * @param $kw
-     * @param string $format
-     * @return false|string
-     */
-    public function getLastDayforWeek($year, $kw, $format = '')
-    {
-        if ($format == "de") {
-            $date = date("d.m.Y", strtotime($year . 'W' . str_pad($kw, 2, '0', STR_PAD_LEFT) . ' +6days'));
-        } else {
-            $date = date("Y.m.d", strtotime($year . 'W' . str_pad($kw, 2, '0', STR_PAD_LEFT) . ' +6days'));
-        }
-        return $date;
-    }
 
     /**
      * Methode zum eintragen der Kalenderdaten wenn noch nicht vorhanden

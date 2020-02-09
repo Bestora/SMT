@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -246,7 +247,7 @@ class RedirectDestination implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getRedirectDestinationTypeAllowableValues();
         if (!in_array($redirect_destination_type, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'redirect_destination_type', must be one of '%s'",
                     implode("', '", $allowedValues)

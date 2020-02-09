@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -337,7 +338,7 @@ class PhoneNumber implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getTypeAllowableValues();
         if (!is_null($type) && !in_array($type, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'type', must be one of '%s'",
                     implode("', '", $allowedValues)

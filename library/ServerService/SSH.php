@@ -77,8 +77,8 @@ class SSH
 
     /**
      * Methode zum authentifizieren an der Shell
-     * @param type $user
-     * @param type password
+     * @param string $user
+     * @param string $password
      */
     protected function authPassword($user = '', $password = '')
     {
@@ -94,7 +94,7 @@ class SSH
 
     /**
      * @param $sName
-     * @return |null
+     * @return |null |null
      * Standardgetter
      */
     public function get($sName)

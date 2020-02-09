@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -335,7 +336,7 @@ class RequestMetadata implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getSortdirectionAllowableValues();
         if (!is_null($sortdirection) && !in_array($sortdirection, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'sortdirection', must be one of '%s'",
                     implode("', '", $allowedValues)

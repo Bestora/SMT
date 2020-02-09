@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -309,7 +310,7 @@ class Attribute implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getDisplayKeyAllowableValues();
         if (!in_array($display_key, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'display_key', must be one of '%s'",
                     implode("', '", $allowedValues)

@@ -33,6 +33,7 @@ class Service
      * Methode zum auslesen eines Services / Dienstes
      * @param type $server_id
      * @return type
+     * @throws Exception
      */
     public function getService($server_id)
     {
@@ -66,8 +67,8 @@ class Service
     /**
      * Methode zum auslesen aller Services eines bestimmten Systems
      *
-     * @param type $iId
-     * @return type
+     * @param $prio
+     * @return array
      */
     public function getAllUpdateService($prio)
     {
@@ -111,7 +112,8 @@ class Service
      * Methode zum auslesen aller Services eines bestimmten Systems
      *
      * @param type $iId
-     * @return type
+     * @return Exception
+     * @throws Exception
      */
     public function getAllSystemService($iId)
     {
@@ -128,7 +130,10 @@ class Service
     /**
      * Alle Details zu einem Service auslesen
      * @param type $server_id
+     * @param bool $wLog
+     * @param bool $wUptime
      * @return type
+     * @throws Exception
      */
     public function getServiceDetail($server_id, $wLog = False, $wUptime = False)
     {
@@ -155,8 +160,8 @@ class Service
 
     /**
      * Alle Logfiles zu einem Service auslesen
-     * @param type $server_id
-     * @return type
+     * @param string $server_id
+     * @return Exception
      */
     public function getLog($server_id = '')
     {
@@ -181,7 +186,7 @@ class Service
     /**
      * Alle Uptime Daten zu einem Service auslesen
      * @param type $server_id
-     * @return type
+     * @return Exception
      */
     public function getUptime($server_id)
     {
@@ -192,7 +197,6 @@ class Service
     /**
      * Methode zum auslesen aller Services eines bestimmten Systems
      *
-     * @param type $iId
      * @return type
      */
     public function getAllService()
@@ -208,6 +212,7 @@ class Service
      * Methode zum prüfen ob es Services mit einem bestimmten Status gibt
      *
      * @param type $iId
+     * @param string $sStatus
      * @return type
      */
     public function getHomeStatusService($iId, $sStatus = '')
@@ -245,6 +250,7 @@ class Service
      * Methode zum prüfen ob es Services mit einem bestimmten Status gibt
      *
      * @param type $iId
+     * @param $sStatus
      * @return type
      */
     public function getRelationStatusService($iId, $sStatus)

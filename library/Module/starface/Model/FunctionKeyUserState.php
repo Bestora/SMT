@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -352,7 +353,7 @@ class FunctionKeyUserState implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getChatPresenceAllowableValues();
         if (!is_null($chat_presence) && !in_array($chat_presence, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'chat_presence', must be one of '%s'",
                     implode("', '", $allowedValues)
@@ -433,7 +434,7 @@ class FunctionKeyUserState implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getStateAllowableValues();
         if (!is_null($state) && !in_array($state, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'state', must be one of '%s'",
                     implode("', '", $allowedValues)

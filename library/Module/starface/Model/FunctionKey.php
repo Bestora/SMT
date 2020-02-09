@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -408,7 +409,7 @@ class FunctionKey implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getFunctionKeyTypeAllowableValues();
         if (!in_array($function_key_type, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'function_key_type', must be one of '%s'",
                     implode("', '", $allowedValues)
@@ -513,7 +514,7 @@ class FunctionKey implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getStateAllowableValues();
         if (!is_null($state) && !in_array($state, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'state', must be one of '%s'",
                     implode("', '", $allowedValues)

@@ -90,7 +90,6 @@ class Config extends Language
         $project ['base'] = project_base;
 
         $this->set('project', $project);
-        define('USER_DB', $this->get('USER_DB'));
     }
 
     /**

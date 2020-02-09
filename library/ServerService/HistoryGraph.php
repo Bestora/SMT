@@ -30,7 +30,8 @@ class HistoryGraph
 {
     /**
      * Prepare the HTML for the graph
-     * @return string
+     * @param $server_id
+     * @return array
      * @throws Exception
      */
     public function createHTML($server_id)

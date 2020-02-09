@@ -37,7 +37,7 @@ class Base extends Content
      * Erstellt einen beliebigen Zufallscode
      *
      * @staticvar <string> $code
-     * @param <integer> $iLength
+     * @param int $iLength
      * @return <string> code
      */
     public static function createCode($iLength = 8) {
@@ -83,6 +83,7 @@ class Base extends Content
      *
      * @param <string> $sName
      * @param <beliebig> $sValue
+     * @param bool $text
      */
     public function set($sName, $sValue, $text = False) {
         $this->$sName = $sValue;
@@ -94,7 +95,7 @@ class Base extends Content
      *
      * @param <type> $controller
      * @param <type> $methode
-     * @param <type> $full
+     * @param bool $full
      */
     public function setRoute($controller, $methode, $full = TRUE) {
         if ($controller == '') {
@@ -137,7 +138,8 @@ class Base extends Content
      * Klasse dem System bereit stellen
      *
      * @param <type> $sClass
-     * @param <type> $bReturn
+     * @param bool $gInstance
+     * @param bool $bReturn
      * @return <type> $gInstance
      */
     public function registerClass($sClass, $gInstance = False, $bReturn = False) {

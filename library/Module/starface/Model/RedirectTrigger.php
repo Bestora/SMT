@@ -30,6 +30,7 @@
 namespace Swagger\Client\Model;
 
 use ArrayAccess;
+use InvalidArgumentException;
 use Swagger\Client\ObjectSerializer;
 
 /**
@@ -246,7 +247,7 @@ class RedirectTrigger implements ModelInterface, ArrayAccess
     {
         $allowedValues = $this->getRedirectTriggerTypeAllowableValues();
         if (!in_array($redirect_trigger_type, $allowedValues, true)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value for 'redirect_trigger_type', must be one of '%s'",
                     implode("', '", $allowedValues)

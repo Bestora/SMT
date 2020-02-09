@@ -62,7 +62,7 @@ class Password
     /**
      * Methode zum speichern von Lizenzen
      * @param type $post
-     * @return type
+     * @return void
      */
     public function savePassword($post)
     {
@@ -77,8 +77,9 @@ class Password
 
     /**
      * Methode zum speichern von Lizenzen
+     * @param $id
      * @param type $post
-     * @return type
+     * @return void
      */
     public function updatePassword($id, $post)
     {
@@ -97,7 +98,7 @@ class Password
     /**
      * Methode zum auslesen eines Eintrags zu einem Systen
      * @param type int $id
-     * @return array
+     * @return Exception
      */
 
     public function getSystemPassword($id)

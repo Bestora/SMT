@@ -32,8 +32,7 @@ class License
     /**
      * Methode zum auslesen aller Services eines bestimmten Systems
      *
-     * @param type $iId
-     * @return type
+     * @return Exception
      */
     public function getAll()
     {
@@ -45,7 +44,7 @@ class License
     /**
      * Methode zum auslesen aller Services eines bestimmten Systems
      *
-     * @param type $iId
+     * @param $id
      * @return type
      */
     public function getDetail($id)
@@ -88,8 +87,9 @@ class License
 
     /**
      * Methode zum speichern von Lizenzen
+     * @param $id
      * @param type $post
-     * @return type
+     * @return void
      */
     public function updateLicense($id, $post)
     {

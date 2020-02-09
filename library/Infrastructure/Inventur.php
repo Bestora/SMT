@@ -52,8 +52,8 @@ class Inventur
 
     /**
      * Auslesen aller Einträge
-     * @return array
-     * */
+     * @return Exception
+     */
     public function readAllItems()
     {
         $db = new Database('SMT-ADMIN');

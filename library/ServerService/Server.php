@@ -34,7 +34,7 @@ class Server extends Service
 
     /**
      * Initiiator mit setzen des Controllers / Serverart
-     * @param type $serverart
+     * @param string $serverart
      */
     public function __construct($serverart = '')
     {
@@ -57,7 +57,7 @@ class Server extends Service
     /**
      * Getter für die Systeme die aktuealisiert werden sollen, nach Priorität sortiert
      * @param type $prio
-     * @return array
+     * @return string
      */
     public function getAllUpdateSystem($prio)
     {
@@ -69,7 +69,9 @@ class Server extends Service
 
     /**
      * Liste aller Systeme einlesen
-     * @return type
+     * @param bool $details
+     * @return Exception
+     * @throws Exception
      */
     public function getAllSystem($details = True)
     {
@@ -94,8 +96,10 @@ class Server extends Service
     /**
      * Alles Syteminfotmationen auslesen
      * @param type $iId
-     * @param type $return
+     * @param bool $services
+     * @param bool $return
      * @return type
+     * @throws Exception
      */
     public function getSystem($iId, $services = True, $return = True)
     {
@@ -207,6 +211,7 @@ class Server extends Service
     /**
      * Getter der Ports zu einer IP Adresse
      * @param type $ip
+     * @return string
      */
     public function getPorts($ip)
     {
@@ -273,8 +278,8 @@ class Server extends Service
 
     /**
      * Methode zum updaten eines Systems
-     * @param type $serverid
      * @param type $post
+     * @return
      */
     public function updateRelationSystem($post)
     {
@@ -361,7 +366,7 @@ class Server extends Service
      * Funktion zum prüfen des DNS im Unternehmen, trägt falsche Daten in die DB ein
      * @param type $ip
      * @param type $system
-     * @param type $cron
+     * @param bool $cron
      * @return mixed
      */
     public function checkDNS($ip, $system, $cron = False)

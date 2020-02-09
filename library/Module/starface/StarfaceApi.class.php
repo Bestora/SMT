@@ -162,7 +162,6 @@ class StarfaceApi
     /**
      * Return a list of all FMC Phones for that specified User
      *
-     * @param $userID
      * @return string|FmcPhone[]
      */
     public function getFMCPhones()

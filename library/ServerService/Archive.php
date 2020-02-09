@@ -1,5 +1,7 @@
 <?php
 
+use psm\Util\Server\ArchiveManager;
+
 /**
  * PHP SMT by palle
  * Monitor your servers and websites.
@@ -67,7 +69,7 @@ class Archive
      *
      * Set period to 0 to disable cleanup altogether.
      * @param \DateInterval|int $period \DateInterval object or number of days (int)
-     * @return \psm\Util\Server\ArchiveManager
+     * @return Archive
      * @throws Exception
      */
     public function setRetentionPeriod($period)

@@ -94,7 +94,7 @@ class Session
      * Methode zum prüfen ob es den Wert in der Session gibt
      *
      * @param <string> $name
-     * @return <string>
+     * @return bool
      */
     public function __isset($name)
     {

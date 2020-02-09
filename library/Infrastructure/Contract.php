@@ -31,6 +31,8 @@ class Contract
 
     /**
      * Methode zum abrufen der Verträge
+     * @param string $id
+     * @return string
      */
     public function getContract($id = '')
     {
@@ -52,6 +54,8 @@ class Contract
     /**
      * Methode zum speichern der Daten
      * Aufruf und Übergabe der Daten an die update Funktion
+     * @param $post
+     * @return |null
      */
     public function saveContract($post)
     {
@@ -66,6 +70,7 @@ class Contract
     /**
      * Mehtode zumk updaten eines Datensatzes
      * @param type $id
+     * @param $post
      */
     public function updateContract($id, $post)
     {

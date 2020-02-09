@@ -19,6 +19,7 @@ class Proftpd
     /**
      * Methode zum auslesen eines Accounts/Users
      * @param string $sUser
+     * @return string
      */
     public function getUser($sUser)
     {

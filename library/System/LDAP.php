@@ -81,8 +81,7 @@ class LDAP
      * Methode zum verbinden zum LDAP
      * @param type $user
      * @param type $pass
-     * @return type
-     * @throws Exception
+     * @return void
      */
     public function ldapAuth($user, $pass)
     {
@@ -107,6 +106,7 @@ class LDAP
     /**
      * Prüfung ob der User eingeloggt ist
      * @param $sUser
+     * @throws Exception
      */
     public function checkUser($sUser)
     {
@@ -148,7 +148,7 @@ class LDAP
      * Methode zum verbinden zum LDAP
      * @param type $user
      * @param type $pass
-     * @return type
+     * @return false|resource
      * @throws Exception
      */
     public function ldapConnect($user, $pass)
