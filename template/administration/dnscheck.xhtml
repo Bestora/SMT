@@ -14,6 +14,7 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
+                    <th style=""></th>
                     <th style="width:15%;">${text/inventory_ip | NULL}</th>
                     <th style="width:35%;">${text/inventory_dns_system_type | NULL}</th>
                     <th style="width:30%;">${text/inventory_dns_new | NULL}</th>
@@ -32,6 +33,7 @@
             <table id="table" class="table table-striped dataTable" role="grid">
                 <thead>
                 <tr style="height: 35px;">
+                    <th style="width:25px;"></th>
                     <th style="width:15%;">IP Adresse</th>
                     <th style="width:35%;">Port</th>
                     <th style="width:30%;">Hostname</th>
@@ -40,6 +42,9 @@
                 </thead>
 
                 <tr tal:repeat="ip listip" style="height:35px;">
+                    <td style="width:25px;">
+                        <img border="0" style="width:20px;height:20px;" src="https://smt.df-automotive.de/assets/dist/img/${ip/existSystem}.png" />
+                    </td>
                     <td>${ip/ip}</td>
                     <td>${ip/port}</td>
                     <td>${structure ip/hostname}</td>

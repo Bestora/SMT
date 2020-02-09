@@ -30,8 +30,8 @@ function main($ajxData)
         $dnsmessage = '<span class="text-green"><b>' . $dns . '</b></span>';
     }
 
-    $s = "22,23,135,515,80,443";
-    $m = "Linux,Telnet,Windows,Printer,http,https";
+    $s = "22,23,135,515,80,443,3389";
+    $m = "Linux,Telnet,Windows,Printer,http,https,RDP";
     $p = explode(',', $s);
     $n = explode(',', $m);
 
@@ -47,9 +47,14 @@ function main($ajxData)
     }
 
     if ($up == 1) {
+        $db->getQuery("SELECT * FROM wos_server_dnsip WHERE ip=:ip", array(':ip' => $ajxData['ip'] . '.' . $ajxData['port']));
+
         $query = "INSERT INTO wos_server_dnsip (ip,port,hostname) VALUE (:ip,:port,:hostname)";
         $value = array(':ip' => $ajxData['ip'] . '.' . $ajxData['port'], ':port' => $port, ':hostname' => $dns);
-        $db->getQuery($query, $value);
+
+        if($db->getNumrows() == 0) {
+            $db->getQuery($query, $value);
+        }
     }
 
     $return_content = '<table style="margin-bottom:0"; class="table table-hover">';

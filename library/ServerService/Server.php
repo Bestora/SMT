@@ -362,6 +362,7 @@ class Server extends Service
      * @param type $ip
      * @param type $system
      * @param type $cron
+     * @return mixed
      */
     public function checkDNS($ip, $system, $cron = False)
     {
@@ -482,6 +483,21 @@ class Server extends Service
 
             parent::saveService($value);
         }
+    }
+
+
+    public function checkHost($ip) {
+
+        $db = new Database('SMT-ADMIN');
+        $db->getQuery("SELECT * FROM wos_server WHERE ipadressen=:ip", array(':ip' => $ip));
+
+        if($db->getNumrows() > 0) {
+            $returnValue = 'on';
+        } else {
+            $returnValue = 'off';
+        }
+
+        return $returnValue;
     }
 
 }
