@@ -476,8 +476,9 @@ class Server extends Service
     {
         $db = new Database('SMT-ADMIN');
         $service = $post['service'];
+        $session = new Session();
 
-        $value['user'] = $_SESSION['username'];
+        $value['user'] = $session->get('username');
         $value['home_system'] = $sys;
         $value['type'] = 'service';
 
@@ -494,7 +495,6 @@ class Server extends Service
 
     public function checkHost($ip)
     {
-
         $db = new Database('SMT-ADMIN');
         $db->getQuery("SELECT * FROM wos_server WHERE ipadressen LIKE :ip", array(':ip' => '%' . $ip . '%'));
 

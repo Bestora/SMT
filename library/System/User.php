@@ -210,27 +210,22 @@ class User
      */
     public function loginUser($sUser, $sPass, $conf)
     {
-        // Sessionverbindung herstellen
         $session = Session::getInstance();
-        // Datenbankverbindung herstellen
         $db = new Database('SMT-USER');
 
         if ($this->auth == 'intern') {
-            // Prüfen ob es den Benutzer gibt
             $query = "SELECT * FROM db_user,db_user_contact WHERE db_user.username=db_user_contact.username && db_user_contact.email=:username && db_user.password=:password && db_user.status=:status";
             $value = array(':username' => $sUser, ':password' => md5($sPass), ':status' => 'on');
 
             $db->getQuery($query, $value);
 
             if ($db->getNumrows() == 0) {
-                // Prüfen ob es einen Auth Code gibt
                 $query = "SELECT * FROM db_user_secure,db_user_contact WHERE db_user_secure.username=db_user_contact.username && db_user_contact.email=:username && db_user_secure.authCode=:password && db_user_secure.lastAuthCode<=:datum";
                 $value = array(':username' => $sUser, ':password' => $sPass, ':datum' => date("Y.m.d"));
 
                 $db->getQuery($query, $value);
             }
 
-            // Benutzernamen und Rechte in die Session schreiben
             if ($db->getNumrows() == 1) {
                 $session->set('username', $db->getValue('username', 0));
                 $session->set('displayName', $this->getUserDaten('db_user_private', $session->get('username'), $feld = 'displayName'));
@@ -262,7 +257,6 @@ class User
 
             if ($ldap->isAuth) {
                 $ldap->checkUser($sUser);
-                // Usernamen aus der SMT Benutzerdatenbank holen
                 $db->getQuery("SELECT username FROM db_user_config WHERE value=:username && name=:name LIMIT 1", array(':username' => $sUser, ':name' => 'ldap_auth'));
 
                 if ($db->getNumrows() > 0) {
