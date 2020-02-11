@@ -476,7 +476,7 @@ class Server extends Service
     {
         $db = new Database('SMT-ADMIN');
         $service = $post['service'];
-        $session = new Session();
+        $session = Session::getInstance();
 
         $value['user'] = $session->get('username');
         $value['home_system'] = $sys;
