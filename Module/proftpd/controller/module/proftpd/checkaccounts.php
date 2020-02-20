@@ -11,7 +11,7 @@ $db->getQuery($query, $value);
 $user = $db->getValue();
 
 for ($i = 0; $i < count($user); $i++) {
-    $ftp->setStatus('block', $user [$i] ['userid']);
+  $ftp->setStatus('block', $user [$i] ['userid']);
 }
 
 $ftp->weblog('sys', count($user) . " Benutzer gesperrt");
@@ -19,14 +19,14 @@ $ftp->weblog('sys', count($user) . " Benutzer gesperrt");
 // Freigeschaltete Accounts sperren die nach X Tagen Reaktivierung den FTP nicht genutzt haben
 $query = "SELECT * FROM ftpuser WHERE gueltig = :datum";
 $value = array(
-    ':datum' => $date_1
+  ':datum' => $date_1
 );
 
 $db->getQuery($query, $value);
 $user = $db->getValue();
 
 for ($i = 0; $i < count($user); $i++) {
-    $ftp->setStatus('block', $user [$i] ['userid']);
+  $ftp->setStatus('block', $user [$i] ['userid']);
 }
 
 $ftp->weblog('sys', count($user) . " Benutzer gesperrt");

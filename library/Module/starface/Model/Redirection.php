@@ -43,462 +43,462 @@ use Swagger\Client\ObjectSerializer;
  */
 class Redirection implements ModelInterface, ArrayAccess
 {
-    const DISCRIMINATOR = null;
-
-    /**
-     * The original name of the model.
-     *
-     * @var string
-     */
-    protected static $swaggerModelName = 'Redirection';
-
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerTypes = [
-        'id' => 'string',
-        'phone_number' => 'string',
-        'group_number' => 'bool',
-        'enabled' => 'bool',
-        'redirect_trigger' => '\Swagger\Client\Model\RedirectTrigger',
-        'redirect_destination' => '\Swagger\Client\Model\RedirectDestination',
-        'last_mailbox_destination' => '\Swagger\Client\Model\RedirectMailboxDestination',
-        'last_phone_number_destination' => '\Swagger\Client\Model\RedirectPhoneNumberDestination'
-    ];
-
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerFormats = [
-        'id' => null,
-        'phone_number' => null,
-        'group_number' => null,
-        'enabled' => null,
-        'redirect_trigger' => null,
-        'redirect_destination' => null,
-        'last_mailbox_destination' => null,
-        'last_phone_number_destination' => null
-    ];
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @var string[]
-     */
-    protected static $attributeMap = [
-        'id' => 'id',
-        'phone_number' => 'phoneNumber',
-        'group_number' => 'groupNumber',
-        'enabled' => 'enabled',
-        'redirect_trigger' => 'redirectTrigger',
-        'redirect_destination' => 'redirectDestination',
-        'last_mailbox_destination' => 'lastMailboxDestination',
-        'last_phone_number_destination' => 'lastPhoneNumberDestination'
-    ];
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @var string[]
-     */
-    protected static $setters = [
-        'id' => 'setId',
-        'phone_number' => 'setPhoneNumber',
-        'group_number' => 'setGroupNumber',
-        'enabled' => 'setEnabled',
-        'redirect_trigger' => 'setRedirectTrigger',
-        'redirect_destination' => 'setRedirectDestination',
-        'last_mailbox_destination' => 'setLastMailboxDestination',
-        'last_phone_number_destination' => 'setLastPhoneNumberDestination'
-    ];
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @var string[]
-     */
-    protected static $getters = [
-        'id' => 'getId',
-        'phone_number' => 'getPhoneNumber',
-        'group_number' => 'getGroupNumber',
-        'enabled' => 'getEnabled',
-        'redirect_trigger' => 'getRedirectTrigger',
-        'redirect_destination' => 'getRedirectDestination',
-        'last_mailbox_destination' => 'getLastMailboxDestination',
-        'last_phone_number_destination' => 'getLastPhoneNumberDestination'
-    ];
-    /**
-     * Associative array for storing property values
-     *
-     * @var mixed[]
-     */
-    protected $container = [];
-
-    /**
-     * Constructor
-     *
-     * @param mixed[] $data Associated array of property values
-     *                      initializing the model
-     */
-    public function __construct(array $data = null)
-    {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['phone_number'] = isset($data['phone_number']) ? $data['phone_number'] : null;
-        $this->container['group_number'] = isset($data['group_number']) ? $data['group_number'] : null;
-        $this->container['enabled'] = isset($data['enabled']) ? $data['enabled'] : null;
-        $this->container['redirect_trigger'] = isset($data['redirect_trigger']) ? $data['redirect_trigger'] : null;
-        $this->container['redirect_destination'] = isset($data['redirect_destination']) ? $data['redirect_destination'] : null;
-        $this->container['last_mailbox_destination'] = isset($data['last_mailbox_destination']) ? $data['last_mailbox_destination'] : null;
-        $this->container['last_phone_number_destination'] = isset($data['last_phone_number_destination']) ? $data['last_phone_number_destination'] : null;
+  const DISCRIMINATOR = null;
+  
+  /**
+   * The original name of the model.
+   *
+   * @var string
+   */
+  protected static $swaggerModelName = 'Redirection';
+  
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerTypes = [
+    'id' => 'string',
+    'phone_number' => 'string',
+    'group_number' => 'bool',
+    'enabled' => 'bool',
+    'redirect_trigger' => '\Swagger\Client\Model\RedirectTrigger',
+    'redirect_destination' => '\Swagger\Client\Model\RedirectDestination',
+    'last_mailbox_destination' => '\Swagger\Client\Model\RedirectMailboxDestination',
+    'last_phone_number_destination' => '\Swagger\Client\Model\RedirectPhoneNumberDestination'
+  ];
+  
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerFormats = [
+    'id' => null,
+    'phone_number' => null,
+    'group_number' => null,
+    'enabled' => null,
+    'redirect_trigger' => null,
+    'redirect_destination' => null,
+    'last_mailbox_destination' => null,
+    'last_phone_number_destination' => null
+  ];
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @var string[]
+   */
+  protected static $attributeMap = [
+    'id' => 'id',
+    'phone_number' => 'phoneNumber',
+    'group_number' => 'groupNumber',
+    'enabled' => 'enabled',
+    'redirect_trigger' => 'redirectTrigger',
+    'redirect_destination' => 'redirectDestination',
+    'last_mailbox_destination' => 'lastMailboxDestination',
+    'last_phone_number_destination' => 'lastPhoneNumberDestination'
+  ];
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @var string[]
+   */
+  protected static $setters = [
+    'id' => 'setId',
+    'phone_number' => 'setPhoneNumber',
+    'group_number' => 'setGroupNumber',
+    'enabled' => 'setEnabled',
+    'redirect_trigger' => 'setRedirectTrigger',
+    'redirect_destination' => 'setRedirectDestination',
+    'last_mailbox_destination' => 'setLastMailboxDestination',
+    'last_phone_number_destination' => 'setLastPhoneNumberDestination'
+  ];
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @var string[]
+   */
+  protected static $getters = [
+    'id' => 'getId',
+    'phone_number' => 'getPhoneNumber',
+    'group_number' => 'getGroupNumber',
+    'enabled' => 'getEnabled',
+    'redirect_trigger' => 'getRedirectTrigger',
+    'redirect_destination' => 'getRedirectDestination',
+    'last_mailbox_destination' => 'getLastMailboxDestination',
+    'last_phone_number_destination' => 'getLastPhoneNumberDestination'
+  ];
+  /**
+   * Associative array for storing property values
+   *
+   * @var mixed[]
+   */
+  protected $container = [];
+  
+  /**
+   * Constructor
+   *
+   * @param mixed[] $data Associated array of property values
+   *                      initializing the model
+   */
+  public function __construct(array $data = null)
+  {
+    $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+    $this->container['phone_number'] = isset($data['phone_number']) ? $data['phone_number'] : null;
+    $this->container['group_number'] = isset($data['group_number']) ? $data['group_number'] : null;
+    $this->container['enabled'] = isset($data['enabled']) ? $data['enabled'] : null;
+    $this->container['redirect_trigger'] = isset($data['redirect_trigger']) ? $data['redirect_trigger'] : null;
+    $this->container['redirect_destination'] = isset($data['redirect_destination']) ? $data['redirect_destination'] : null;
+    $this->container['last_mailbox_destination'] = isset($data['last_mailbox_destination']) ? $data['last_mailbox_destination'] : null;
+    $this->container['last_phone_number_destination'] = isset($data['last_phone_number_destination']) ? $data['last_phone_number_destination'] : null;
+  }
+  
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerTypes()
+  {
+    return self::$swaggerTypes;
+  }
+  
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerFormats()
+  {
+    return self::$swaggerFormats;
+  }
+  
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @return array
+   */
+  public static function attributeMap()
+  {
+    return self::$attributeMap;
+  }
+  
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @return array
+   */
+  public static function setters()
+  {
+    return self::$setters;
+  }
+  
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @return array
+   */
+  public static function getters()
+  {
+    return self::$getters;
+  }
+  
+  /**
+   * The original name of the model.
+   *
+   * @return string
+   */
+  public function getModelName()
+  {
+    return self::$swaggerModelName;
+  }
+  
+  /**
+   * Validate all the properties in the model
+   * return true if all passed
+   *
+   * @return bool True if all properties are valid
+   */
+  public function valid()
+  {
+    return count($this->listInvalidProperties()) === 0;
+  }
+  
+  /**
+   * Show all the invalid properties with reasons.
+   *
+   * @return array invalid properties with reasons
+   */
+  public function listInvalidProperties()
+  {
+    $invalidProperties = [];
+    
+    return $invalidProperties;
+  }
+  
+  /**
+   * Gets id
+   *
+   * @return string
+   */
+  public function getId()
+  {
+    return $this->container['id'];
+  }
+  
+  /**
+   * Sets id
+   *
+   * @param string $id The Id of the Redirection
+   *
+   * @return $this
+   */
+  public function setId($id)
+  {
+    $this->container['id'] = $id;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets phone_number
+   *
+   * @return string
+   */
+  public function getPhoneNumber()
+  {
+    return $this->container['phone_number'];
+  }
+  
+  /**
+   * Sets phone_number
+   *
+   * @param string $phone_number The phoneNumber that will be handled by this Redirection
+   *
+   * @return $this
+   */
+  public function setPhoneNumber($phone_number)
+  {
+    $this->container['phone_number'] = $phone_number;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets group_number
+   *
+   * @return bool
+   */
+  public function getGroupNumber()
+  {
+    return $this->container['group_number'];
+  }
+  
+  /**
+   * Sets group_number
+   *
+   * @param bool $group_number True if the phoneNumber of this Redirection is assigned to a group, false otherwise
+   *
+   * @return $this
+   */
+  public function setGroupNumber($group_number)
+  {
+    $this->container['group_number'] = $group_number;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets enabled
+   *
+   * @return bool
+   */
+  public function getEnabled()
+  {
+    return $this->container['enabled'];
+  }
+  
+  /**
+   * Sets enabled
+   *
+   * @param bool $enabled Whether this Redirection is enabled or disabled
+   *
+   * @return $this
+   */
+  public function setEnabled($enabled)
+  {
+    $this->container['enabled'] = $enabled;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets redirect_trigger
+   *
+   * @return RedirectTrigger
+   */
+  public function getRedirectTrigger()
+  {
+    return $this->container['redirect_trigger'];
+  }
+  
+  /**
+   * Sets redirect_trigger
+   *
+   * @param RedirectTrigger $redirect_trigger redirect_trigger
+   *
+   * @return $this
+   */
+  public function setRedirectTrigger($redirect_trigger)
+  {
+    $this->container['redirect_trigger'] = $redirect_trigger;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets redirect_destination
+   *
+   * @return RedirectDestination
+   */
+  public function getRedirectDestination()
+  {
+    return $this->container['redirect_destination'];
+  }
+  
+  /**
+   * Sets redirect_destination
+   *
+   * @param RedirectDestination $redirect_destination redirect_destination
+   *
+   * @return $this
+   */
+  public function setRedirectDestination($redirect_destination)
+  {
+    $this->container['redirect_destination'] = $redirect_destination;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets last_mailbox_destination
+   *
+   * @return RedirectMailboxDestination
+   */
+  public function getLastMailboxDestination()
+  {
+    return $this->container['last_mailbox_destination'];
+  }
+  
+  /**
+   * Sets last_mailbox_destination
+   *
+   * @param RedirectMailboxDestination $last_mailbox_destination last_mailbox_destination
+   *
+   * @return $this
+   */
+  public function setLastMailboxDestination($last_mailbox_destination)
+  {
+    $this->container['last_mailbox_destination'] = $last_mailbox_destination;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets last_phone_number_destination
+   *
+   * @return RedirectPhoneNumberDestination
+   */
+  public function getLastPhoneNumberDestination()
+  {
+    return $this->container['last_phone_number_destination'];
+  }
+  
+  /**
+   * Sets last_phone_number_destination
+   *
+   * @param RedirectPhoneNumberDestination $last_phone_number_destination last_phone_number_destination
+   *
+   * @return $this
+   */
+  public function setLastPhoneNumberDestination($last_phone_number_destination)
+  {
+    $this->container['last_phone_number_destination'] = $last_phone_number_destination;
+    
+    return $this;
+  }
+  
+  /**
+   * Returns true if offset exists. False otherwise.
+   *
+   * @param integer $offset Offset
+   *
+   * @return boolean
+   */
+  public function offsetExists($offset)
+  {
+    return isset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return mixed
+   */
+  public function offsetGet($offset)
+  {
+    return isset($this->container[$offset]) ? $this->container[$offset] : null;
+  }
+  
+  /**
+   * Sets value based on offset.
+   *
+   * @param integer $offset Offset
+   * @param mixed $value Value to be set
+   *
+   * @return void
+   */
+  public function offsetSet($offset, $value)
+  {
+    if (is_null($offset)) {
+      $this->container[] = $value;
+    } else {
+      $this->container[$offset] = $value;
     }
-
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerTypes()
-    {
-        return self::$swaggerTypes;
+  }
+  
+  /**
+   * Unsets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return void
+   */
+  public function offsetUnset($offset)
+  {
+    unset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets the string presentation of the object
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
+      return json_encode(
+        ObjectSerializer::sanitizeForSerialization($this),
+        JSON_PRETTY_PRINT
+      );
     }
-
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerFormats()
-    {
-        return self::$swaggerFormats;
-    }
-
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @return array
-     */
-    public static function attributeMap()
-    {
-        return self::$attributeMap;
-    }
-
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @return array
-     */
-    public static function setters()
-    {
-        return self::$setters;
-    }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @return array
-     */
-    public static function getters()
-    {
-        return self::$getters;
-    }
-
-    /**
-     * The original name of the model.
-     *
-     * @return string
-     */
-    public function getModelName()
-    {
-        return self::$swaggerModelName;
-    }
-
-    /**
-     * Validate all the properties in the model
-     * return true if all passed
-     *
-     * @return bool True if all properties are valid
-     */
-    public function valid()
-    {
-        return count($this->listInvalidProperties()) === 0;
-    }
-
-    /**
-     * Show all the invalid properties with reasons.
-     *
-     * @return array invalid properties with reasons
-     */
-    public function listInvalidProperties()
-    {
-        $invalidProperties = [];
-
-        return $invalidProperties;
-    }
-
-    /**
-     * Gets id
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->container['id'];
-    }
-
-    /**
-     * Sets id
-     *
-     * @param string $id The Id of the Redirection
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->container['id'] = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets phone_number
-     *
-     * @return string
-     */
-    public function getPhoneNumber()
-    {
-        return $this->container['phone_number'];
-    }
-
-    /**
-     * Sets phone_number
-     *
-     * @param string $phone_number The phoneNumber that will be handled by this Redirection
-     *
-     * @return $this
-     */
-    public function setPhoneNumber($phone_number)
-    {
-        $this->container['phone_number'] = $phone_number;
-
-        return $this;
-    }
-
-    /**
-     * Gets group_number
-     *
-     * @return bool
-     */
-    public function getGroupNumber()
-    {
-        return $this->container['group_number'];
-    }
-
-    /**
-     * Sets group_number
-     *
-     * @param bool $group_number True if the phoneNumber of this Redirection is assigned to a group, false otherwise
-     *
-     * @return $this
-     */
-    public function setGroupNumber($group_number)
-    {
-        $this->container['group_number'] = $group_number;
-
-        return $this;
-    }
-
-    /**
-     * Gets enabled
-     *
-     * @return bool
-     */
-    public function getEnabled()
-    {
-        return $this->container['enabled'];
-    }
-
-    /**
-     * Sets enabled
-     *
-     * @param bool $enabled Whether this Redirection is enabled or disabled
-     *
-     * @return $this
-     */
-    public function setEnabled($enabled)
-    {
-        $this->container['enabled'] = $enabled;
-
-        return $this;
-    }
-
-    /**
-     * Gets redirect_trigger
-     *
-     * @return \Swagger\Client\Model\RedirectTrigger
-     */
-    public function getRedirectTrigger()
-    {
-        return $this->container['redirect_trigger'];
-    }
-
-    /**
-     * Sets redirect_trigger
-     *
-     * @param \Swagger\Client\Model\RedirectTrigger $redirect_trigger redirect_trigger
-     *
-     * @return $this
-     */
-    public function setRedirectTrigger($redirect_trigger)
-    {
-        $this->container['redirect_trigger'] = $redirect_trigger;
-
-        return $this;
-    }
-
-    /**
-     * Gets redirect_destination
-     *
-     * @return \Swagger\Client\Model\RedirectDestination
-     */
-    public function getRedirectDestination()
-    {
-        return $this->container['redirect_destination'];
-    }
-
-    /**
-     * Sets redirect_destination
-     *
-     * @param \Swagger\Client\Model\RedirectDestination $redirect_destination redirect_destination
-     *
-     * @return $this
-     */
-    public function setRedirectDestination($redirect_destination)
-    {
-        $this->container['redirect_destination'] = $redirect_destination;
-
-        return $this;
-    }
-
-    /**
-     * Gets last_mailbox_destination
-     *
-     * @return \Swagger\Client\Model\RedirectMailboxDestination
-     */
-    public function getLastMailboxDestination()
-    {
-        return $this->container['last_mailbox_destination'];
-    }
-
-    /**
-     * Sets last_mailbox_destination
-     *
-     * @param \Swagger\Client\Model\RedirectMailboxDestination $last_mailbox_destination last_mailbox_destination
-     *
-     * @return $this
-     */
-    public function setLastMailboxDestination($last_mailbox_destination)
-    {
-        $this->container['last_mailbox_destination'] = $last_mailbox_destination;
-
-        return $this;
-    }
-
-    /**
-     * Gets last_phone_number_destination
-     *
-     * @return \Swagger\Client\Model\RedirectPhoneNumberDestination
-     */
-    public function getLastPhoneNumberDestination()
-    {
-        return $this->container['last_phone_number_destination'];
-    }
-
-    /**
-     * Sets last_phone_number_destination
-     *
-     * @param \Swagger\Client\Model\RedirectPhoneNumberDestination $last_phone_number_destination last_phone_number_destination
-     *
-     * @return $this
-     */
-    public function setLastPhoneNumberDestination($last_phone_number_destination)
-    {
-        $this->container['last_phone_number_destination'] = $last_phone_number_destination;
-
-        return $this;
-    }
-
-    /**
-     * Returns true if offset exists. False otherwise.
-     *
-     * @param integer $offset Offset
-     *
-     * @return boolean
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->container[$offset]);
-    }
-
-    /**
-     * Gets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-
-    /**
-     * Sets value based on offset.
-     *
-     * @param integer $offset Offset
-     * @param mixed $value Value to be set
-     *
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->container[] = $value;
-        } else {
-            $this->container[$offset] = $value;
-        }
-    }
-
-    /**
-     * Unsets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->container[$offset]);
-    }
-
-    /**
-     * Gets the string presentation of the object
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(
-                ObjectSerializer::sanitizeForSerialization($this),
-                JSON_PRETTY_PRINT
-            );
-        }
-
-        return json_encode(ObjectSerializer::sanitizeForSerialization($this));
-    }
+    
+    return json_encode(ObjectSerializer::sanitizeForSerialization($this));
+  }
 }
 
 

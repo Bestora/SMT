@@ -44,621 +44,625 @@ use Swagger\Client\ObjectSerializer;
  */
 class PhoneNumber implements ModelInterface, ArrayAccess
 {
-    const DISCRIMINATOR = null;
-    const TYPE_INVALID = 'INVALID';
-    const TYPE_INTERNAL = 'INTERNAL';
-    const TYPE_EXTERNAL = 'EXTERNAL';
-    const TYPE_RESERVED = 'RESERVED';
-    const TYPE_NT = 'NT';
-    const TYPE_DISPLAY = 'DISPLAY';
-    const TYPE_FXO = 'FXO';
-    /**
-     * The original name of the model.
-     *
-     * @var string
-     */
-    protected static $swaggerModelName = 'PhoneNumber';
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerTypes = [
-        'id' => 'int',
-        'type' => 'string',
-        'number' => 'string',
-        'name' => 'string',
-        'number_block_id' => 'int',
-        'exit_code' => 'string',
-        'local_prefix' => 'string',
-        'national_prefix' => 'string',
-        'assigned_user_account_id' => 'int',
-        'assigned_group_account_id' => 'int',
-        'assigned_module_instance_id' => 'string',
-        'assigned_module_entry_point_id' => 'string'
+  const DISCRIMINATOR = null;
+  const TYPE_INVALID = 'INVALID';
+  const TYPE_INTERNAL = 'INTERNAL';
+  const TYPE_EXTERNAL = 'EXTERNAL';
+  const TYPE_RESERVED = 'RESERVED';
+  const TYPE_NT = 'NT';
+  const TYPE_DISPLAY = 'DISPLAY';
+  const TYPE_FXO = 'FXO';
+  /**
+   * The original name of the model.
+   *
+   * @var string
+   */
+  protected static $swaggerModelName = 'PhoneNumber';
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerTypes = [
+    'id' => 'int',
+    'type' => 'string',
+    'number' => 'string',
+    'name' => 'string',
+    'number_block_id' => 'int',
+    'exit_code' => 'string',
+    'local_prefix' => 'string',
+    'national_prefix' => 'string',
+    'assigned_user_account_id' => 'int',
+    'assigned_group_account_id' => 'int',
+    'assigned_module_instance_id' => 'string',
+    'assigned_module_entry_point_id' => 'string'
+  ];
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerFormats = [
+    'id' => 'int32',
+    'type' => null,
+    'number' => null,
+    'name' => null,
+    'number_block_id' => 'int32',
+    'exit_code' => null,
+    'local_prefix' => null,
+    'national_prefix' => null,
+    'assigned_user_account_id' => 'int32',
+    'assigned_group_account_id' => 'int32',
+    'assigned_module_instance_id' => null,
+    'assigned_module_entry_point_id' => null
+  ];
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @var string[]
+   */
+  protected static $attributeMap = [
+    'id' => 'id',
+    'type' => 'type',
+    'number' => 'number',
+    'name' => 'name',
+    'number_block_id' => 'numberBlockId',
+    'exit_code' => 'exitCode',
+    'local_prefix' => 'localPrefix',
+    'national_prefix' => 'nationalPrefix',
+    'assigned_user_account_id' => 'assignedUserAccountId',
+    'assigned_group_account_id' => 'assignedGroupAccountId',
+    'assigned_module_instance_id' => 'assignedModuleInstanceId',
+    'assigned_module_entry_point_id' => 'assignedModuleEntryPointId'
+  ];
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @var string[]
+   */
+  protected static $setters = [
+    'id' => 'setId',
+    'type' => 'setType',
+    'number' => 'setNumber',
+    'name' => 'setName',
+    'number_block_id' => 'setNumberBlockId',
+    'exit_code' => 'setExitCode',
+    'local_prefix' => 'setLocalPrefix',
+    'national_prefix' => 'setNationalPrefix',
+    'assigned_user_account_id' => 'setAssignedUserAccountId',
+    'assigned_group_account_id' => 'setAssignedGroupAccountId',
+    'assigned_module_instance_id' => 'setAssignedModuleInstanceId',
+    'assigned_module_entry_point_id' => 'setAssignedModuleEntryPointId'
+  ];
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @var string[]
+   */
+  protected static $getters = [
+    'id' => 'getId',
+    'type' => 'getType',
+    'number' => 'getNumber',
+    'name' => 'getName',
+    'number_block_id' => 'getNumberBlockId',
+    'exit_code' => 'getExitCode',
+    'local_prefix' => 'getLocalPrefix',
+    'national_prefix' => 'getNationalPrefix',
+    'assigned_user_account_id' => 'getAssignedUserAccountId',
+    'assigned_group_account_id' => 'getAssignedGroupAccountId',
+    'assigned_module_instance_id' => 'getAssignedModuleInstanceId',
+    'assigned_module_entry_point_id' => 'getAssignedModuleEntryPointId'
+  ];
+  /**
+   * Associative array for storing property values
+   *
+   * @var mixed[]
+   */
+  protected $container = [];
+  
+  /**
+   * Constructor
+   *
+   * @param mixed[] $data Associated array of property values
+   *                      initializing the model
+   */
+  public function __construct(array $data = null)
+  {
+    $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+    $this->container['type'] = isset($data['type']) ? $data['type'] : null;
+    $this->container['number'] = isset($data['number']) ? $data['number'] : null;
+    $this->container['name'] = isset($data['name']) ? $data['name'] : null;
+    $this->container['number_block_id'] = isset($data['number_block_id']) ? $data['number_block_id'] : null;
+    $this->container['exit_code'] = isset($data['exit_code']) ? $data['exit_code'] : null;
+    $this->container['local_prefix'] = isset($data['local_prefix']) ? $data['local_prefix'] : null;
+    $this->container['national_prefix'] = isset($data['national_prefix']) ? $data['national_prefix'] : null;
+    $this->container['assigned_user_account_id'] = isset($data['assigned_user_account_id']) ? $data['assigned_user_account_id'] : null;
+    $this->container['assigned_group_account_id'] = isset($data['assigned_group_account_id']) ? $data['assigned_group_account_id'] : null;
+    $this->container['assigned_module_instance_id'] = isset($data['assigned_module_instance_id']) ? $data['assigned_module_instance_id'] : null;
+    $this->container['assigned_module_entry_point_id'] = isset($data['assigned_module_entry_point_id']) ? $data['assigned_module_entry_point_id'] : null;
+  }
+  
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerTypes()
+  {
+    return self::$swaggerTypes;
+  }
+  
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerFormats()
+  {
+    return self::$swaggerFormats;
+  }
+  
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @return array
+   */
+  public static function attributeMap()
+  {
+    return self::$attributeMap;
+  }
+  
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @return array
+   */
+  public static function setters()
+  {
+    return self::$setters;
+  }
+  
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @return array
+   */
+  public static function getters()
+  {
+    return self::$getters;
+  }
+  
+  /**
+   * The original name of the model.
+   *
+   * @return string
+   */
+  public function getModelName()
+  {
+    return self::$swaggerModelName;
+  }
+  
+  /**
+   * Validate all the properties in the model
+   * return true if all passed
+   *
+   * @return bool True if all properties are valid
+   */
+  public function valid()
+  {
+    return count($this->listInvalidProperties()) === 0;
+  }
+  
+  /**
+   * Show all the invalid properties with reasons.
+   *
+   * @return array invalid properties with reasons
+   */
+  public function listInvalidProperties()
+  {
+    $invalidProperties = [];
+    
+    $allowedValues = $this->getTypeAllowableValues();
+    if (!is_null($this->container['type']) && !in_array($this->container['type'], $allowedValues, true)) {
+      $invalidProperties[] = sprintf(
+        "invalid value for 'type', must be one of '%s'",
+        implode("', '", $allowedValues)
+      );
+    }
+    
+    return $invalidProperties;
+  }
+  
+  /**
+   * Gets allowable values of the enum
+   *
+   * @return string[]
+   */
+  public function getTypeAllowableValues()
+  {
+    return [
+      self::TYPE_INVALID,
+      self::TYPE_INTERNAL,
+      self::TYPE_EXTERNAL,
+      self::TYPE_RESERVED,
+      self::TYPE_NT,
+      self::TYPE_DISPLAY,
+      self::TYPE_FXO,
     ];
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerFormats = [
-        'id' => 'int32',
-        'type' => null,
-        'number' => null,
-        'name' => null,
-        'number_block_id' => 'int32',
-        'exit_code' => null,
-        'local_prefix' => null,
-        'national_prefix' => null,
-        'assigned_user_account_id' => 'int32',
-        'assigned_group_account_id' => 'int32',
-        'assigned_module_instance_id' => null,
-        'assigned_module_entry_point_id' => null
-    ];
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @var string[]
-     */
-    protected static $attributeMap = [
-        'id' => 'id',
-        'type' => 'type',
-        'number' => 'number',
-        'name' => 'name',
-        'number_block_id' => 'numberBlockId',
-        'exit_code' => 'exitCode',
-        'local_prefix' => 'localPrefix',
-        'national_prefix' => 'nationalPrefix',
-        'assigned_user_account_id' => 'assignedUserAccountId',
-        'assigned_group_account_id' => 'assignedGroupAccountId',
-        'assigned_module_instance_id' => 'assignedModuleInstanceId',
-        'assigned_module_entry_point_id' => 'assignedModuleEntryPointId'
-    ];
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @var string[]
-     */
-    protected static $setters = [
-        'id' => 'setId',
-        'type' => 'setType',
-        'number' => 'setNumber',
-        'name' => 'setName',
-        'number_block_id' => 'setNumberBlockId',
-        'exit_code' => 'setExitCode',
-        'local_prefix' => 'setLocalPrefix',
-        'national_prefix' => 'setNationalPrefix',
-        'assigned_user_account_id' => 'setAssignedUserAccountId',
-        'assigned_group_account_id' => 'setAssignedGroupAccountId',
-        'assigned_module_instance_id' => 'setAssignedModuleInstanceId',
-        'assigned_module_entry_point_id' => 'setAssignedModuleEntryPointId'
-    ];
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @var string[]
-     */
-    protected static $getters = [
-        'id' => 'getId',
-        'type' => 'getType',
-        'number' => 'getNumber',
-        'name' => 'getName',
-        'number_block_id' => 'getNumberBlockId',
-        'exit_code' => 'getExitCode',
-        'local_prefix' => 'getLocalPrefix',
-        'national_prefix' => 'getNationalPrefix',
-        'assigned_user_account_id' => 'getAssignedUserAccountId',
-        'assigned_group_account_id' => 'getAssignedGroupAccountId',
-        'assigned_module_instance_id' => 'getAssignedModuleInstanceId',
-        'assigned_module_entry_point_id' => 'getAssignedModuleEntryPointId'
-    ];
-    /**
-     * Associative array for storing property values
-     *
-     * @var mixed[]
-     */
-    protected $container = [];
-
-    /**
-     * Constructor
-     *
-     * @param mixed[] $data Associated array of property values
-     *                      initializing the model
-     */
-    public function __construct(array $data = null)
-    {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['number'] = isset($data['number']) ? $data['number'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['number_block_id'] = isset($data['number_block_id']) ? $data['number_block_id'] : null;
-        $this->container['exit_code'] = isset($data['exit_code']) ? $data['exit_code'] : null;
-        $this->container['local_prefix'] = isset($data['local_prefix']) ? $data['local_prefix'] : null;
-        $this->container['national_prefix'] = isset($data['national_prefix']) ? $data['national_prefix'] : null;
-        $this->container['assigned_user_account_id'] = isset($data['assigned_user_account_id']) ? $data['assigned_user_account_id'] : null;
-        $this->container['assigned_group_account_id'] = isset($data['assigned_group_account_id']) ? $data['assigned_group_account_id'] : null;
-        $this->container['assigned_module_instance_id'] = isset($data['assigned_module_instance_id']) ? $data['assigned_module_instance_id'] : null;
-        $this->container['assigned_module_entry_point_id'] = isset($data['assigned_module_entry_point_id']) ? $data['assigned_module_entry_point_id'] : null;
+  }
+  
+  /**
+   * Gets id
+   *
+   * @return int
+   */
+  public function getId()
+  {
+    return $this->container['id'];
+  }
+  
+  /**
+   * Sets id
+   *
+   * @param int $id the Id of the phone number
+   *
+   * @return $this
+   */
+  public function setId($id)
+  {
+    $this->container['id'] = $id;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets type
+   *
+   * @return string
+   */
+  public function getType()
+  {
+    return $this->container['type'];
+  }
+  
+  /**
+   * Sets type
+   *
+   * @param string $type the type of the phone number
+   *
+   * @return $this
+   */
+  public function setType($type)
+  {
+    $allowedValues = $this->getTypeAllowableValues();
+    if (!is_null($type) && !in_array($type, $allowedValues, true)) {
+      throw new InvalidArgumentException(
+        sprintf(
+          "Invalid value for 'type', must be one of '%s'",
+          implode("', '", $allowedValues)
+        )
+      );
     }
-
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerTypes()
-    {
-        return self::$swaggerTypes;
+    $this->container['type'] = $type;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets number
+   *
+   * @return string
+   */
+  public function getNumber()
+  {
+    return $this->container['number'];
+  }
+  
+  /**
+   * Sets number
+   *
+   * @param string $number the number itself (extention)
+   *
+   * @return $this
+   */
+  public function setNumber($number)
+  {
+    $this->container['number'] = $number;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets name
+   *
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->container['name'];
+  }
+  
+  /**
+   * Sets name
+   *
+   * @param string $name the name of the phone number
+   *
+   * @return $this
+   */
+  public function setName($name)
+  {
+    $this->container['name'] = $name;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets number_block_id
+   *
+   * @return int
+   */
+  public function getNumberBlockId()
+  {
+    return $this->container['number_block_id'];
+  }
+  
+  /**
+   * Sets number_block_id
+   *
+   * @param int $number_block_id the id of the corresponding NumberBlock
+   *
+   * @return $this
+   */
+  public function setNumberBlockId($number_block_id)
+  {
+    $this->container['number_block_id'] = $number_block_id;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets exit_code
+   *
+   * @return string
+   */
+  public function getExitCode()
+  {
+    return $this->container['exit_code'];
+  }
+  
+  /**
+   * Sets exit_code
+   *
+   * @param string $exit_code the exit code of the phone number
+   *
+   * @return $this
+   */
+  public function setExitCode($exit_code)
+  {
+    $this->container['exit_code'] = $exit_code;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets local_prefix
+   *
+   * @return string
+   */
+  public function getLocalPrefix()
+  {
+    return $this->container['local_prefix'];
+  }
+  
+  /**
+   * Sets local_prefix
+   *
+   * @param string $local_prefix the local prefix of the phone number
+   *
+   * @return $this
+   */
+  public function setLocalPrefix($local_prefix)
+  {
+    $this->container['local_prefix'] = $local_prefix;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets national_prefix
+   *
+   * @return string
+   */
+  public function getNationalPrefix()
+  {
+    return $this->container['national_prefix'];
+  }
+  
+  /**
+   * Sets national_prefix
+   *
+   * @param string $national_prefix the national prefix of the phone number
+   *
+   * @return $this
+   */
+  public function setNationalPrefix($national_prefix)
+  {
+    $this->container['national_prefix'] = $national_prefix;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets assigned_user_account_id
+   *
+   * @return int
+   */
+  public function getAssignedUserAccountId()
+  {
+    return $this->container['assigned_user_account_id'];
+  }
+  
+  /**
+   * Sets assigned_user_account_id
+   *
+   * @param int $assigned_user_account_id the id of the user account this phone number is assigned to or null if it is
+   *   not assigned to an account
+   *
+   * @return $this
+   */
+  public function setAssignedUserAccountId($assigned_user_account_id)
+  {
+    $this->container['assigned_user_account_id'] = $assigned_user_account_id;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets assigned_group_account_id
+   *
+   * @return int
+   */
+  public function getAssignedGroupAccountId()
+  {
+    return $this->container['assigned_group_account_id'];
+  }
+  
+  /**
+   * Sets assigned_group_account_id
+   *
+   * @param int $assigned_group_account_id the id of the group account this phone number is assigned to or null if it
+   *   is not assigned to an account
+   *
+   * @return $this
+   */
+  public function setAssignedGroupAccountId($assigned_group_account_id)
+  {
+    $this->container['assigned_group_account_id'] = $assigned_group_account_id;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets assigned_module_instance_id
+   *
+   * @return string
+   */
+  public function getAssignedModuleInstanceId()
+  {
+    return $this->container['assigned_module_instance_id'];
+  }
+  
+  /**
+   * Sets assigned_module_instance_id
+   *
+   * @param string $assigned_module_instance_id the id of the module instance this phone number is assigned to or null
+   *   if it is not assigned to a module
+   *
+   * @return $this
+   */
+  public function setAssignedModuleInstanceId($assigned_module_instance_id)
+  {
+    $this->container['assigned_module_instance_id'] = $assigned_module_instance_id;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets assigned_module_entry_point_id
+   *
+   * @return string
+   */
+  public function getAssignedModuleEntryPointId()
+  {
+    return $this->container['assigned_module_entry_point_id'];
+  }
+  
+  /**
+   * Sets assigned_module_entry_point_id
+   *
+   * @param string $assigned_module_entry_point_id the id of the module entry point this phone number is assigned to or
+   *   null if it is not assigned to a module
+   *
+   * @return $this
+   */
+  public function setAssignedModuleEntryPointId($assigned_module_entry_point_id)
+  {
+    $this->container['assigned_module_entry_point_id'] = $assigned_module_entry_point_id;
+    
+    return $this;
+  }
+  
+  /**
+   * Returns true if offset exists. False otherwise.
+   *
+   * @param integer $offset Offset
+   *
+   * @return boolean
+   */
+  public function offsetExists($offset)
+  {
+    return isset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return mixed
+   */
+  public function offsetGet($offset)
+  {
+    return isset($this->container[$offset]) ? $this->container[$offset] : null;
+  }
+  
+  /**
+   * Sets value based on offset.
+   *
+   * @param integer $offset Offset
+   * @param mixed $value Value to be set
+   *
+   * @return void
+   */
+  public function offsetSet($offset, $value)
+  {
+    if (is_null($offset)) {
+      $this->container[] = $value;
+    } else {
+      $this->container[$offset] = $value;
     }
-
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerFormats()
-    {
-        return self::$swaggerFormats;
+  }
+  
+  /**
+   * Unsets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return void
+   */
+  public function offsetUnset($offset)
+  {
+    unset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets the string presentation of the object
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
+      return json_encode(
+        ObjectSerializer::sanitizeForSerialization($this),
+        JSON_PRETTY_PRINT
+      );
     }
-
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @return array
-     */
-    public static function attributeMap()
-    {
-        return self::$attributeMap;
-    }
-
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @return array
-     */
-    public static function setters()
-    {
-        return self::$setters;
-    }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @return array
-     */
-    public static function getters()
-    {
-        return self::$getters;
-    }
-
-    /**
-     * The original name of the model.
-     *
-     * @return string
-     */
-    public function getModelName()
-    {
-        return self::$swaggerModelName;
-    }
-
-    /**
-     * Validate all the properties in the model
-     * return true if all passed
-     *
-     * @return bool True if all properties are valid
-     */
-    public function valid()
-    {
-        return count($this->listInvalidProperties()) === 0;
-    }
-
-    /**
-     * Show all the invalid properties with reasons.
-     *
-     * @return array invalid properties with reasons
-     */
-    public function listInvalidProperties()
-    {
-        $invalidProperties = [];
-
-        $allowedValues = $this->getTypeAllowableValues();
-        if (!is_null($this->container['type']) && !in_array($this->container['type'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value for 'type', must be one of '%s'",
-                implode("', '", $allowedValues)
-            );
-        }
-
-        return $invalidProperties;
-    }
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getTypeAllowableValues()
-    {
-        return [
-            self::TYPE_INVALID,
-            self::TYPE_INTERNAL,
-            self::TYPE_EXTERNAL,
-            self::TYPE_RESERVED,
-            self::TYPE_NT,
-            self::TYPE_DISPLAY,
-            self::TYPE_FXO,
-        ];
-    }
-
-    /**
-     * Gets id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->container['id'];
-    }
-
-    /**
-     * Sets id
-     *
-     * @param int $id the Id of the phone number
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->container['id'] = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->container['type'];
-    }
-
-    /**
-     * Sets type
-     *
-     * @param string $type the type of the phone number
-     *
-     * @return $this
-     */
-    public function setType($type)
-    {
-        $allowedValues = $this->getTypeAllowableValues();
-        if (!is_null($type) && !in_array($type, $allowedValues, true)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    "Invalid value for 'type', must be one of '%s'",
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['type'] = $type;
-
-        return $this;
-    }
-
-    /**
-     * Gets number
-     *
-     * @return string
-     */
-    public function getNumber()
-    {
-        return $this->container['number'];
-    }
-
-    /**
-     * Sets number
-     *
-     * @param string $number the number itself (extention)
-     *
-     * @return $this
-     */
-    public function setNumber($number)
-    {
-        $this->container['number'] = $number;
-
-        return $this;
-    }
-
-    /**
-     * Gets name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->container['name'];
-    }
-
-    /**
-     * Sets name
-     *
-     * @param string $name the name of the phone number
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->container['name'] = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets number_block_id
-     *
-     * @return int
-     */
-    public function getNumberBlockId()
-    {
-        return $this->container['number_block_id'];
-    }
-
-    /**
-     * Sets number_block_id
-     *
-     * @param int $number_block_id the id of the corresponding NumberBlock
-     *
-     * @return $this
-     */
-    public function setNumberBlockId($number_block_id)
-    {
-        $this->container['number_block_id'] = $number_block_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets exit_code
-     *
-     * @return string
-     */
-    public function getExitCode()
-    {
-        return $this->container['exit_code'];
-    }
-
-    /**
-     * Sets exit_code
-     *
-     * @param string $exit_code the exit code of the phone number
-     *
-     * @return $this
-     */
-    public function setExitCode($exit_code)
-    {
-        $this->container['exit_code'] = $exit_code;
-
-        return $this;
-    }
-
-    /**
-     * Gets local_prefix
-     *
-     * @return string
-     */
-    public function getLocalPrefix()
-    {
-        return $this->container['local_prefix'];
-    }
-
-    /**
-     * Sets local_prefix
-     *
-     * @param string $local_prefix the local prefix of the phone number
-     *
-     * @return $this
-     */
-    public function setLocalPrefix($local_prefix)
-    {
-        $this->container['local_prefix'] = $local_prefix;
-
-        return $this;
-    }
-
-    /**
-     * Gets national_prefix
-     *
-     * @return string
-     */
-    public function getNationalPrefix()
-    {
-        return $this->container['national_prefix'];
-    }
-
-    /**
-     * Sets national_prefix
-     *
-     * @param string $national_prefix the national prefix of the phone number
-     *
-     * @return $this
-     */
-    public function setNationalPrefix($national_prefix)
-    {
-        $this->container['national_prefix'] = $national_prefix;
-
-        return $this;
-    }
-
-    /**
-     * Gets assigned_user_account_id
-     *
-     * @return int
-     */
-    public function getAssignedUserAccountId()
-    {
-        return $this->container['assigned_user_account_id'];
-    }
-
-    /**
-     * Sets assigned_user_account_id
-     *
-     * @param int $assigned_user_account_id the id of the user account this phone number is assigned to or null if it is not assigned to an account
-     *
-     * @return $this
-     */
-    public function setAssignedUserAccountId($assigned_user_account_id)
-    {
-        $this->container['assigned_user_account_id'] = $assigned_user_account_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets assigned_group_account_id
-     *
-     * @return int
-     */
-    public function getAssignedGroupAccountId()
-    {
-        return $this->container['assigned_group_account_id'];
-    }
-
-    /**
-     * Sets assigned_group_account_id
-     *
-     * @param int $assigned_group_account_id the id of the group account this phone number is assigned to or null if it is not assigned to an account
-     *
-     * @return $this
-     */
-    public function setAssignedGroupAccountId($assigned_group_account_id)
-    {
-        $this->container['assigned_group_account_id'] = $assigned_group_account_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets assigned_module_instance_id
-     *
-     * @return string
-     */
-    public function getAssignedModuleInstanceId()
-    {
-        return $this->container['assigned_module_instance_id'];
-    }
-
-    /**
-     * Sets assigned_module_instance_id
-     *
-     * @param string $assigned_module_instance_id the id of the module instance this phone number is assigned to or null if it is not assigned to a module
-     *
-     * @return $this
-     */
-    public function setAssignedModuleInstanceId($assigned_module_instance_id)
-    {
-        $this->container['assigned_module_instance_id'] = $assigned_module_instance_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets assigned_module_entry_point_id
-     *
-     * @return string
-     */
-    public function getAssignedModuleEntryPointId()
-    {
-        return $this->container['assigned_module_entry_point_id'];
-    }
-
-    /**
-     * Sets assigned_module_entry_point_id
-     *
-     * @param string $assigned_module_entry_point_id the id of the module entry point this phone number is assigned to or null if it is not assigned to a module
-     *
-     * @return $this
-     */
-    public function setAssignedModuleEntryPointId($assigned_module_entry_point_id)
-    {
-        $this->container['assigned_module_entry_point_id'] = $assigned_module_entry_point_id;
-
-        return $this;
-    }
-
-    /**
-     * Returns true if offset exists. False otherwise.
-     *
-     * @param integer $offset Offset
-     *
-     * @return boolean
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->container[$offset]);
-    }
-
-    /**
-     * Gets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-
-    /**
-     * Sets value based on offset.
-     *
-     * @param integer $offset Offset
-     * @param mixed $value Value to be set
-     *
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->container[] = $value;
-        } else {
-            $this->container[$offset] = $value;
-        }
-    }
-
-    /**
-     * Unsets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->container[$offset]);
-    }
-
-    /**
-     * Gets the string presentation of the object
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(
-                ObjectSerializer::sanitizeForSerialization($this),
-                JSON_PRETTY_PRINT
-            );
-        }
-
-        return json_encode(ObjectSerializer::sanitizeForSerialization($this));
-    }
+    
+    return json_encode(ObjectSerializer::sanitizeForSerialization($this));
+  }
 }
 
 

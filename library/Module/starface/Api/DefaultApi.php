@@ -30,6 +30,7 @@ namespace Swagger\Client\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\MultipartStream;
@@ -74,14059 +75,14220 @@ use function GuzzleHttp\Psr7\try_fopen;
  */
 class DefaultApi
 {
-    /**
-     * @var ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var Configuration
-     */
-    protected $config;
-
-    /**
-     * @var HeaderSelector
-     */
-    protected $headerSelector;
-
-    /**
-     * @param ClientInterface $client
-     * @param Configuration $config
-     * @param HeaderSelector $selector
-     */
-    public function __construct(
-        ClientInterface $client = null,
-        Configuration $config = null,
-        HeaderSelector $selector = null
-    )
-    {
-        $this->client = $client ?: new Client();
-        $this->config = $config ?: new Configuration();
-        $this->headerSelector = $selector ?: new HeaderSelector();
-    }
-
-    /**
-     * @return Configuration
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * Operation assignPhone
-     *
-     * Assignes a phone to the User
-     *
-     * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function assignPhone($phone_assignment, $user_id)
-    {
-        $this->assignPhoneWithHttpInfo($phone_assignment, $user_id);
-    }
-
-    /**
-     * Operation assignPhoneWithHttpInfo
-     *
-     * Assignes a phone to the User
-     *
-     * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function assignPhoneWithHttpInfo($phone_assignment, $user_id)
-    {
-        $returnType = '';
-        $request = $this->assignPhoneRequest($phone_assignment, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
-    }
-
-    /**
-     * Create request for operation 'assignPhone'
-     *
-     * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function assignPhoneRequest($phone_assignment, $user_id)
-    {
-        // verify the required parameter 'phone_assignment' is set
-        if ($phone_assignment === null || (is_array($phone_assignment) && count($phone_assignment) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_assignment when calling assignPhone'
-            );
-        }
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling assignPhone'
-            );
-        }
-
-        $resourcePath = '/users/{userId}/phoneconfig/phones';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-        if (isset($phone_assignment)) {
-            $_tempBody = $phone_assignment;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+  /**
+   * @var ClientInterface
+   */
+  protected $client;
+  
+  /**
+   * @var Configuration
+   */
+  protected $config;
+  
+  /**
+   * @var HeaderSelector
+   */
+  protected $headerSelector;
+  
+  /**
+   * @param ClientInterface $client
+   * @param Configuration $config
+   * @param HeaderSelector $selector
+   */
+  public function __construct(
+    ClientInterface $client = null,
+    Configuration $config = null,
+    HeaderSelector $selector = null
+  )
+  {
+    $this->client = $client ?: new Client();
+    $this->config = $config ?: new Configuration();
+    $this->headerSelector = $selector ?: new HeaderSelector();
+  }
+  
+  /**
+   * @return Configuration
+   */
+  public function getConfig()
+  {
+    return $this->config;
+  }
+  
+  /**
+   * Operation assignPhone
+   *
+   * Assignes a phone to the User
+   *
+   * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given
+   *   {userId} (required)
+   * @param int $user_id Id of the User (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function assignPhone($phone_assignment, $user_id)
+  {
+    $this->assignPhoneWithHttpInfo($phone_assignment, $user_id);
+  }
+  
+  /**
+   * Operation assignPhoneWithHttpInfo
+   *
+   * Assignes a phone to the User
+   *
+   * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given
+   *   {userId} (required)
+   * @param int $user_id Id of the User (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function assignPhoneWithHttpInfo($phone_assignment, $user_id)
+  {
+    $returnType = '';
+    $request = $this->assignPhoneRequest($phone_assignment, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create http client option
-     *
-     * @return array of http client options
-     * @throws RuntimeException on file opening failure
-     */
-    protected function createHttpClientOption()
-    {
-        $options = [];
-        if ($this->config->getDebug()) {
-            $options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
-            if (!$options[RequestOptions::DEBUG]) {
-                throw new RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
-            }
-        }
-
-        return $options;
+  }
+  
+  /**
+   * Create request for operation 'assignPhone'
+   *
+   * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given
+   *   {userId} (required)
+   * @param int $user_id Id of the User (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function assignPhoneRequest($phone_assignment, $user_id)
+  {
+    // verify the required parameter 'phone_assignment' is set
+    if ($phone_assignment === null || (is_array($phone_assignment) && count($phone_assignment) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_assignment when calling assignPhone'
+      );
     }
-
-    /**
-     * Operation assignPhoneAsync
-     *
-     * Assignes a phone to the User
-     *
-     * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function assignPhoneAsync($phone_assignment, $user_id)
-    {
-        return $this->assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling assignPhone'
+      );
     }
-
-    /**
-     * Operation assignPhoneAsyncWithHttpInfo
-     *
-     * Assignes a phone to the User
-     *
-     * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
-    {
-        $returnType = '';
-        $request = $this->assignPhoneRequest($phone_assignment, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/phoneconfig/phones';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation createFunctionKey
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKey $function_key The new FunctionKey to create (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function createFunctionKey($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        list($response) = $this->createFunctionKeyWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    if (isset($phone_assignment)) {
+      $_tempBody = $phone_assignment;
     }
-
-    /**
-     * Operation createFunctionKeyWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKey $function_key The new FunctionKey to create (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function createFunctionKeyWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 201:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Create request for operation 'createFunctionKey'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKey $function_key The new FunctionKey to create (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling createFunctionKey'
-            );
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'function_key' is set
-        if ($function_key === null || (is_array($function_key) && count($function_key) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $function_key when calling createFunctionKey'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}/keys/';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Create http client option
+   *
+   * @return array of http client options
+   * @throws RuntimeException on file opening failure
+   */
+  protected function createHttpClientOption()
+  {
+    $options = [];
+    if ($this->config->getDebug()) {
+      $options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
+      if (!$options[RequestOptions::DEBUG]) {
+        throw new RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
+      }
+    }
+    
+    return $options;
+  }
+  
+  /**
+   * Operation assignPhoneAsync
+   *
+   * Assignes a phone to the User
+   *
+   * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given
+   *   {userId} (required)
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function assignPhoneAsync($phone_assignment, $user_id)
+  {
+    return $this->assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($function_key)) {
-            $_tempBody = $function_key;
+      );
+  }
+  
+  /**
+   * Operation assignPhoneAsyncWithHttpInfo
+   *
+   * Assignes a phone to the User
+   *
+   * @param PhoneAssignment $phone_assignment PhoneAssignment-Object to assign the phone to the User with the given
+   *   {userId} (required)
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function assignPhoneAsyncWithHttpInfo($phone_assignment, $user_id)
+  {
+    $returnType = '';
+    $request = $this->assignPhoneRequest($phone_assignment, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation createFunctionKey
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKey $function_key The new FunctionKey to create (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function createFunctionKey($fk_set_id, $function_key, $act_on_behalf_of = null)
+  {
+    list($response) = $this->createFunctionKeyWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation createFunctionKeyWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKey $function_key The new FunctionKey to create (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function createFunctionKeyWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 201:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation createFunctionKeyAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKey $function_key The new FunctionKey to create (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function createFunctionKeyAsync($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        return $this->createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'createFunctionKey'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKey $function_key The new FunctionKey to create (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling createFunctionKey'
+      );
     }
-
-    /**
-     * Operation createFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKey $function_key The new FunctionKey to create (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'function_key' is set
+    if ($function_key === null || (is_array($function_key) && count($function_key) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $function_key when calling createFunctionKey'
+      );
     }
-
-    /**
-     * Operation deleteAvatar
-     *
-     * Delete the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function deleteAvatar($user_id)
-    {
-        $this->deleteAvatarWithHttpInfo($user_id);
+    
+    $resourcePath = '/functionkeysets/{fkSetId}/keys/';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation deleteAvatarWithHttpInfo
-     *
-     * Delete the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deleteAvatarWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->deleteAvatarRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'deleteAvatar'
-     *
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function deleteAvatarRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling deleteAvatar'
-            );
+    
+    // body params
+    $_tempBody = null;
+    if (isset($function_key)) {
+      $_tempBody = $function_key;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        $resourcePath = '/users/{userId}/avatar';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation createFunctionKeyAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKey $function_key The new FunctionKey to create (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function createFunctionKeyAsync($fk_set_id, $function_key, $act_on_behalf_of = null)
+  {
+    return $this->createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation createFunctionKeyAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKey $function_key The new FunctionKey to create (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function createFunctionKeyAsyncWithHttpInfo($fk_set_id, $function_key, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->createFunctionKeyRequest($fk_set_id, $function_key, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation deleteAvatar
+   *
+   * Delete the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function deleteAvatar($user_id)
+  {
+    $this->deleteAvatarWithHttpInfo($user_id);
+  }
+  
+  /**
+   * Operation deleteAvatarWithHttpInfo
+   *
+   * Delete the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function deleteAvatarWithHttpInfo($user_id)
+  {
+    $returnType = '';
+    $request = $this->deleteAvatarRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation deleteAvatarAsync
-     *
-     * Delete the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteAvatarAsync($user_id)
-    {
-        return $this->deleteAvatarAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'deleteAvatar'
+   *
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function deleteAvatarRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling deleteAvatar'
+      );
     }
-
-    /**
-     * Operation deleteAvatarAsyncWithHttpInfo
-     *
-     * Delete the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteAvatarAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->deleteAvatarRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/avatar';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation deleteContact
-     *
-     * Delete a contact
-     *
-     * @param string $contact_id Id of the contact (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function deleteContact($contact_id)
-    {
-        $this->deleteContactWithHttpInfo($contact_id);
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation deleteContactWithHttpInfo
-     *
-     * Delete a contact
-     *
-     * @param string $contact_id Id of the contact (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deleteContactWithHttpInfo($contact_id)
-    {
-        $returnType = '';
-        $request = $this->deleteContactRequest($contact_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'deleteContact'
-     *
-     * @param string $contact_id Id of the contact (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function deleteContactRequest($contact_id)
-    {
-        // verify the required parameter 'contact_id' is set
-        if ($contact_id === null || (is_array($contact_id) && count($contact_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $contact_id when calling deleteContact'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation deleteAvatarAsync
+   *
+   * Delete the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteAvatarAsync($user_id)
+  {
+    return $this->deleteAvatarAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/contacts/{contactId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($contact_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'contactId' . '}',
-                ObjectSerializer::toPathValue($contact_id),
-                $resourcePath
-            );
+      );
+  }
+  
+  /**
+   * Operation deleteAvatarAsyncWithHttpInfo
+   *
+   * Delete the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteAvatarAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '';
+    $request = $this->deleteAvatarRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation deleteContact
+   *
+   * Delete a contact
+   *
+   * @param string $contact_id Id of the contact (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function deleteContact($contact_id)
+  {
+    $this->deleteContactWithHttpInfo($contact_id);
+  }
+  
+  /**
+   * Operation deleteContactWithHttpInfo
+   *
+   * Delete a contact
+   *
+   * @param string $contact_id Id of the contact (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function deleteContactWithHttpInfo($contact_id)
+  {
+    $returnType = '';
+    $request = $this->deleteContactRequest($contact_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation deleteContactAsync
-     *
-     * Delete a contact
-     *
-     * @param string $contact_id Id of the contact (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteContactAsync($contact_id)
-    {
-        return $this->deleteContactAsyncWithHttpInfo($contact_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'deleteContact'
+   *
+   * @param string $contact_id Id of the contact (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function deleteContactRequest($contact_id)
+  {
+    // verify the required parameter 'contact_id' is set
+    if ($contact_id === null || (is_array($contact_id) && count($contact_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $contact_id when calling deleteContact'
+      );
     }
-
-    /**
-     * Operation deleteContactAsyncWithHttpInfo
-     *
-     * Delete a contact
-     *
-     * @param string $contact_id Id of the contact (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteContactAsyncWithHttpInfo($contact_id)
-    {
-        $returnType = '';
-        $request = $this->deleteContactRequest($contact_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/contacts/{contactId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($contact_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'contactId' . '}',
+        ObjectSerializer::toPathValue($contact_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation deleteFmcPhone
-     *
-     * Delete a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function deleteFmcPhone($fmc_id, $user_id = null)
-    {
-        $this->deleteFmcPhoneWithHttpInfo($fmc_id, $user_id);
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation deleteFmcPhoneWithHttpInfo
-     *
-     * Delete a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deleteFmcPhoneWithHttpInfo($fmc_id, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->deleteFmcPhoneRequest($fmc_id, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'deleteFmcPhone'
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function deleteFmcPhoneRequest($fmc_id, $user_id = null)
-    {
-        // verify the required parameter 'fmc_id' is set
-        if ($fmc_id === null || (is_array($fmc_id) && count($fmc_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fmc_id when calling deleteFmcPhone'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation deleteContactAsync
+   *
+   * Delete a contact
+   *
+   * @param string $contact_id Id of the contact (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteContactAsync($contact_id)
+  {
+    return $this->deleteContactAsyncWithHttpInfo($contact_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.deleteFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+      );
+  }
+  
+  /**
+   * Operation deleteContactAsyncWithHttpInfo
+   *
+   * Delete a contact
+   *
+   * @param string $contact_id Id of the contact (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteContactAsyncWithHttpInfo($contact_id)
+  {
+    $returnType = '';
+    $request = $this->deleteContactRequest($contact_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $resourcePath = '/fmcPhones/{fmcId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
-        }
-
-        // path params
-        if ($fmc_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fmcId' . '}',
-                ObjectSerializer::toPathValue($fmc_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation deleteFmcPhone
+   *
+   * Delete a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function deleteFmcPhone($fmc_id, $user_id = null)
+  {
+    $this->deleteFmcPhoneWithHttpInfo($fmc_id, $user_id);
+  }
+  
+  /**
+   * Operation deleteFmcPhoneWithHttpInfo
+   *
+   * Delete a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function deleteFmcPhoneWithHttpInfo($fmc_id, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->deleteFmcPhoneRequest($fmc_id, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation deleteFmcPhoneAsync
-     *
-     * Delete a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteFmcPhoneAsync($fmc_id, $user_id = null)
-    {
-        return $this->deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'deleteFmcPhone'
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function deleteFmcPhoneRequest($fmc_id, $user_id = null)
+  {
+    // verify the required parameter 'fmc_id' is set
+    if ($fmc_id === null || (is_array($fmc_id) && count($fmc_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fmc_id when calling deleteFmcPhone'
+      );
     }
-
-    /**
-     * Operation deleteFmcPhoneAsyncWithHttpInfo
-     *
-     * Delete a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->deleteFmcPhoneRequest($fmc_id, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.deleteFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation deleteFunctionKey
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function deleteFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        list($response) = $this->deleteFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of);
-        return $response;
+    
+    
+    $resourcePath = '/fmcPhones/{fmcId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation deleteFunctionKeyWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deleteFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 204:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($fmc_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fmcId' . '}',
+        ObjectSerializer::toPathValue($fmc_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'deleteFunctionKey'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling deleteFunctionKey'
-            );
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'key_id' is set
-        if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $key_id when calling deleteFunctionKey'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation deleteFmcPhoneAsync
+   *
+   * Delete a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteFmcPhoneAsync($fmc_id, $user_id = null)
+  {
+    return $this->deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // path params
-        if ($key_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'keyId' . '}',
-                ObjectSerializer::toPathValue($key_id),
-                $resourcePath
-            );
+      );
+  }
+  
+  /**
+   * Operation deleteFmcPhoneAsyncWithHttpInfo
+   *
+   * Delete a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be deleted (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->deleteFmcPhoneRequest($fmc_id, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation deleteFunctionKey
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function deleteFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    list($response) = $this->deleteFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation deleteFunctionKeyWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function deleteFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 204:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation deleteFunctionKeyAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        return $this->deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'deleteFunctionKey'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling deleteFunctionKey'
+      );
     }
-
-    /**
-     * Operation deleteFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'key_id' is set
+    if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $key_id when calling deleteFunctionKey'
+      );
     }
-
-    /**
-     * Operation deletePhoneAssignment
-     *
-     * Deletes the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function deletePhoneAssignment($user_id, $phone_id)
-    {
-        $this->deletePhoneAssignmentWithHttpInfo($user_id, $phone_id);
+    
+    $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation deletePhoneAssignmentWithHttpInfo
-     *
-     * Deletes the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deletePhoneAssignmentWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '';
-        $request = $this->deletePhoneAssignmentRequest($user_id, $phone_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'deletePhoneAssignment'
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function deletePhoneAssignmentRequest($user_id, $phone_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling deletePhoneAssignment'
-            );
+    // path params
+    if ($key_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'keyId' . '}',
+        ObjectSerializer::toPathValue($key_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'phone_id' is set
-        if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_id when calling deletePhoneAssignment'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-        // path params
-        if ($phone_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'phoneId' . '}',
-                ObjectSerializer::toPathValue($phone_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation deleteFunctionKeyAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    return $this->deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation deleteFunctionKeyAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->deleteFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation deletePhoneAssignment
+   *
+   * Deletes the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function deletePhoneAssignment($user_id, $phone_id)
+  {
+    $this->deletePhoneAssignmentWithHttpInfo($user_id, $phone_id);
+  }
+  
+  /**
+   * Operation deletePhoneAssignmentWithHttpInfo
+   *
+   * Deletes the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function deletePhoneAssignmentWithHttpInfo($user_id, $phone_id)
+  {
+    $returnType = '';
+    $request = $this->deletePhoneAssignmentRequest($user_id, $phone_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation deletePhoneAssignmentAsync
-     *
-     * Deletes the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deletePhoneAssignmentAsync($user_id, $phone_id)
-    {
-        return $this->deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'deletePhoneAssignment'
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function deletePhoneAssignmentRequest($user_id, $phone_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling deletePhoneAssignment'
+      );
     }
-
-    /**
-     * Operation deletePhoneAssignmentAsyncWithHttpInfo
-     *
-     * Deletes the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '';
-        $request = $this->deletePhoneAssignmentRequest($user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'phone_id' is set
+    if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_id when calling deletePhoneAssignment'
+      );
     }
-
-    /**
-     * Operation deleteUser
-     *
-     * Delete a user
-     *
-     * @param int $user_id Id of the User that will be deleted (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function deleteUser($user_id)
-    {
-        $this->deleteUserWithHttpInfo($user_id);
+    
+    $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation deleteUserWithHttpInfo
-     *
-     * Delete a user
-     *
-     * @param int $user_id Id of the User that will be deleted (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function deleteUserWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->deleteUserRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // path params
+    if ($phone_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'phoneId' . '}',
+        ObjectSerializer::toPathValue($phone_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'deleteUser'
-     *
-     * @param int $user_id Id of the User that will be deleted (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function deleteUserRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling deleteUser'
-            );
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        $resourcePath = '/users/{userId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation deletePhoneAssignmentAsync
+   *
+   * Deletes the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deletePhoneAssignmentAsync($user_id, $phone_id)
+  {
+    return $this->deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+      );
+  }
+  
+  /**
+   * Operation deletePhoneAssignmentAsyncWithHttpInfo
+   *
+   * Deletes the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone that gets unassigned from the User with the given {userId} (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deletePhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+  {
+    $returnType = '';
+    $request = $this->deletePhoneAssignmentRequest($user_id, $phone_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation deleteUser
+   *
+   * Delete a user
+   *
+   * @param int $user_id Id of the User that will be deleted (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function deleteUser($user_id)
+  {
+    $this->deleteUserWithHttpInfo($user_id);
+  }
+  
+  /**
+   * Operation deleteUserWithHttpInfo
+   *
+   * Delete a user
+   *
+   * @param int $user_id Id of the User that will be deleted (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function deleteUserWithHttpInfo($user_id)
+  {
+    $returnType = '';
+    $request = $this->deleteUserRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation deleteUserAsync
-     *
-     * Delete a user
-     *
-     * @param int $user_id Id of the User that will be deleted (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteUserAsync($user_id)
-    {
-        return $this->deleteUserAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'deleteUser'
+   *
+   * @param int $user_id Id of the User that will be deleted (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function deleteUserRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling deleteUser'
+      );
     }
-
-    /**
-     * Operation deleteUserAsyncWithHttpInfo
-     *
-     * Delete a user
-     *
-     * @param int $user_id Id of the User that will be deleted (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function deleteUserAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->deleteUserRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getAvatar
-     *
-     * Fetch the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getAvatar($user_id)
-    {
-        $this->getAvatarWithHttpInfo($user_id);
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getAvatarWithHttpInfo
-     *
-     * Fetch the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getAvatarWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->getAvatarRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getAvatar'
-     *
-     * @param int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getAvatarRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getAvatar'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation deleteUserAsync
+   *
+   * Delete a user
+   *
+   * @param int $user_id Id of the User that will be deleted (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteUserAsync($user_id)
+  {
+    return $this->deleteUserAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users/{userId}/avatar';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      );
+  }
+  
+  /**
+   * Operation deleteUserAsyncWithHttpInfo
+   *
+   * Delete a user
+   *
+   * @param int $user_id Id of the User that will be deleted (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function deleteUserAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '';
+    $request = $this->deleteUserRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['image/jpeg']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['image/jpeg'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getAvatar
+   *
+   * Fetch the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be fetched (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getAvatar($user_id)
+  {
+    $this->getAvatarWithHttpInfo($user_id);
+  }
+  
+  /**
+   * Operation getAvatarWithHttpInfo
+   *
+   * Fetch the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be fetched (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getAvatarWithHttpInfo($user_id)
+  {
+    $returnType = '';
+    $request = $this->getAvatarRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getAvatarAsync
-     *
-     * Fetch the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getAvatarAsync($user_id)
-    {
-        return $this->getAvatarAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getAvatar'
+   *
+   * @param int $user_id Id of the User thats avatar will be fetched (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getAvatarRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getAvatar'
+      );
     }
-
-    /**
-     * Operation getAvatarAsyncWithHttpInfo
-     *
-     * Fetch the Avatar
-     *
-     * @param int $user_id Id of the User thats avatar will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getAvatarAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '';
-        $request = $this->getAvatarRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/avatar';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getCalServices
-     *
-     * Retrive a list of all available call services
-     *
-     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @return CallService[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getCalServices($type = null)
-    {
-        list($response) = $this->getCalServicesWithHttpInfo($type);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['image/jpeg']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['image/jpeg'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getCalServicesWithHttpInfo
-     *
-     * Retrive a list of all available call services
-     *
-     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @return array of \Swagger\Client\Model\CallService[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getCalServicesWithHttpInfo($type = null)
-    {
-        $returnType = '\Swagger\Client\Model\CallService[]';
-        $request = $this->getCalServicesRequest($type);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\CallService[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getCalServices'
-     *
-     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getCalServicesRequest($type = null)
-    {
-
-        $resourcePath = '/callservices';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($type !== null) {
-            $queryParams['type'] = ObjectSerializer::toQueryValue($type);
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getAvatarAsync
+   *
+   * Fetch the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getAvatarAsync($user_id)
+  {
+    return $this->getAvatarAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+      );
+  }
+  
+  /**
+   * Operation getAvatarAsyncWithHttpInfo
+   *
+   * Fetch the Avatar
+   *
+   * @param int $user_id Id of the User thats avatar will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getAvatarAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '';
+    $request = $this->getAvatarRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getCalServices
+   *
+   * Retrive a list of all available call services
+   *
+   * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will
+   *   default to FOR_USER_ACCOUNTS (optional)
+   *
+   * @return CallService[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getCalServices($type = null)
+  {
+    list($response) = $this->getCalServicesWithHttpInfo($type);
+    return $response;
+  }
+  
+  /**
+   * Operation getCalServicesWithHttpInfo
+   *
+   * Retrive a list of all available call services
+   *
+   * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will
+   *   default to FOR_USER_ACCOUNTS (optional)
+   *
+   * @return array of \Swagger\Client\Model\CallService[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getCalServicesWithHttpInfo($type = null)
+  {
+    $returnType = '\Swagger\Client\Model\CallService[]';
+    $request = $this->getCalServicesRequest($type);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\CallService[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getCalServicesAsync
-     *
-     * Retrive a list of all available call services
-     *
-     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getCalServicesAsync($type = null)
-    {
-        return $this->getCalServicesAsyncWithHttpInfo($type)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getCalServices'
+   *
+   * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will
+   *   default to FOR_USER_ACCOUNTS (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getCalServicesRequest($type = null)
+  {
+    
+    $resourcePath = '/callservices';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($type !== null) {
+      $queryParams['type'] = ObjectSerializer::toQueryValue($type);
     }
-
-    /**
-     * Operation getCalServicesAsyncWithHttpInfo
-     *
-     * Retrive a list of all available call services
-     *
-     * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getCalServicesAsyncWithHttpInfo($type = null)
-    {
-        $returnType = '\Swagger\Client\Model\CallService[]';
-        $request = $this->getCalServicesRequest($type);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getCallService
-     *
-     * Fetch a CallService
-     *
-     * @param int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @return CallService
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getCallService($service_id)
-    {
-        list($response) = $this->getCallServiceWithHttpInfo($service_id);
-        return $response;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Operation getCallServiceWithHttpInfo
-     *
-     * Fetch a CallService
-     *
-     * @param int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @return array of \Swagger\Client\Model\CallService, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getCallServiceWithHttpInfo($service_id)
-    {
-        $returnType = '\Swagger\Client\Model\CallService';
-        $request = $this->getCallServiceRequest($service_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\CallService',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
     }
-
-    /**
-     * Create request for operation 'getCallService'
-     *
-     * @param int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getCallServiceRequest($service_id)
-    {
-        // verify the required parameter 'service_id' is set
-        if ($service_id === null || (is_array($service_id) && count($service_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $service_id when calling getCallService'
-            );
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getCalServicesAsync
+   *
+   * Retrive a list of all available call services
+   *
+   * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will
+   *   default to FOR_USER_ACCOUNTS (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getCalServicesAsync($type = null)
+  {
+    return $this->getCalServicesAsyncWithHttpInfo($type)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/callservices/{serviceId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($service_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'serviceId' . '}',
-                ObjectSerializer::toPathValue($service_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getCalServicesAsyncWithHttpInfo
+   *
+   * Retrive a list of all available call services
+   *
+   * @param string $type filter for a call service type. If none or an invalid type is provided the type filter will
+   *   default to FOR_USER_ACCOUNTS (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getCalServicesAsyncWithHttpInfo($type = null)
+  {
+    $returnType = '\Swagger\Client\Model\CallService[]';
+    $request = $this->getCalServicesRequest($type);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getCallService
+   *
+   * Fetch a CallService
+   *
+   * @param int $service_id Id of the CallService that will be fetched (required)
+   *
+   * @return CallService
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getCallService($service_id)
+  {
+    list($response) = $this->getCallServiceWithHttpInfo($service_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getCallServiceWithHttpInfo
+   *
+   * Fetch a CallService
+   *
+   * @param int $service_id Id of the CallService that will be fetched (required)
+   *
+   * @return array of \Swagger\Client\Model\CallService, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getCallServiceWithHttpInfo($service_id)
+  {
+    $returnType = '\Swagger\Client\Model\CallService';
+    $request = $this->getCallServiceRequest($service_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\CallService',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getCallServiceAsync
-     *
-     * Fetch a CallService
-     *
-     * @param int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getCallServiceAsync($service_id)
-    {
-        return $this->getCallServiceAsyncWithHttpInfo($service_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getCallService'
+   *
+   * @param int $service_id Id of the CallService that will be fetched (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getCallServiceRequest($service_id)
+  {
+    // verify the required parameter 'service_id' is set
+    if ($service_id === null || (is_array($service_id) && count($service_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $service_id when calling getCallService'
+      );
     }
-
-    /**
-     * Operation getCallServiceAsyncWithHttpInfo
-     *
-     * Fetch a CallService
-     *
-     * @param int $service_id Id of the CallService that will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getCallServiceAsyncWithHttpInfo($service_id)
-    {
-        $returnType = '\Swagger\Client\Model\CallService';
-        $request = $this->getCallServiceRequest($service_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/callservices/{serviceId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($service_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'serviceId' . '}',
+        ObjectSerializer::toPathValue($service_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getContact
-     *
-     * Fetch a contact
-     *
-     * @param string $contact_id Id of the contact that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return Contact
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getContact($contact_id, $user_id = null)
-    {
-        list($response) = $this->getContactWithHttpInfo($contact_id, $user_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getContactWithHttpInfo
-     *
-     * Fetch a contact
-     *
-     * @param string $contact_id Id of the contact that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\Contact, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getContactWithHttpInfo($contact_id, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\Contact';
-        $request = $this->getContactRequest($contact_id, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Contact',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getContact'
-     *
-     * @param string $contact_id Id of the contact that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getContactRequest($contact_id, $user_id = null)
-    {
-        // verify the required parameter 'contact_id' is set
-        if ($contact_id === null || (is_array($contact_id) && count($contact_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $contact_id when calling getContact'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getCallServiceAsync
+   *
+   * Fetch a CallService
+   *
+   * @param int $service_id Id of the CallService that will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getCallServiceAsync($service_id)
+  {
+    return $this->getCallServiceAsyncWithHttpInfo($service_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getContact, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
-        }
-
-
-        $resourcePath = '/contacts/{contactId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
-        }
-
-        // path params
-        if ($contact_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'contactId' . '}',
-                ObjectSerializer::toPathValue($contact_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getCallServiceAsyncWithHttpInfo
+   *
+   * Fetch a CallService
+   *
+   * @param int $service_id Id of the CallService that will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getCallServiceAsyncWithHttpInfo($service_id)
+  {
+    $returnType = '\Swagger\Client\Model\CallService';
+    $request = $this->getCallServiceRequest($service_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getContact
+   *
+   * Fetch a contact
+   *
+   * @param string $contact_id Id of the contact that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Contact
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getContact($contact_id, $user_id = null)
+  {
+    list($response) = $this->getContactWithHttpInfo($contact_id, $user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getContactWithHttpInfo
+   *
+   * Fetch a contact
+   *
+   * @param string $contact_id Id of the contact that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of \Swagger\Client\Model\Contact, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getContactWithHttpInfo($contact_id, $user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\Contact';
+    $request = $this->getContactRequest($contact_id, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Contact',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getContactAsync
-     *
-     * Fetch a contact
-     *
-     * @param string $contact_id Id of the contact that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getContactAsync($contact_id, $user_id = null)
-    {
-        return $this->getContactAsyncWithHttpInfo($contact_id, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getContact'
+   *
+   * @param string $contact_id Id of the contact that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getContactRequest($contact_id, $user_id = null)
+  {
+    // verify the required parameter 'contact_id' is set
+    if ($contact_id === null || (is_array($contact_id) && count($contact_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $contact_id when calling getContact'
+      );
     }
-
-    /**
-     * Operation getContactAsyncWithHttpInfo
-     *
-     * Fetch a contact
-     *
-     * @param string $contact_id Id of the contact that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getContactAsyncWithHttpInfo($contact_id, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\Contact';
-        $request = $this->getContactRequest($contact_id, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getContact, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation getContactList
-     *
-     * Retrieve a list of ContactSummary-Objects
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $tags Ids of tags to filter for (optional)
-     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @return ContactList
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws InvalidArgumentException
-     */
-    public function getContactList($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        list($response) = $this->getContactListWithHttpInfo($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
-        return $response;
+    
+    
+    $resourcePath = '/contacts/{contactId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation getContactListWithHttpInfo
-     *
-     * Retrieve a list of ContactSummary-Objects
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $tags Ids of tags to filter for (optional)
-     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @return array of \Swagger\Client\Model\ContactList, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getContactListWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        $returnType = '\Swagger\Client\Model\ContactList';
-        $request = $this->getContactListRequest($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\ContactList',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($contact_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'contactId' . '}',
+        ObjectSerializer::toPathValue($contact_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'getContactList'
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $tags Ids of tags to filter for (optional)
-     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getContactListRequest($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getContactList, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-
-        $resourcePath = '/contacts';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-        // query params
-        if (is_array($tags)) {
-            $queryParams['tags'] = $tags;
-        } else
-            if ($tags !== null) {
-                $queryParams['tags'] = ObjectSerializer::toQueryValue($tags);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getContactAsync
+   *
+   * Fetch a contact
+   *
+   * @param string $contact_id Id of the contact that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getContactAsync($contact_id, $user_id = null)
+  {
+    return $this->getContactAsyncWithHttpInfo($contact_id, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getContactAsyncWithHttpInfo
+   *
+   * Fetch a contact
+   *
+   * @param string $contact_id Id of the contact that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getContactAsyncWithHttpInfo($contact_id, $user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\Contact';
+    $request = $this->getContactRequest($contact_id, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        // query params
-        if ($search_terms !== null) {
-            $queryParams['searchTerms'] = ObjectSerializer::toQueryValue($search_terms);
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = ObjectSerializer::toQueryValue($page);
-        }
-        // query params
-        if ($pagesize !== null) {
-            $queryParams['pagesize'] = ObjectSerializer::toQueryValue($pagesize);
-        }
-        // query params
-        if ($sort !== null) {
-            $queryParams['sort'] = ObjectSerializer::toQueryValue($sort);
-        }
-        // query params
-        if ($sortdirection !== null) {
-            $queryParams['sortdirection'] = ObjectSerializer::toQueryValue($sortdirection);
-        }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getContactList
+   *
+   * Retrieve a list of ContactSummary-Objects
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param string[] $tags Ids of tags to filter for (optional)
+   * @param string $search_terms The string to search for in familyname, firstname, company or any configured
+   *   number-field (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+   * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;,
+   *   &#39;company&#39; (optional)
+   * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+   *
+   * @return ContactList
+   * @throws ApiException on non-2xx response
+   * @throws InvalidArgumentException
+   */
+  public function getContactList($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    list($response) = $this->getContactListWithHttpInfo($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
+    return $response;
+  }
+  
+  /**
+   * Operation getContactListWithHttpInfo
+   *
+   * Retrieve a list of ContactSummary-Objects
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param string[] $tags Ids of tags to filter for (optional)
+   * @param string $search_terms The string to search for in familyname, firstname, company or any configured
+   *   number-field (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+   * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;,
+   *   &#39;company&#39; (optional)
+   * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+   *
+   * @return array of \Swagger\Client\Model\ContactList, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getContactListWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    $returnType = '\Swagger\Client\Model\ContactList';
+    $request = $this->getContactListRequest($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\ContactList',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getContactListAsync
-     *
-     * Retrieve a list of ContactSummary-Objects
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $tags Ids of tags to filter for (optional)
-     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getContactListAsync($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        return $this->getContactListAsyncWithHttpInfo($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getContactList'
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param string[] $tags Ids of tags to filter for (optional)
+   * @param string $search_terms The string to search for in familyname, firstname, company or any configured
+   *   number-field (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+   * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;,
+   *   &#39;company&#39; (optional)
+   * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getContactListRequest($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getContactList, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation getContactListAsyncWithHttpInfo
-     *
-     * Retrieve a list of ContactSummary-Objects
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $tags Ids of tags to filter for (optional)
-     * @param string $search_terms The string to search for in familyname, firstname, company or any configured number-field (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
-     * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;, &#39;company&#39; (optional)
-     * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getContactListAsyncWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        $returnType = '\Swagger\Client\Model\ContactList';
-        $request = $this->getContactListRequest($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    
+    $resourcePath = '/contacts';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation getFmcPhone
-     *
-     * Fetch a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FmcPhone
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getFmcPhone($fmc_id, $user_id = null)
-    {
-        list($response) = $this->getFmcPhoneWithHttpInfo($fmc_id, $user_id);
-        return $response;
+    // query params
+    if (is_array($tags)) {
+      $queryParams['tags'] = $tags;
+    } else
+      if ($tags !== null) {
+        $queryParams['tags'] = ObjectSerializer::toQueryValue($tags);
+      }
+    // query params
+    if ($search_terms !== null) {
+      $queryParams['searchTerms'] = ObjectSerializer::toQueryValue($search_terms);
     }
-
-    /**
-     * Operation getFmcPhoneWithHttpInfo
-     *
-     * Fetch a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FmcPhone, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFmcPhoneWithHttpInfo($fmc_id, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone';
-        $request = $this->getFmcPhoneRequest($fmc_id, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FmcPhone',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // query params
+    if ($page !== null) {
+      $queryParams['page'] = ObjectSerializer::toQueryValue($page);
     }
-
-    /**
-     * Create request for operation 'getFmcPhone'
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getFmcPhoneRequest($fmc_id, $user_id = null)
-    {
-        // verify the required parameter 'fmc_id' is set
-        if ($fmc_id === null || (is_array($fmc_id) && count($fmc_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fmc_id when calling getFmcPhone'
-            );
+    // query params
+    if ($pagesize !== null) {
+      $queryParams['pagesize'] = ObjectSerializer::toQueryValue($pagesize);
+    }
+    // query params
+    if ($sort !== null) {
+      $queryParams['sort'] = ObjectSerializer::toQueryValue($sort);
+    }
+    // query params
+    if ($sortdirection !== null) {
+      $queryParams['sortdirection'] = ObjectSerializer::toQueryValue($sortdirection);
+    }
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-
-        $resourcePath = '/fmcPhones/{fmcId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // path params
-        if ($fmc_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fmcId' . '}',
-                ObjectSerializer::toPathValue($fmc_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getContactListAsync
+   *
+   * Retrieve a list of ContactSummary-Objects
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param string[] $tags Ids of tags to filter for (optional)
+   * @param string $search_terms The string to search for in familyname, firstname, company or any configured
+   *   number-field (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+   * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;,
+   *   &#39;company&#39; (optional)
+   * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getContactListAsync($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    return $this->getContactListAsyncWithHttpInfo($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getContactListAsyncWithHttpInfo
+   *
+   * Retrieve a list of ContactSummary-Objects
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param string[] $tags Ids of tags to filter for (optional)
+   * @param string $search_terms The string to search for in familyname, firstname, company or any configured
+   *   number-field (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. The pagesize is currently limited to 40. (optional)
+   * @param string $sort The fieldname to sort for. For example &#39;familyname&#39;, &#39;firstname&#39;,
+   *   &#39;company&#39; (optional)
+   * @param string $sortdirection The sort direction. ASC for ascending, DESC for descending (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getContactListAsyncWithHttpInfo($user_id = null, $tags = null, $search_terms = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    $returnType = '\Swagger\Client\Model\ContactList';
+    $request = $this->getContactListRequest($user_id, $tags, $search_terms, $page, $pagesize, $sort, $sortdirection);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getFmcPhone
+   *
+   * Fetch a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return FmcPhone
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getFmcPhone($fmc_id, $user_id = null)
+  {
+    list($response) = $this->getFmcPhoneWithHttpInfo($fmc_id, $user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getFmcPhoneWithHttpInfo
+   *
+   * Fetch a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of \Swagger\Client\Model\FmcPhone, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getFmcPhoneWithHttpInfo($fmc_id, $user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\FmcPhone';
+    $request = $this->getFmcPhoneRequest($fmc_id, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FmcPhone',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getFmcPhoneAsync
-     *
-     * Fetch a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFmcPhoneAsync($fmc_id, $user_id = null)
-    {
-        return $this->getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getFmcPhone'
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getFmcPhoneRequest($fmc_id, $user_id = null)
+  {
+    // verify the required parameter 'fmc_id' is set
+    if ($fmc_id === null || (is_array($fmc_id) && count($fmc_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fmc_id when calling getFmcPhone'
+      );
     }
-
-    /**
-     * Operation getFmcPhoneAsyncWithHttpInfo
-     *
-     * Fetch a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone';
-        $request = $this->getFmcPhoneRequest($fmc_id, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation getFmcPhones
-     *
-     * Retrieve a list of FmcPhones
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FmcPhone[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getFmcPhones($user_id = null)
-    {
-        list($response) = $this->getFmcPhonesWithHttpInfo($user_id);
-        return $response;
+    
+    
+    $resourcePath = '/fmcPhones/{fmcId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation getFmcPhonesWithHttpInfo
-     *
-     * Retrieve a list of FmcPhones
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FmcPhone[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFmcPhonesWithHttpInfo($user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone[]';
-        $request = $this->getFmcPhonesRequest($user_id);
+    
+    // path params
+    if ($fmc_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fmcId' . '}',
+        ObjectSerializer::toPathValue($fmc_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getFmcPhoneAsync
+   *
+   * Fetch a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFmcPhoneAsync($fmc_id, $user_id = null)
+  {
+    return $this->getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getFmcPhoneAsyncWithHttpInfo
+   *
+   * Fetch a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be fetched (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFmcPhoneAsyncWithHttpInfo($fmc_id, $user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\FmcPhone';
+    $request = $this->getFmcPhoneRequest($fmc_id, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
+            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
+        }
+      );
+  }
+  
+  /**
+   * Operation getFmcPhones
+   *
+   * Retrieve a list of FmcPhones
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return FmcPhone[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getFmcPhones($user_id = null)
+  {
+    list($response) = $this->getFmcPhonesWithHttpInfo($user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getFmcPhonesWithHttpInfo
+   *
+   * Retrieve a list of FmcPhones
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of \Swagger\Client\Model\FmcPhone[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getFmcPhonesWithHttpInfo($user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\FmcPhone[]';
+    $request = $this->getFmcPhonesRequest($user_id);
 //        var_dump($request);
 //        die();
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FmcPhone[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
+        );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FmcPhone[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'getFmcPhones'
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getFmcPhonesRequest($user_id = null)
-    {
+  }
+  
+  /**
+   * Create request for operation 'getFmcPhones'
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getFmcPhonesRequest($user_id = null)
+  {
 //        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
 //            throw new \InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getFmcPhones, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
 //        }
-
-        $resourcePath = '/fmcPhones';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+    
+    $resourcePath = '/fmcPhones';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+    }
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+      $defaultHeaders['authToken'] = $this->config->getAccessToken();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getFmcPhonesAsync
+   *
+   * Retrieve a list of FmcPhones
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFmcPhonesAsync($user_id = null)
+  {
+    return $this->getFmcPhonesAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getFmcPhonesAsyncWithHttpInfo
+   *
+   * Retrieve a list of FmcPhones
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFmcPhonesAsyncWithHttpInfo($user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\FmcPhone[]';
+    $request = $this->getFmcPhonesRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-            $defaultHeaders['authToken'] = $this->config->getAccessToken();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getFunctionKey
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    list($response) = $this->getFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation getFunctionKeyWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getFmcPhonesAsync
-     *
-     * Retrieve a list of FmcPhones
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFmcPhonesAsync($user_id = null)
-    {
-        return $this->getFmcPhonesAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getFunctionKey'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling getFunctionKey'
+      );
     }
-
-    /**
-     * Operation getFmcPhonesAsyncWithHttpInfo
-     *
-     * Retrieve a list of FmcPhones
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFmcPhonesAsyncWithHttpInfo($user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone[]';
-        $request = $this->getFmcPhonesRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'key_id' is set
+    if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $key_id when calling getFunctionKey'
+      );
     }
-
-    /**
-     * Operation getFunctionKey
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        list($response) = $this->getFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of);
-        return $response;
+    
+    $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation getFunctionKeyWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'getFunctionKey'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling getFunctionKey'
-            );
+    // path params
+    if ($key_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'keyId' . '}',
+        ObjectSerializer::toPathValue($key_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'key_id' is set
-        if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $key_id when calling getFunctionKey'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getFunctionKeyAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    return $this->getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // path params
-        if ($key_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'keyId' . '}',
-                ObjectSerializer::toPathValue($key_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeyAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeySet
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getFunctionKeySet($fk_set_id, $act_on_behalf_of = null)
+  {
+    list($response) = $this->getFunctionKeySetWithHttpInfo($fk_set_id, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation getFunctionKeySetWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getFunctionKeySetWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getFunctionKeyAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getFunctionKeySet'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling getFunctionKeySet'
+      );
     }
-
-    /**
-     * Operation getFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->getFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/functionkeysets/{fkSetId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation getFunctionKeySet
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getFunctionKeySet($fk_set_id, $act_on_behalf_of = null)
-    {
-        list($response) = $this->getFunctionKeySetWithHttpInfo($fk_set_id, $act_on_behalf_of);
-        return $response;
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getFunctionKeySetWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFunctionKeySetWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Create request for operation 'getFunctionKeySet'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling getFunctionKeySet'
-            );
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getFunctionKeySetAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeySetAsync($fk_set_id, $act_on_behalf_of = null)
+  {
+    return $this->getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeySetAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeySets
+   *
+   * Retrieve a list of FunctionKeySets
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKeySet[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getFunctionKeySets($act_on_behalf_of = null)
+  {
+    list($response) = $this->getFunctionKeySetsWithHttpInfo($act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation getFunctionKeySetsWithHttpInfo
+   *
+   * Retrieve a list of FunctionKeySets
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKeySet[], HTTP status code, HTTP response headers (array of
+   *   strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getFunctionKeySetsWithHttpInfo($act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKeySet[]';
+    $request = $this->getFunctionKeySetsRequest($act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
-    }
-
-    /**
-     * Operation getFunctionKeySetAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeySetAsync($fk_set_id, $act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeySetAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeySetAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->getFunctionKeySetRequest($fk_set_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeySets
-     *
-     * Retrieve a list of FunctionKeySets
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKeySet[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getFunctionKeySets($act_on_behalf_of = null)
-    {
-        list($response) = $this->getFunctionKeySetsWithHttpInfo($act_on_behalf_of);
-        return $response;
-    }
-
-    /**
-     * Operation getFunctionKeySetsWithHttpInfo
-     *
-     * Retrieve a list of FunctionKeySets
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKeySet[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFunctionKeySetsWithHttpInfo($act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKeySet[]';
-        $request = $this->getFunctionKeySetsRequest($act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKeySet[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKeySet[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'getFunctionKeySets'
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getFunctionKeySetsRequest($act_on_behalf_of = null)
-    {
-
-        $resourcePath = '/functionkeysets';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+  }
+  
+  /**
+   * Create request for operation 'getFunctionKeySets'
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getFunctionKeySetsRequest($act_on_behalf_of = null)
+  {
+    
+    $resourcePath = '/functionkeysets';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+    }
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getFunctionKeySetsAsync
+   *
+   * Retrieve a list of FunctionKeySets
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeySetsAsync($act_on_behalf_of = null)
+  {
+    return $this->getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeySetsAsyncWithHttpInfo
+   *
+   * Retrieve a list of FunctionKeySets
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKeySet[]';
+    $request = $this->getFunctionKeySetsRequest($act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeys
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getFunctionKeys($fk_set_id, $act_on_behalf_of = null)
+  {
+    list($response) = $this->getFunctionKeysWithHttpInfo($fk_set_id, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation getFunctionKeysWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getFunctionKeysWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey[]';
+    $request = $this->getFunctionKeysRequest($fk_set_id, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getFunctionKeySetsAsync
-     *
-     * Retrieve a list of FunctionKeySets
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeySetsAsync($act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getFunctionKeys'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getFunctionKeysRequest($fk_set_id, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling getFunctionKeys'
+      );
     }
-
-    /**
-     * Operation getFunctionKeySetsAsyncWithHttpInfo
-     *
-     * Retrieve a list of FunctionKeySets
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeySetsAsyncWithHttpInfo($act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKeySet[]';
-        $request = $this->getFunctionKeySetsRequest($act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/functionkeysets/{fkSetId}/keys/';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation getFunctionKeys
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getFunctionKeys($fk_set_id, $act_on_behalf_of = null)
-    {
-        list($response) = $this->getFunctionKeysWithHttpInfo($fk_set_id, $act_on_behalf_of);
-        return $response;
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getFunctionKeysWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFunctionKeysWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey[]';
-        $request = $this->getFunctionKeysRequest($fk_set_id, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Create request for operation 'getFunctionKeys'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getFunctionKeysRequest($fk_set_id, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling getFunctionKeys'
-            );
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}/keys/';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getFunctionKeysAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeysAsync($fk_set_id, $act_on_behalf_of = null)
+  {
+    return $this->getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getFunctionKeysAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey[]';
+    $request = $this->getFunctionKeysRequest($fk_set_id, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getLogin
+   *
+   * Get a template Login-Object filled with loginType and nonce
+   *
+   *
+   * @return Login
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getLogin()
+  {
+    list($response) = $this->getLoginWithHttpInfo();
+    return $response;
+  }
+  
+  /**
+   * Operation getLoginWithHttpInfo
+   *
+   * Get a template Login-Object filled with loginType and nonce
+   *
+   *
+   * @return array of \Swagger\Client\Model\Login, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getLoginWithHttpInfo()
+  {
+    $returnType = '\Swagger\Client\Model\Login';
+    $request = $this->getLoginRequest();
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
-    }
-
-    /**
-     * Operation getFunctionKeysAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeysAsync($fk_set_id, $act_on_behalf_of = null)
-    {
-        return $this->getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getFunctionKeysAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getFunctionKeysAsyncWithHttpInfo($fk_set_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey[]';
-        $request = $this->getFunctionKeysRequest($fk_set_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Operation getLogin
-     *
-     * Get a template Login-Object filled with loginType and nonce
-     *
-     *
-     * @return Login
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getLogin()
-    {
-        list($response) = $this->getLoginWithHttpInfo();
-        return $response;
-    }
-
-    /**
-     * Operation getLoginWithHttpInfo
-     *
-     * Get a template Login-Object filled with loginType and nonce
-     *
-     *
-     * @return array of \Swagger\Client\Model\Login, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getLoginWithHttpInfo()
-    {
-        $returnType = '\Swagger\Client\Model\Login';
-        $request = $this->getLoginRequest();
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Login',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Login',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'getLogin'
-     *
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getLoginRequest()
-    {
-
-        $resourcePath = '/login';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+  }
+  
+  /**
+   * Create request for operation 'getLogin'
+   *
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getLoginRequest()
+  {
+    
+    $resourcePath = '/login';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getLoginAsync
+   *
+   * Get a template Login-Object filled with loginType and nonce
+   *
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getLoginAsync()
+  {
+    return $this->getLoginAsyncWithHttpInfo()
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getLoginAsyncWithHttpInfo
+   *
+   * Get a template Login-Object filled with loginType and nonce
+   *
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getLoginAsyncWithHttpInfo()
+  {
+    $returnType = '\Swagger\Client\Model\Login';
+    $request = $this->getLoginRequest();
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getNumbersForAssignedPhone
+   *
+   * Fetches a list of NumberForPhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+   *
+   * @return NumberForPhoneAssignment[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getNumbersForAssignedPhone($user_id, $phone_id)
+  {
+    list($response) = $this->getNumbersForAssignedPhoneWithHttpInfo($user_id, $phone_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getNumbersForAssignedPhoneWithHttpInfo
+   *
+   * Fetches a list of NumberForPhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+   *
+   * @return array of \Swagger\Client\Model\NumberForPhoneAssignment[], HTTP status code, HTTP response headers (array
+   *   of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getNumbersForAssignedPhoneWithHttpInfo($user_id, $phone_id)
+  {
+    $returnType = '\Swagger\Client\Model\NumberForPhoneAssignment[]';
+    $request = $this->getNumbersForAssignedPhoneRequest($user_id, $phone_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\NumberForPhoneAssignment[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getLoginAsync
-     *
-     * Get a template Login-Object filled with loginType and nonce
-     *
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getLoginAsync()
-    {
-        return $this->getLoginAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getNumbersForAssignedPhone'
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getNumbersForAssignedPhoneRequest($user_id, $phone_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getNumbersForAssignedPhone'
+      );
     }
-
-    /**
-     * Operation getLoginAsyncWithHttpInfo
-     *
-     * Get a template Login-Object filled with loginType and nonce
-     *
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getLoginAsyncWithHttpInfo()
-    {
-        $returnType = '\Swagger\Client\Model\Login';
-        $request = $this->getLoginRequest();
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'phone_id' is set
+    if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_id when calling getNumbersForAssignedPhone'
+      );
     }
-
-    /**
-     * Operation getNumbersForAssignedPhone
-     *
-     * Fetches a list of NumberForPhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @return NumberForPhoneAssignment[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getNumbersForAssignedPhone($user_id, $phone_id)
-    {
-        list($response) = $this->getNumbersForAssignedPhoneWithHttpInfo($user_id, $phone_id);
-        return $response;
+    
+    $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}/numbers';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getNumbersForAssignedPhoneWithHttpInfo
-     *
-     * Fetches a list of NumberForPhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @return array of \Swagger\Client\Model\NumberForPhoneAssignment[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getNumbersForAssignedPhoneWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '\Swagger\Client\Model\NumberForPhoneAssignment[]';
-        $request = $this->getNumbersForAssignedPhoneRequest($user_id, $phone_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\NumberForPhoneAssignment[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // path params
+    if ($phone_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'phoneId' . '}',
+        ObjectSerializer::toPathValue($phone_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'getNumbersForAssignedPhone'
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getNumbersForAssignedPhoneRequest($user_id, $phone_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getNumbersForAssignedPhone'
-            );
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'phone_id' is set
-        if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_id when calling getNumbersForAssignedPhone'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}/numbers';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-        // path params
-        if ($phone_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'phoneId' . '}',
-                ObjectSerializer::toPathValue($phone_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getNumbersForAssignedPhoneAsync
+   *
+   * Fetches a list of NumberForPhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getNumbersForAssignedPhoneAsync($user_id, $phone_id)
+  {
+    return $this->getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getNumbersForAssignedPhoneAsyncWithHttpInfo
+   *
+   * Fetches a list of NumberForPhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
+  {
+    $returnType = '\Swagger\Client\Model\NumberForPhoneAssignment[]';
+    $request = $this->getNumbersForAssignedPhoneRequest($user_id, $phone_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getPhoneAssignment
+   *
+   * Fetches the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+   *
+   * @return PhoneAssignment
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getPhoneAssignment($user_id, $phone_id)
+  {
+    list($response) = $this->getPhoneAssignmentWithHttpInfo($user_id, $phone_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getPhoneAssignmentWithHttpInfo
+   *
+   * Fetches the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneAssignment, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getPhoneAssignmentWithHttpInfo($user_id, $phone_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneAssignment';
+    $request = $this->getPhoneAssignmentRequest($user_id, $phone_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneAssignment',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getNumbersForAssignedPhoneAsync
-     *
-     * Fetches a list of NumberForPhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getNumbersForAssignedPhoneAsync($user_id, $phone_id)
-    {
-        return $this->getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getPhoneAssignment'
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getPhoneAssignmentRequest($user_id, $phone_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getPhoneAssignment'
+      );
     }
-
-    /**
-     * Operation getNumbersForAssignedPhoneAsyncWithHttpInfo
-     *
-     * Fetches a list of NumberForPhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getNumbersForAssignedPhoneAsyncWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '\Swagger\Client\Model\NumberForPhoneAssignment[]';
-        $request = $this->getNumbersForAssignedPhoneRequest($user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'phone_id' is set
+    if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_id when calling getPhoneAssignment'
+      );
     }
-
-    /**
-     * Operation getPhoneAssignment
-     *
-     * Fetches the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @return PhoneAssignment
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getPhoneAssignment($user_id, $phone_id)
-    {
-        list($response) = $this->getPhoneAssignmentWithHttpInfo($user_id, $phone_id);
-        return $response;
+    
+    $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getPhoneAssignmentWithHttpInfo
-     *
-     * Fetches the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneAssignment, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getPhoneAssignmentWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneAssignment';
-        $request = $this->getPhoneAssignmentRequest($user_id, $phone_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneAssignment',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // path params
+    if ($phone_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'phoneId' . '}',
+        ObjectSerializer::toPathValue($phone_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'getPhoneAssignment'
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getPhoneAssignmentRequest($user_id, $phone_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getPhoneAssignment'
-            );
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'phone_id' is set
-        if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_id when calling getPhoneAssignment'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-        // path params
-        if ($phone_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'phoneId' . '}',
-                ObjectSerializer::toPathValue($phone_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getPhoneAssignmentAsync
+   *
+   * Fetches the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneAssignmentAsync($user_id, $phone_id)
+  {
+    return $this->getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getPhoneAssignmentAsyncWithHttpInfo
+   *
+   * Fetches the PhoneAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneAssignment';
+    $request = $this->getPhoneAssignmentRequest($user_id, $phone_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getPhoneConfig
+   *
+   * Fetch the PhoneConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PhoneConfig
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getPhoneConfig($user_id)
+  {
+    list($response) = $this->getPhoneConfigWithHttpInfo($user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getPhoneConfigWithHttpInfo
+   *
+   * Fetch the PhoneConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneConfig, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getPhoneConfigWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneConfig';
+    $request = $this->getPhoneConfigRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneConfig',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getPhoneAssignmentAsync
-     *
-     * Fetches the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneAssignmentAsync($user_id, $phone_id)
-    {
-        return $this->getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getPhoneConfig'
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getPhoneConfigRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getPhoneConfig'
+      );
     }
-
-    /**
-     * Operation getPhoneAssignmentAsyncWithHttpInfo
-     *
-     * Fetches the PhoneAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats is assigned to the User with the given {userId} (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneAssignmentAsyncWithHttpInfo($user_id, $phone_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneAssignment';
-        $request = $this->getPhoneAssignmentRequest($user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/phoneconfig';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getPhoneConfig
-     *
-     * Fetch the PhoneConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PhoneConfig
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getPhoneConfig($user_id)
-    {
-        list($response) = $this->getPhoneConfigWithHttpInfo($user_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getPhoneConfigWithHttpInfo
-     *
-     * Fetch the PhoneConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneConfig, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getPhoneConfigWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneConfig';
-        $request = $this->getPhoneConfigRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneConfig',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getPhoneConfig'
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getPhoneConfigRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getPhoneConfig'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getPhoneConfigAsync
+   *
+   * Fetch the PhoneConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneConfigAsync($user_id)
+  {
+    return $this->getPhoneConfigAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getPhoneConfigAsyncWithHttpInfo
+   *
+   * Fetch the PhoneConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneConfigAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneConfig';
+    $request = $this->getPhoneConfigRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumber
+   *
+   * Fetch a PhoneNumber
+   *
+   * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+   *
+   * @return PhoneNumber
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getPhoneNumber($phone_number_id)
+  {
+    list($response) = $this->getPhoneNumberWithHttpInfo($phone_number_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getPhoneNumberWithHttpInfo
+   *
+   * Fetch a PhoneNumber
+   *
+   * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneNumber, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getPhoneNumberWithHttpInfo($phone_number_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumber';
+    $request = $this->getPhoneNumberRequest($phone_number_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneNumber',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getPhoneConfigAsync
-     *
-     * Fetch the PhoneConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneConfigAsync($user_id)
-    {
-        return $this->getPhoneConfigAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getPhoneNumber'
+   *
+   * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getPhoneNumberRequest($phone_number_id)
+  {
+    // verify the required parameter 'phone_number_id' is set
+    if ($phone_number_id === null || (is_array($phone_number_id) && count($phone_number_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_number_id when calling getPhoneNumber'
+      );
     }
-
-    /**
-     * Operation getPhoneConfigAsyncWithHttpInfo
-     *
-     * Fetch the PhoneConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneConfigAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneConfig';
-        $request = $this->getPhoneConfigRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/phonenumbers/{phoneNumberId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($phone_number_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'phoneNumberId' . '}',
+        ObjectSerializer::toPathValue($phone_number_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getPhoneNumber
-     *
-     * Fetch a PhoneNumber
-     *
-     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @return PhoneNumber
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getPhoneNumber($phone_number_id)
-    {
-        list($response) = $this->getPhoneNumberWithHttpInfo($phone_number_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getPhoneNumberWithHttpInfo
-     *
-     * Fetch a PhoneNumber
-     *
-     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneNumber, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getPhoneNumberWithHttpInfo($phone_number_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumber';
-        $request = $this->getPhoneNumberRequest($phone_number_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneNumber',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getPhoneNumber'
-     *
-     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getPhoneNumberRequest($phone_number_id)
-    {
-        // verify the required parameter 'phone_number_id' is set
-        if ($phone_number_id === null || (is_array($phone_number_id) && count($phone_number_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_number_id when calling getPhoneNumber'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getPhoneNumberAsync
+   *
+   * Fetch a PhoneNumber
+   *
+   * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumberAsync($phone_number_id)
+  {
+    return $this->getPhoneNumberAsyncWithHttpInfo($phone_number_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/phonenumbers/{phoneNumberId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($phone_number_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'phoneNumberId' . '}',
-                ObjectSerializer::toPathValue($phone_number_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumberAsyncWithHttpInfo
+   *
+   * Fetch a PhoneNumber
+   *
+   * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumberAsyncWithHttpInfo($phone_number_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumber';
+    $request = $this->getPhoneNumberRequest($phone_number_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumberAssignment
+   *
+   * Fetches the PhoneNumberAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+   *
+   * @return PhoneNumberAssignment
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getPhoneNumberAssignment($user_id, $phone_number_id)
+  {
+    list($response) = $this->getPhoneNumberAssignmentWithHttpInfo($user_id, $phone_number_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getPhoneNumberAssignmentWithHttpInfo
+   *
+   * Fetches the PhoneNumberAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneNumberAssignment, HTTP status code, HTTP response headers (array of
+   *   strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getPhoneNumberAssignmentWithHttpInfo($user_id, $phone_number_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumberAssignment';
+    $request = $this->getPhoneNumberAssignmentRequest($user_id, $phone_number_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneNumberAssignment',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getPhoneNumberAsync
-     *
-     * Fetch a PhoneNumber
-     *
-     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumberAsync($phone_number_id)
-    {
-        return $this->getPhoneNumberAsyncWithHttpInfo($phone_number_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getPhoneNumberAssignment'
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getPhoneNumberAssignmentRequest($user_id, $phone_number_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getPhoneNumberAssignment'
+      );
     }
-
-    /**
-     * Operation getPhoneNumberAsyncWithHttpInfo
-     *
-     * Fetch a PhoneNumber
-     *
-     * @param int $phone_number_id Id of the PhoneNumber that will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumberAsyncWithHttpInfo($phone_number_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumber';
-        $request = $this->getPhoneNumberRequest($phone_number_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'phone_number_id' is set
+    if ($phone_number_id === null || (is_array($phone_number_id) && count($phone_number_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_number_id when calling getPhoneNumberAssignment'
+      );
     }
-
-    /**
-     * Operation getPhoneNumberAssignment
-     *
-     * Fetches the PhoneNumberAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @return PhoneNumberAssignment
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getPhoneNumberAssignment($user_id, $phone_number_id)
-    {
-        list($response) = $this->getPhoneNumberAssignmentWithHttpInfo($user_id, $phone_number_id);
-        return $response;
+    
+    $resourcePath = '/users/{userId}/phonenumberconfig/phonenumbers/{phoneNumberId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getPhoneNumberAssignmentWithHttpInfo
-     *
-     * Fetches the PhoneNumberAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneNumberAssignment, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getPhoneNumberAssignmentWithHttpInfo($user_id, $phone_number_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment';
-        $request = $this->getPhoneNumberAssignmentRequest($user_id, $phone_number_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneNumberAssignment',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // path params
+    if ($phone_number_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'phoneNumberId' . '}',
+        ObjectSerializer::toPathValue($phone_number_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'getPhoneNumberAssignment'
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getPhoneNumberAssignmentRequest($user_id, $phone_number_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getPhoneNumberAssignment'
-            );
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'phone_number_id' is set
-        if ($phone_number_id === null || (is_array($phone_number_id) && count($phone_number_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_number_id when calling getPhoneNumberAssignment'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}/phonenumberconfig/phonenumbers/{phoneNumberId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-        // path params
-        if ($phone_number_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'phoneNumberId' . '}',
-                ObjectSerializer::toPathValue($phone_number_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getPhoneNumberAssignmentAsync
+   *
+   * Fetches the PhoneNumberAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumberAssignmentAsync($user_id, $phone_number_id)
+  {
+    return $this->getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumberAssignmentAsyncWithHttpInfo
+   *
+   * Fetches the PhoneNumberAssignment
+   *
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumberAssignment';
+    $request = $this->getPhoneNumberAssignmentRequest($user_id, $phone_number_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumberConfig
+   *
+   * Fetch the PhoneNumberConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PhoneNumberConfig
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getPhoneNumberConfig($user_id)
+  {
+    list($response) = $this->getPhoneNumberConfigWithHttpInfo($user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getPhoneNumberConfigWithHttpInfo
+   *
+   * Fetch the PhoneNumberConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneNumberConfig, HTTP status code, HTTP response headers (array of
+   *   strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getPhoneNumberConfigWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumberConfig';
+    $request = $this->getPhoneNumberConfigRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneNumberConfig',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getPhoneNumberAssignmentAsync
-     *
-     * Fetches the PhoneNumberAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumberAssignmentAsync($user_id, $phone_number_id)
-    {
-        return $this->getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getPhoneNumberConfig'
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getPhoneNumberConfigRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getPhoneNumberConfig'
+      );
     }
-
-    /**
-     * Operation getPhoneNumberAssignmentAsyncWithHttpInfo
-     *
-     * Fetches the PhoneNumberAssignment
-     *
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_number_id Id of the PhoneNumber thats is assigned to the User with the given {userId} (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumberAssignmentAsyncWithHttpInfo($user_id, $phone_number_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment';
-        $request = $this->getPhoneNumberAssignmentRequest($user_id, $phone_number_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/phonenumberconfig';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getPhoneNumberConfig
-     *
-     * Fetch the PhoneNumberConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PhoneNumberConfig
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getPhoneNumberConfig($user_id)
-    {
-        list($response) = $this->getPhoneNumberConfigWithHttpInfo($user_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getPhoneNumberConfigWithHttpInfo
-     *
-     * Fetch the PhoneNumberConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneNumberConfig, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getPhoneNumberConfigWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberConfig';
-        $request = $this->getPhoneNumberConfigRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneNumberConfig',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getPhoneNumberConfig'
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getPhoneNumberConfigRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getPhoneNumberConfig'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getPhoneNumberConfigAsync
+   *
+   * Fetch the PhoneNumberConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumberConfigAsync($user_id)
+  {
+    return $this->getPhoneNumberConfigAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users/{userId}/phonenumberconfig';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumberConfigAsyncWithHttpInfo
+   *
+   * Fetch the PhoneNumberConfig
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumberConfigAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumberConfig';
+    $request = $this->getPhoneNumberConfigRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumbers
+   *
+   * Retrive a list of all configured PhoneNumbers
+   *
+   * @param string $type filter for the type of the PhoneNumber (optional)
+   * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+   *
+   * @return PhoneNumber[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getPhoneNumbers($type = null, $assigned = null)
+  {
+    list($response) = $this->getPhoneNumbersWithHttpInfo($type, $assigned);
+    return $response;
+  }
+  
+  /**
+   * Operation getPhoneNumbersWithHttpInfo
+   *
+   * Retrive a list of all configured PhoneNumbers
+   *
+   * @param string $type filter for the type of the PhoneNumber (optional)
+   * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+   *
+   * @return array of \Swagger\Client\Model\PhoneNumber[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getPhoneNumbersWithHttpInfo($type = null, $assigned = null)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumber[]';
+    $request = $this->getPhoneNumbersRequest($type, $assigned);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneNumber[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getPhoneNumberConfigAsync
-     *
-     * Fetch the PhoneNumberConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumberConfigAsync($user_id)
-    {
-        return $this->getPhoneNumberConfigAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getPhoneNumbers'
+   *
+   * @param string $type filter for the type of the PhoneNumber (optional)
+   * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getPhoneNumbersRequest($type = null, $assigned = null)
+  {
+    
+    $resourcePath = '/phonenumbers';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($type !== null) {
+      $queryParams['type'] = ObjectSerializer::toQueryValue($type);
     }
-
-    /**
-     * Operation getPhoneNumberConfigAsyncWithHttpInfo
-     *
-     * Fetch the PhoneNumberConfig
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumberConfigAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberConfig';
-        $request = $this->getPhoneNumberConfigRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // query params
+    if ($assigned !== null) {
+      $queryParams['assigned'] = ObjectSerializer::toQueryValue($assigned);
     }
-
-    /**
-     * Operation getPhoneNumbers
-     *
-     * Retrive a list of all configured PhoneNumbers
-     *
-     * @param string $type filter for the type of the PhoneNumber (optional)
-     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @return PhoneNumber[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getPhoneNumbers($type = null, $assigned = null)
-    {
-        list($response) = $this->getPhoneNumbersWithHttpInfo($type, $assigned);
-        return $response;
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getPhoneNumbersWithHttpInfo
-     *
-     * Retrive a list of all configured PhoneNumbers
-     *
-     * @param string $type filter for the type of the PhoneNumber (optional)
-     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @return array of \Swagger\Client\Model\PhoneNumber[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getPhoneNumbersWithHttpInfo($type = null, $assigned = null)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumber[]';
-        $request = $this->getPhoneNumbersRequest($type, $assigned);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneNumber[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getPhoneNumbers'
-     *
-     * @param string $type filter for the type of the PhoneNumber (optional)
-     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getPhoneNumbersRequest($type = null, $assigned = null)
-    {
-
-        $resourcePath = '/phonenumbers';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($type !== null) {
-            $queryParams['type'] = ObjectSerializer::toQueryValue($type);
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getPhoneNumbersAsync
+   *
+   * Retrive a list of all configured PhoneNumbers
+   *
+   * @param string $type filter for the type of the PhoneNumber (optional)
+   * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumbersAsync($type = null, $assigned = null)
+  {
+    return $this->getPhoneNumbersAsyncWithHttpInfo($type, $assigned)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // query params
-        if ($assigned !== null) {
-            $queryParams['assigned'] = ObjectSerializer::toQueryValue($assigned);
-        }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getPhoneNumbersAsyncWithHttpInfo
+   *
+   * Retrive a list of all configured PhoneNumbers
+   *
+   * @param string $type filter for the type of the PhoneNumber (optional)
+   * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getPhoneNumbersAsyncWithHttpInfo($type = null, $assigned = null)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumber[]';
+    $request = $this->getPhoneNumbersRequest($type, $assigned);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getRedirect
+   *
+   * Fetch a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be fetched (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Redirection
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getRedirect($redirect_id, $act_on_behalf_of = null)
+  {
+    list($response) = $this->getRedirectWithHttpInfo($redirect_id, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation getRedirectWithHttpInfo
+   *
+   * Fetch a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be fetched (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\Redirection, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getRedirectWithHttpInfo($redirect_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\Redirection';
+    $request = $this->getRedirectRequest($redirect_id, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Redirection',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getPhoneNumbersAsync
-     *
-     * Retrive a list of all configured PhoneNumbers
-     *
-     * @param string $type filter for the type of the PhoneNumber (optional)
-     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumbersAsync($type = null, $assigned = null)
-    {
-        return $this->getPhoneNumbersAsyncWithHttpInfo($type, $assigned)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getRedirect'
+   *
+   * @param string $redirect_id Id of the Redirection that will be fetched (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getRedirectRequest($redirect_id, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'redirect_id' is set
+    if ($redirect_id === null || (is_array($redirect_id) && count($redirect_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $redirect_id when calling getRedirect'
+      );
     }
-
-    /**
-     * Operation getPhoneNumbersAsyncWithHttpInfo
-     *
-     * Retrive a list of all configured PhoneNumbers
-     *
-     * @param string $type filter for the type of the PhoneNumber (optional)
-     * @param bool $assigned filter for only ssssigned or unassigned PhoneNumbers (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getPhoneNumbersAsyncWithHttpInfo($type = null, $assigned = null)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumber[]';
-        $request = $this->getPhoneNumbersRequest($type, $assigned);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    if ($act_on_behalf_of !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $act_on_behalf_of)) {
+      throw new InvalidArgumentException("invalid value for \"act_on_behalf_of\" when calling DefaultApi.getRedirect, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation getRedirect
-     *
-     * Fetch a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return Redirection
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getRedirect($redirect_id, $act_on_behalf_of = null)
-    {
-        list($response) = $this->getRedirectWithHttpInfo($redirect_id, $act_on_behalf_of);
-        return $response;
+    
+    
+    $resourcePath = '/redirects/{redirectId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation getRedirectWithHttpInfo
-     *
-     * Fetch a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\Redirection, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getRedirectWithHttpInfo($redirect_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection';
-        $request = $this->getRedirectRequest($redirect_id, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Redirection',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($redirect_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'redirectId' . '}',
+        ObjectSerializer::toPathValue($redirect_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'getRedirect'
-     *
-     * @param string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getRedirectRequest($redirect_id, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'redirect_id' is set
-        if ($redirect_id === null || (is_array($redirect_id) && count($redirect_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $redirect_id when calling getRedirect'
-            );
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        if ($act_on_behalf_of !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $act_on_behalf_of)) {
-            throw new InvalidArgumentException("invalid value for \"act_on_behalf_of\" when calling DefaultApi.getRedirect, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-
-        $resourcePath = '/redirects/{redirectId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // path params
-        if ($redirect_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'redirectId' . '}',
-                ObjectSerializer::toPathValue($redirect_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getRedirectAsync
+   *
+   * Fetch a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be fetched (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getRedirectAsync($redirect_id, $act_on_behalf_of = null)
+  {
+    return $this->getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getRedirectAsyncWithHttpInfo
+   *
+   * Fetch a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be fetched (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\Redirection';
+    $request = $this->getRedirectRequest($redirect_id, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getRedirects
+   *
+   * Retrieve a list of redirects
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Redirection[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getRedirects($act_on_behalf_of = null)
+  {
+    list($response) = $this->getRedirectsWithHttpInfo($act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation getRedirectsWithHttpInfo
+   *
+   * Retrieve a list of redirects
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\Redirection[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getRedirectsWithHttpInfo($act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\Redirection[]';
+    $request = $this->getRedirectsRequest($act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Redirection[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getRedirectAsync
-     *
-     * Fetch a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getRedirectAsync($redirect_id, $act_on_behalf_of = null)
-    {
-        return $this->getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getRedirects'
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getRedirectsRequest($act_on_behalf_of = null)
+  {
+    if ($act_on_behalf_of !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $act_on_behalf_of)) {
+      throw new InvalidArgumentException("invalid value for \"act_on_behalf_of\" when calling DefaultApi.getRedirects, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation getRedirectAsyncWithHttpInfo
-     *
-     * Fetch a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be fetched (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getRedirectAsyncWithHttpInfo($redirect_id, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection';
-        $request = $this->getRedirectRequest($redirect_id, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    
+    $resourcePath = '/redirects';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation getRedirects
-     *
-     * Retrieve a list of redirects
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return Redirection[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getRedirects($act_on_behalf_of = null)
-    {
-        list($response) = $this->getRedirectsWithHttpInfo($act_on_behalf_of);
-        return $response;
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getRedirectsWithHttpInfo
-     *
-     * Retrieve a list of redirects
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\Redirection[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getRedirectsWithHttpInfo($act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection[]';
-        $request = $this->getRedirectsRequest($act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Redirection[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getRedirects'
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getRedirectsRequest($act_on_behalf_of = null)
-    {
-        if ($act_on_behalf_of !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $act_on_behalf_of)) {
-            throw new InvalidArgumentException("invalid value for \"act_on_behalf_of\" when calling DefaultApi.getRedirects, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getRedirectsAsync
+   *
+   * Retrieve a list of redirects
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getRedirectsAsync($act_on_behalf_of = null)
+  {
+    return $this->getRedirectsAsyncWithHttpInfo($act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-
-        $resourcePath = '/redirects';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
-        }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getRedirectsAsyncWithHttpInfo
+   *
+   * Retrieve a list of redirects
+   *
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getRedirectsAsyncWithHttpInfo($act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\Redirection[]';
+    $request = $this->getRedirectsRequest($act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getScheme
+   *
+   * Get the configured ContactsScheme
+   *
+   * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+   *
+   * @return ContactsScheme
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getScheme($lang = null)
+  {
+    list($response) = $this->getSchemeWithHttpInfo($lang);
+    return $response;
+  }
+  
+  /**
+   * Operation getSchemeWithHttpInfo
+   *
+   * Get the configured ContactsScheme
+   *
+   * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+   *
+   * @return array of \Swagger\Client\Model\ContactsScheme, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getSchemeWithHttpInfo($lang = null)
+  {
+    $returnType = '\Swagger\Client\Model\ContactsScheme';
+    $request = $this->getSchemeRequest($lang);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
-    }
-
-    /**
-     * Operation getRedirectsAsync
-     *
-     * Retrieve a list of redirects
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getRedirectsAsync($act_on_behalf_of = null)
-    {
-        return $this->getRedirectsAsyncWithHttpInfo($act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getRedirectsAsyncWithHttpInfo
-     *
-     * Retrieve a list of redirects
-     *
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getRedirectsAsyncWithHttpInfo($act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection[]';
-        $request = $this->getRedirectsRequest($act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Operation getScheme
-     *
-     * Get the configured ContactsScheme
-     *
-     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @return ContactsScheme
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getScheme($lang = null)
-    {
-        list($response) = $this->getSchemeWithHttpInfo($lang);
-        return $response;
-    }
-
-    /**
-     * Operation getSchemeWithHttpInfo
-     *
-     * Get the configured ContactsScheme
-     *
-     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @return array of \Swagger\Client\Model\ContactsScheme, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getSchemeWithHttpInfo($lang = null)
-    {
-        $returnType = '\Swagger\Client\Model\ContactsScheme';
-        $request = $this->getSchemeRequest($lang);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\ContactsScheme',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\ContactsScheme',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'getScheme'
-     *
-     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getSchemeRequest($lang = null)
-    {
-
-        $resourcePath = '/contacts/scheme';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($lang !== null) {
-            $queryParams['lang'] = ObjectSerializer::toQueryValue($lang);
+  }
+  
+  /**
+   * Create request for operation 'getScheme'
+   *
+   * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getSchemeRequest($lang = null)
+  {
+    
+    $resourcePath = '/contacts/scheme';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($lang !== null) {
+      $queryParams['lang'] = ObjectSerializer::toQueryValue($lang);
+    }
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getSchemeAsync
+   *
+   * Get the configured ContactsScheme
+   *
+   * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getSchemeAsync($lang = null)
+  {
+    return $this->getSchemeAsyncWithHttpInfo($lang)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getSchemeAsyncWithHttpInfo
+   *
+   * Get the configured ContactsScheme
+   *
+   * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getSchemeAsyncWithHttpInfo($lang = null)
+  {
+    $returnType = '\Swagger\Client\Model\ContactsScheme';
+    $request = $this->getSchemeRequest($lang);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getTagList
+   *
+   * Retrieve a list of tags
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. (optional)
+   * @param string $sort The fieldname to sort for. (optional)
+   * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending
+   *   (optional)
+   *
+   * @return Tag[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getTagList($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    list($response) = $this->getTagListWithHttpInfo($user_id, $page, $pagesize, $sort, $sortdirection);
+    return $response;
+  }
+  
+  /**
+   * Operation getTagListWithHttpInfo
+   *
+   * Retrieve a list of tags
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. (optional)
+   * @param string $sort The fieldname to sort for. (optional)
+   * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending
+   *   (optional)
+   *
+   * @return array of \Swagger\Client\Model\Tag[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getTagListWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    $returnType = '\Swagger\Client\Model\Tag[]';
+    $request = $this->getTagListRequest($user_id, $page, $pagesize, $sort, $sortdirection);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Tag[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getSchemeAsync
-     *
-     * Get the configured ContactsScheme
-     *
-     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getSchemeAsync($lang = null)
-    {
-        return $this->getSchemeAsyncWithHttpInfo($lang)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getTagList'
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. (optional)
+   * @param string $sort The fieldname to sort for. (optional)
+   * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getTagListRequest($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getTagList, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation getSchemeAsyncWithHttpInfo
-     *
-     * Get the configured ContactsScheme
-     *
-     * @param string $lang Language identifiers as specified by RFC 3066 for i18nDisplayName (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getSchemeAsyncWithHttpInfo($lang = null)
-    {
-        $returnType = '\Swagger\Client\Model\ContactsScheme';
-        $request = $this->getSchemeRequest($lang);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    
+    $resourcePath = '/contacts/tags';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation getTagList
-     *
-     * Retrieve a list of tags
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. (optional)
-     * @param string $sort The fieldname to sort for. (optional)
-     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @return Tag[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getTagList($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        list($response) = $this->getTagListWithHttpInfo($user_id, $page, $pagesize, $sort, $sortdirection);
-        return $response;
+    // query params
+    if ($page !== null) {
+      $queryParams['page'] = ObjectSerializer::toQueryValue($page);
     }
-
-    /**
-     * Operation getTagListWithHttpInfo
-     *
-     * Retrieve a list of tags
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. (optional)
-     * @param string $sort The fieldname to sort for. (optional)
-     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @return array of \Swagger\Client\Model\Tag[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getTagListWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        $returnType = '\Swagger\Client\Model\Tag[]';
-        $request = $this->getTagListRequest($user_id, $page, $pagesize, $sort, $sortdirection);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Tag[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // query params
+    if ($pagesize !== null) {
+      $queryParams['pagesize'] = ObjectSerializer::toQueryValue($pagesize);
     }
-
-    /**
-     * Create request for operation 'getTagList'
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. (optional)
-     * @param string $sort The fieldname to sort for. (optional)
-     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getTagListRequest($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.getTagList, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+    // query params
+    if ($sort !== null) {
+      $queryParams['sort'] = ObjectSerializer::toQueryValue($sort);
+    }
+    // query params
+    if ($sortdirection !== null) {
+      $queryParams['sortdirection'] = ObjectSerializer::toQueryValue($sortdirection);
+    }
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-
-        $resourcePath = '/contacts/tags';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = ObjectSerializer::toQueryValue($page);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-        // query params
-        if ($pagesize !== null) {
-            $queryParams['pagesize'] = ObjectSerializer::toQueryValue($pagesize);
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getTagListAsync
+   *
+   * Retrieve a list of tags
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. (optional)
+   * @param string $sort The fieldname to sort for. (optional)
+   * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getTagListAsync($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    return $this->getTagListAsyncWithHttpInfo($user_id, $page, $pagesize, $sort, $sortdirection)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // query params
-        if ($sort !== null) {
-            $queryParams['sort'] = ObjectSerializer::toQueryValue($sort);
-        }
-        // query params
-        if ($sortdirection !== null) {
-            $queryParams['sortdirection'] = ObjectSerializer::toQueryValue($sortdirection);
-        }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getTagListAsyncWithHttpInfo
+   *
+   * Retrieve a list of tags
+   *
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns
+   *   the first page (optional)
+   * @param int $pagesize The page size to use. Default is 20. (optional)
+   * @param string $sort The fieldname to sort for. (optional)
+   * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getTagListAsyncWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
+  {
+    $returnType = '\Swagger\Client\Model\Tag[]';
+    $request = $this->getTagListRequest($user_id, $page, $pagesize, $sort, $sortdirection);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getUser
+   *
+   * Fetch a user
+   *
+   * @param int $user_id Id of the User that will be fetched (required)
+   *
+   * @return User
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getUser($user_id)
+  {
+    list($response) = $this->getUserWithHttpInfo($user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation getUserWithHttpInfo
+   *
+   * Fetch a user
+   *
+   * @param int $user_id Id of the User that will be fetched (required)
+   *
+   * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getUserWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\User';
+    $request = $this->getUserRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\User',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getTagListAsync
-     *
-     * Retrieve a list of tags
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. (optional)
-     * @param string $sort The fieldname to sort for. (optional)
-     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getTagListAsync($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        return $this->getTagListAsyncWithHttpInfo($user_id, $page, $pagesize, $sort, $sortdirection)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'getUser'
+   *
+   * @param int $user_id Id of the User that will be fetched (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getUserRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling getUser'
+      );
     }
-
-    /**
-     * Operation getTagListAsyncWithHttpInfo
-     *
-     * Retrieve a list of tags
-     *
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param int $page The page number for this request. This parameter is 0-indexed. This means that a value 0 returns the first page (optional)
-     * @param int $pagesize The page size to use. Default is 20. (optional)
-     * @param string $sort The fieldname to sort for. (optional)
-     * @param string $sortdirection The sort direction. &#39;ASC&#39; for ascending, &#39;DESC&#39; for descending (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getTagListAsyncWithHttpInfo($user_id = null, $page = null, $pagesize = null, $sort = null, $sortdirection = null)
-    {
-        $returnType = '\Swagger\Client\Model\Tag[]';
-        $request = $this->getTagListRequest($user_id, $page, $pagesize, $sort, $sortdirection);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation getUser
-     *
-     * Fetch a user
-     *
-     * @param int $user_id Id of the User that will be fetched (required)
-     *
-     * @return User
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getUser($user_id)
-    {
-        list($response) = $this->getUserWithHttpInfo($user_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation getUserWithHttpInfo
-     *
-     * Fetch a user
-     *
-     * @param int $user_id Id of the User that will be fetched (required)
-     *
-     * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getUserWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->getUserRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\User',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'getUser'
-     *
-     * @param int $user_id Id of the User that will be fetched (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getUserRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling getUser'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getUserAsync
+   *
+   * Fetch a user
+   *
+   * @param int $user_id Id of the User that will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getUserAsync($user_id)
+  {
+    return $this->getUserAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users/{userId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation getUserAsyncWithHttpInfo
+   *
+   * Fetch a user
+   *
+   * @param int $user_id Id of the User that will be fetched (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getUserAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\User';
+    $request = $this->getUserRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation getUsers
+   *
+   * Retrieve a list of users
+   *
+   * @param string $search_term The searchTerm to query users. (optional)
+   *
+   * @return User[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function getUsers($search_term = null)
+  {
+    list($response) = $this->getUsersWithHttpInfo($search_term);
+    return $response;
+  }
+  
+  /**
+   * Operation getUsersWithHttpInfo
+   *
+   * Retrieve a list of users
+   *
+   * @param string $search_term The searchTerm to query users. (optional)
+   *
+   * @return array of \Swagger\Client\Model\User[], HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function getUsersWithHttpInfo($search_term = null)
+  {
+    $returnType = '\Swagger\Client\Model\User[]';
+    $request = $this->getUsersRequest($search_term);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
-    }
-
-    /**
-     * Operation getUserAsync
-     *
-     * Fetch a user
-     *
-     * @param int $user_id Id of the User that will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getUserAsync($user_id)
-    {
-        return $this->getUserAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation getUserAsyncWithHttpInfo
-     *
-     * Fetch a user
-     *
-     * @param int $user_id Id of the User that will be fetched (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getUserAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->getUserRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Operation getUsers
-     *
-     * Retrieve a list of users
-     *
-     * @param string $search_term The searchTerm to query users. (optional)
-     *
-     * @return User[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function getUsers($search_term = null)
-    {
-        list($response) = $this->getUsersWithHttpInfo($search_term);
-        return $response;
-    }
-
-    /**
-     * Operation getUsersWithHttpInfo
-     *
-     * Retrieve a list of users
-     *
-     * @param string $search_term The searchTerm to query users. (optional)
-     *
-     * @return array of \Swagger\Client\Model\User[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getUsersWithHttpInfo($search_term = null)
-    {
-        $returnType = '\Swagger\Client\Model\User[]';
-        $request = $this->getUsersRequest($search_term);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\User[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\User[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'getUsers'
-     *
-     * @param string $search_term The searchTerm to query users. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function getUsersRequest($search_term = null)
-    {
-
-        $resourcePath = '/users';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($search_term !== null) {
-            $queryParams['searchTerm'] = ObjectSerializer::toQueryValue($search_term);
+  }
+  
+  /**
+   * Create request for operation 'getUsers'
+   *
+   * @param string $search_term The searchTerm to query users. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function getUsersRequest($search_term = null)
+  {
+    
+    $resourcePath = '/users';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($search_term !== null) {
+      $queryParams['searchTerm'] = ObjectSerializer::toQueryValue($search_term);
+    }
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation getUsersAsync
+   *
+   * Retrieve a list of users
+   *
+   * @param string $search_term The searchTerm to query users. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getUsersAsync($search_term = null)
+  {
+    return $this->getUsersAsyncWithHttpInfo($search_term)
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation getUsersAsyncWithHttpInfo
+   *
+   * Retrieve a list of users
+   *
+   * @param string $search_term The searchTerm to query users. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function getUsersAsyncWithHttpInfo($search_term = null)
+  {
+    $returnType = '\Swagger\Client\Model\User[]';
+    $request = $this->getUsersRequest($search_term);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation listAssignedPhones
+   *
+   * Fetches a list of assigned phones
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PhoneAssignment[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function listAssignedPhones($user_id)
+  {
+    list($response) = $this->listAssignedPhonesWithHttpInfo($user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation listAssignedPhonesWithHttpInfo
+   *
+   * Fetches a list of assigned phones
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneAssignment[], HTTP status code, HTTP response headers (array of
+   *   strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function listAssignedPhonesWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneAssignment[]';
+    $request = $this->listAssignedPhonesRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneAssignment[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation getUsersAsync
-     *
-     * Retrieve a list of users
-     *
-     * @param string $search_term The searchTerm to query users. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getUsersAsync($search_term = null)
-    {
-        return $this->getUsersAsyncWithHttpInfo($search_term)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'listAssignedPhones'
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function listAssignedPhonesRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling listAssignedPhones'
+      );
     }
-
-    /**
-     * Operation getUsersAsyncWithHttpInfo
-     *
-     * Retrieve a list of users
-     *
-     * @param string $search_term The searchTerm to query users. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function getUsersAsyncWithHttpInfo($search_term = null)
-    {
-        $returnType = '\Swagger\Client\Model\User[]';
-        $request = $this->getUsersRequest($search_term);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/phoneconfig/phones';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation listAssignedPhones
-     *
-     * Fetches a list of assigned phones
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PhoneAssignment[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function listAssignedPhones($user_id)
-    {
-        list($response) = $this->listAssignedPhonesWithHttpInfo($user_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation listAssignedPhonesWithHttpInfo
-     *
-     * Fetches a list of assigned phones
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneAssignment[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function listAssignedPhonesWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneAssignment[]';
-        $request = $this->listAssignedPhonesRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneAssignment[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'listAssignedPhones'
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function listAssignedPhonesRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling listAssignedPhones'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation listAssignedPhonesAsync
+   *
+   * Fetches a list of assigned phones
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function listAssignedPhonesAsync($user_id)
+  {
+    return $this->listAssignedPhonesAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig/phones';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation listAssignedPhonesAsyncWithHttpInfo
+   *
+   * Fetches a list of assigned phones
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function listAssignedPhonesAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneAssignment[]';
+    $request = $this->listAssignedPhonesRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation listPhoneNumberAssignment
+   *
+   * Fetches a list of assigned phone numbers
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PhoneNumberAssignment[]
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function listPhoneNumberAssignment($user_id)
+  {
+    list($response) = $this->listPhoneNumberAssignmentWithHttpInfo($user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation listPhoneNumberAssignmentWithHttpInfo
+   *
+   * Fetches a list of assigned phone numbers
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return array of \Swagger\Client\Model\PhoneNumberAssignment[], HTTP status code, HTTP response headers (array of
+   *   strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function listPhoneNumberAssignmentWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumberAssignment[]';
+    $request = $this->listPhoneNumberAssignmentRequest($user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\PhoneNumberAssignment[]',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation listAssignedPhonesAsync
-     *
-     * Fetches a list of assigned phones
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function listAssignedPhonesAsync($user_id)
-    {
-        return $this->listAssignedPhonesAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'listPhoneNumberAssignment'
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function listPhoneNumberAssignmentRequest($user_id)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling listPhoneNumberAssignment'
+      );
     }
-
-    /**
-     * Operation listAssignedPhonesAsyncWithHttpInfo
-     *
-     * Fetches a list of assigned phones
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function listAssignedPhonesAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneAssignment[]';
-        $request = $this->listAssignedPhonesRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users/{userId}/phonenumberconfig/phonenumbers/';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation listPhoneNumberAssignment
-     *
-     * Fetches a list of assigned phone numbers
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PhoneNumberAssignment[]
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function listPhoneNumberAssignment($user_id)
-    {
-        list($response) = $this->listPhoneNumberAssignmentWithHttpInfo($user_id);
-        return $response;
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation listPhoneNumberAssignmentWithHttpInfo
-     *
-     * Fetches a list of assigned phone numbers
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return array of \Swagger\Client\Model\PhoneNumberAssignment[], HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function listPhoneNumberAssignmentWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment[]';
-        $request = $this->listPhoneNumberAssignmentRequest($user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\PhoneNumberAssignment[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'listPhoneNumberAssignment'
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function listPhoneNumberAssignmentRequest($user_id)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling listPhoneNumberAssignment'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation listPhoneNumberAssignmentAsync
+   *
+   * Fetches a list of assigned phone numbers
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function listPhoneNumberAssignmentAsync($user_id)
+  {
+    return $this->listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users/{userId}/phonenumberconfig/phonenumbers/';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation listPhoneNumberAssignmentAsyncWithHttpInfo
+   *
+   * Fetches a list of assigned phone numbers
+   *
+   * @param int $user_id Id of the User (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
+  {
+    $returnType = '\Swagger\Client\Model\PhoneNumberAssignment[]';
+    $request = $this->listPhoneNumberAssignmentRequest($user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation login
+   *
+   * Login to the Rest-Service and get an AuthToken
+   *
+   * @param Login $login Login-Object with the user&#39;s secret. (required)
+   *
+   * @throws ApiException on non-2xx response
+   * @throws InvalidArgumentException
+   * @return AuthToken
+   */
+  public function login($login)
+  {
+    list($response) = $this->loginWithHttpInfo($login);
+    return $response;
+  }
+  
+  /**
+   * Operation loginWithHttpInfo
+   *
+   * Login to the Rest-Service and get an AuthToken
+   *
+   * @param Login $login Login-Object with the user&#39;s secret. (required)
+   *
+   * @return array of \Swagger\Client\Model\AuthToken, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function loginWithHttpInfo($login)
+  {
+    $returnType = '\Swagger\Client\Model\AuthToken';
+    $request = $this->loginRequest($login);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\AuthToken',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation listPhoneNumberAssignmentAsync
-     *
-     * Fetches a list of assigned phone numbers
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function listPhoneNumberAssignmentAsync($user_id)
-    {
-        return $this->listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'login'
+   *
+   * @param Login $login Login-Object with the user&#39;s secret. (required)
+   *
+   * @throws InvalidArgumentException
+   * @return Request
+   */
+  protected function loginRequest($login)
+  {
+    // verify the required parameter 'login' is set
+    if ($login === null || (is_array($login) && count($login) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $login when calling login'
+      );
     }
-
-    /**
-     * Operation listPhoneNumberAssignmentAsyncWithHttpInfo
-     *
-     * Fetches a list of assigned phone numbers
-     *
-     * @param int $user_id Id of the User (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function listPhoneNumberAssignmentAsyncWithHttpInfo($user_id)
-    {
-        $returnType = '\Swagger\Client\Model\PhoneNumberAssignment[]';
-        $request = $this->listPhoneNumberAssignmentRequest($user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/login';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // body params
+    $_tempBody = null;
+    if (isset($login)) {
+      $_tempBody = $login;
     }
-
-    /**
-     * Operation login
-     *
-     * Login to the Rest-Service and get an AuthToken
-     *
-     * @param Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     * @throws InvalidArgumentException
-     * @return AuthToken
-     */
-    public function login($login)
-    {
-        list($response) = $this->loginWithHttpInfo($login);
-        return $response;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation loginWithHttpInfo
-     *
-     * Login to the Rest-Service and get an AuthToken
-     *
-     * @param Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @return array of \Swagger\Client\Model\AuthToken, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function loginWithHttpInfo($login)
-    {
-        $returnType = '\Swagger\Client\Model\AuthToken';
-        $request = $this->loginRequest($login);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\AuthToken',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'login'
-     *
-     * @param Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @throws InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function loginRequest($login)
-    {
-        // verify the required parameter 'login' is set
-        if ($login === null || (is_array($login) && count($login) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $login when calling login'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+      $defaultHeaders['X-Version'] = '2';
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation loginAsync
+   *
+   * Login to the Rest-Service and get an AuthToken
+   *
+   * @param Login $login Login-Object with the user&#39;s secret. (required)
+   *
+   * @throws InvalidArgumentException
+   * @return PromiseInterface
+   */
+  public function loginAsync($login)
+  {
+    return $this->loginAsyncWithHttpInfo($login)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/login';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // body params
-        $_tempBody = null;
-        if (isset($login)) {
-            $_tempBody = $login;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation loginAsyncWithHttpInfo
+   *
+   * Login to the Rest-Service and get an AuthToken
+   *
+   * @param Login $login Login-Object with the user&#39;s secret. (required)
+   *
+   * @throws InvalidArgumentException
+   * @return PromiseInterface
+   */
+  public function loginAsyncWithHttpInfo($login)
+  {
+    $returnType = '\Swagger\Client\Model\AuthToken';
+    $request = $this->loginRequest($login);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-            $defaultHeaders['X-Version'] = '2';
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation logout
+   *
+   * Invalidate the provided authToken.
+   *
+   * @param string $auth_token The authToken to invalidate (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function logout($auth_token)
+  {
+    $this->logoutWithHttpInfo($auth_token);
+  }
+  
+  /**
+   * Operation logoutWithHttpInfo
+   *
+   * Invalidate the provided authToken.
+   *
+   * @param string $auth_token The authToken to invalidate (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function logoutWithHttpInfo($auth_token)
+  {
+    $returnType = '';
+    $request = $this->logoutRequest($auth_token);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation loginAsync
-     *
-     * Login to the Rest-Service and get an AuthToken
-     *
-     * @param Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @throws InvalidArgumentException
-     * @return PromiseInterface
-     */
-    public function loginAsync($login)
-    {
-        return $this->loginAsyncWithHttpInfo($login)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'logout'
+   *
+   * @param string $auth_token The authToken to invalidate (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function logoutRequest($auth_token)
+  {
+    // verify the required parameter 'auth_token' is set
+    if ($auth_token === null || (is_array($auth_token) && count($auth_token) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $auth_token when calling logout'
+      );
     }
-
-    /**
-     * Operation loginAsyncWithHttpInfo
-     *
-     * Login to the Rest-Service and get an AuthToken
-     *
-     * @param Login $login Login-Object with the user&#39;s secret. (required)
-     *
-     * @throws InvalidArgumentException
-     * @return PromiseInterface
-     */
-    public function loginAsyncWithHttpInfo($login)
-    {
-        $returnType = '\Swagger\Client\Model\AuthToken';
-        $request = $this->loginRequest($login);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/login';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // header params
+    if ($auth_token !== null) {
+      $headerParams['authToken'] = ObjectSerializer::toHeaderValue($auth_token);
     }
-
-    /**
-     * Operation logout
-     *
-     * Invalidate the provided authToken.
-     *
-     * @param string $auth_token The authToken to invalidate (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function logout($auth_token)
-    {
-        $this->logoutWithHttpInfo($auth_token);
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation logoutWithHttpInfo
-     *
-     * Invalidate the provided authToken.
-     *
-     * @param string $auth_token The authToken to invalidate (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function logoutWithHttpInfo($auth_token)
-    {
-        $returnType = '';
-        $request = $this->logoutRequest($auth_token);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'logout'
-     *
-     * @param string $auth_token The authToken to invalidate (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function logoutRequest($auth_token)
-    {
-        // verify the required parameter 'auth_token' is set
-        if ($auth_token === null || (is_array($auth_token) && count($auth_token) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $auth_token when calling logout'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'DELETE',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation logoutAsync
+   *
+   * Invalidate the provided authToken.
+   *
+   * @param string $auth_token The authToken to invalidate (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function logoutAsync($auth_token)
+  {
+    return $this->logoutAsyncWithHttpInfo($auth_token)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/login';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // header params
-        if ($auth_token !== null) {
-            $headerParams['authToken'] = ObjectSerializer::toHeaderValue($auth_token);
+      );
+  }
+  
+  /**
+   * Operation logoutAsyncWithHttpInfo
+   *
+   * Invalidate the provided authToken.
+   *
+   * @param string $auth_token The authToken to invalidate (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function logoutAsyncWithHttpInfo($auth_token)
+  {
+    $returnType = '';
+    $request = $this->logoutRequest($auth_token);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation postContact
+   *
+   * Create a new contact
+   *
+   * @param Contact $contact User object to add to the addressbook (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function postContact($contact, $user_id = null)
+  {
+    $this->postContactWithHttpInfo($contact, $user_id);
+  }
+  
+  /**
+   * Operation postContactWithHttpInfo
+   *
+   * Create a new contact
+   *
+   * @param Contact $contact User object to add to the addressbook (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function postContactWithHttpInfo($contact, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->postContactRequest($contact, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation logoutAsync
-     *
-     * Invalidate the provided authToken.
-     *
-     * @param string $auth_token The authToken to invalidate (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function logoutAsync($auth_token)
-    {
-        return $this->logoutAsyncWithHttpInfo($auth_token)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'postContact'
+   *
+   * @param Contact $contact User object to add to the addressbook (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function postContactRequest($contact, $user_id = null)
+  {
+    // verify the required parameter 'contact' is set
+    if ($contact === null || (is_array($contact) && count($contact) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $contact when calling postContact'
+      );
     }
-
-    /**
-     * Operation logoutAsyncWithHttpInfo
-     *
-     * Invalidate the provided authToken.
-     *
-     * @param string $auth_token The authToken to invalidate (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function logoutAsyncWithHttpInfo($auth_token)
-    {
-        $returnType = '';
-        $request = $this->logoutRequest($auth_token);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.postContact, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation postContact
-     *
-     * Create a new contact
-     *
-     * @param Contact $contact User object to add to the addressbook (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function postContact($contact, $user_id = null)
-    {
-        $this->postContactWithHttpInfo($contact, $user_id);
+    
+    
+    $resourcePath = '/contacts';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation postContactWithHttpInfo
-     *
-     * Create a new contact
-     *
-     * @param Contact $contact User object to add to the addressbook (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function postContactWithHttpInfo($contact, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->postContactRequest($contact, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    
+    // body params
+    $_tempBody = null;
+    if (isset($contact)) {
+      $_tempBody = $contact;
     }
-
-    /**
-     * Create request for operation 'postContact'
-     *
-     * @param Contact $contact User object to add to the addressbook (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function postContactRequest($contact, $user_id = null)
-    {
-        // verify the required parameter 'contact' is set
-        if ($contact === null || (is_array($contact) && count($contact) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $contact when calling postContact'
-            );
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.postContact, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-
-        $resourcePath = '/contacts';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-
-        // body params
-        $_tempBody = null;
-        if (isset($contact)) {
-            $_tempBody = $contact;
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation postContactAsync
+   *
+   * Create a new contact
+   *
+   * @param Contact $contact User object to add to the addressbook (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function postContactAsync($contact, $user_id = null)
+  {
+    return $this->postContactAsyncWithHttpInfo($contact, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+      );
+  }
+  
+  /**
+   * Operation postContactAsyncWithHttpInfo
+   *
+   * Create a new contact
+   *
+   * @param Contact $contact User object to add to the addressbook (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function postContactAsyncWithHttpInfo($contact, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->postContactRequest($contact, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation postFmcPhone
+   *
+   * Create a new FmcPhone
+   *
+   * @param FmcPhone $fmc_phone FmcPhone object to add (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function postFmcPhone($fmc_phone, $user_id = null)
+  {
+    $this->postFmcPhoneWithHttpInfo($fmc_phone, $user_id);
+  }
+  
+  /**
+   * Operation postFmcPhoneWithHttpInfo
+   *
+   * Create a new FmcPhone
+   *
+   * @param FmcPhone $fmc_phone FmcPhone object to add (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function postFmcPhoneWithHttpInfo($fmc_phone, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->postFmcPhoneRequest($fmc_phone, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation postContactAsync
-     *
-     * Create a new contact
-     *
-     * @param Contact $contact User object to add to the addressbook (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function postContactAsync($contact, $user_id = null)
-    {
-        return $this->postContactAsyncWithHttpInfo($contact, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'postFmcPhone'
+   *
+   * @param FmcPhone $fmc_phone FmcPhone object to add (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function postFmcPhoneRequest($fmc_phone, $user_id = null)
+  {
+    // verify the required parameter 'fmc_phone' is set
+    if ($fmc_phone === null || (is_array($fmc_phone) && count($fmc_phone) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fmc_phone when calling postFmcPhone'
+      );
     }
-
-    /**
-     * Operation postContactAsyncWithHttpInfo
-     *
-     * Create a new contact
-     *
-     * @param Contact $contact User object to add to the addressbook (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function postContactAsyncWithHttpInfo($contact, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->postContactRequest($contact, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.postFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation postFmcPhone
-     *
-     * Create a new FmcPhone
-     *
-     * @param FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function postFmcPhone($fmc_phone, $user_id = null)
-    {
-        $this->postFmcPhoneWithHttpInfo($fmc_phone, $user_id);
+    
+    
+    $resourcePath = '/fmcPhones';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Operation postFmcPhoneWithHttpInfo
-     *
-     * Create a new FmcPhone
-     *
-     * @param FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function postFmcPhoneWithHttpInfo($fmc_phone, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->postFmcPhoneRequest($fmc_phone, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    
+    // body params
+    $_tempBody = null;
+    if (isset($fmc_phone)) {
+      $_tempBody = $fmc_phone;
     }
-
-    /**
-     * Create request for operation 'postFmcPhone'
-     *
-     * @param FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function postFmcPhoneRequest($fmc_phone, $user_id = null)
-    {
-        // verify the required parameter 'fmc_phone' is set
-        if ($fmc_phone === null || (is_array($fmc_phone) && count($fmc_phone) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fmc_phone when calling postFmcPhone'
-            );
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.postFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-
-        $resourcePath = '/fmcPhones';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-
-        // body params
-        $_tempBody = null;
-        if (isset($fmc_phone)) {
-            $_tempBody = $fmc_phone;
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation postFmcPhoneAsync
+   *
+   * Create a new FmcPhone
+   *
+   * @param FmcPhone $fmc_phone FmcPhone object to add (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function postFmcPhoneAsync($fmc_phone, $user_id = null)
+  {
+    return $this->postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+      );
+  }
+  
+  /**
+   * Operation postFmcPhoneAsyncWithHttpInfo
+   *
+   * Create a new FmcPhone
+   *
+   * @param FmcPhone $fmc_phone FmcPhone object to add (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->postFmcPhoneRequest($fmc_phone, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation postUser
+   *
+   * Create a new user
+   *
+   * @param User $user User object to add (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function postUser($user)
+  {
+    $this->postUserWithHttpInfo($user);
+  }
+  
+  /**
+   * Operation postUserWithHttpInfo
+   *
+   * Create a new user
+   *
+   * @param User $user User object to add (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function postUserWithHttpInfo($user)
+  {
+    $returnType = '';
+    $request = $this->postUserRequest($user);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation postFmcPhoneAsync
-     *
-     * Create a new FmcPhone
-     *
-     * @param FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function postFmcPhoneAsync($fmc_phone, $user_id = null)
-    {
-        return $this->postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'postUser'
+   *
+   * @param User $user User object to add (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function postUserRequest($user)
+  {
+    // verify the required parameter 'user' is set
+    if ($user === null || (is_array($user) && count($user) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user when calling postUser'
+      );
     }
-
-    /**
-     * Operation postFmcPhoneAsyncWithHttpInfo
-     *
-     * Create a new FmcPhone
-     *
-     * @param FmcPhone $fmc_phone FmcPhone object to add (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function postFmcPhoneAsyncWithHttpInfo($fmc_phone, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->postFmcPhoneRequest($fmc_phone, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    
+    $resourcePath = '/users';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // body params
+    $_tempBody = null;
+    if (isset($user)) {
+      $_tempBody = $user;
     }
-
-    /**
-     * Operation postUser
-     *
-     * Create a new user
-     *
-     * @param User $user User object to add (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function postUser($user)
-    {
-        $this->postUserWithHttpInfo($user);
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
     }
-
-    /**
-     * Operation postUserWithHttpInfo
-     *
-     * Create a new user
-     *
-     * @param User $user User object to add (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function postUserWithHttpInfo($user)
-    {
-        $returnType = '';
-        $request = $this->postUserRequest($user);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
     }
-
-    /**
-     * Create request for operation 'postUser'
-     *
-     * @param User $user User object to add (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function postUserRequest($user)
-    {
-        // verify the required parameter 'user' is set
-        if ($user === null || (is_array($user) && count($user) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user when calling postUser'
-            );
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation postUserAsync
+   *
+   * Create a new user
+   *
+   * @param User $user User object to add (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function postUserAsync($user)
+  {
+    return $this->postUserAsyncWithHttpInfo($user)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        $resourcePath = '/users';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // body params
-        $_tempBody = null;
-        if (isset($user)) {
-            $_tempBody = $user;
+      );
+  }
+  
+  /**
+   * Operation postUserAsyncWithHttpInfo
+   *
+   * Create a new user
+   *
+   * @param User $user User object to add (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function postUserAsyncWithHttpInfo($user)
+  {
+    $returnType = '';
+    $request = $this->postUserRequest($user);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation pressFunctionKey
+   *
+   * Performs the action assigned to the FunctionKey.
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the
+   *   functionKeyType. (optional)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function pressFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+  {
+    $this->pressFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of, $params);
+  }
+  
+  /**
+   * Operation pressFunctionKeyWithHttpInfo
+   *
+   * Performs the action assigned to the FunctionKey.
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the
+   *   functionKeyType. (optional)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function pressFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+  {
+    $returnType = '';
+    $request = $this->pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of, $params);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation postUserAsync
-     *
-     * Create a new user
-     *
-     * @param User $user User object to add (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function postUserAsync($user)
-    {
-        return $this->postUserAsyncWithHttpInfo($user)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'pressFunctionKey'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the
+   *   functionKeyType. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling pressFunctionKey'
+      );
     }
-
-    /**
-     * Operation postUserAsyncWithHttpInfo
-     *
-     * Create a new user
-     *
-     * @param User $user User object to add (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function postUserAsyncWithHttpInfo($user)
-    {
-        $returnType = '';
-        $request = $this->postUserRequest($user);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'key_id' is set
+    if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $key_id when calling pressFunctionKey'
+      );
     }
-
-    /**
-     * Operation pressFunctionKey
-     *
-     * Performs the action assigned to the FunctionKey.
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function pressFunctionKey($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        $this->pressFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of, $params);
+    
+    $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}/press';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation pressFunctionKeyWithHttpInfo
-     *
-     * Performs the action assigned to the FunctionKey.
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function pressFunctionKeyWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        $returnType = '';
-        $request = $this->pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of, $params);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    // query params
+    if (is_array($params)) {
+      $queryParams['params'] = $params;
+    } else
+      if ($params !== null) {
+        $queryParams['params'] = ObjectSerializer::toQueryValue($params);
+      }
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'pressFunctionKey'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling pressFunctionKey'
-            );
+    // path params
+    if ($key_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'keyId' . '}',
+        ObjectSerializer::toPathValue($key_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'key_id' is set
-        if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $key_id when calling pressFunctionKey'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}/press';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-        // query params
-        if (is_array($params)) {
-            $queryParams['params'] = $params;
-        } else
-            if ($params !== null) {
-                $queryParams['params'] = ObjectSerializer::toQueryValue($params);
-            }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'POST',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation pressFunctionKeyAsync
+   *
+   * Performs the action assigned to the FunctionKey.
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the
+   *   functionKeyType. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function pressFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+  {
+    return $this->pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of, $params)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // path params
-        if ($key_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'keyId' . '}',
-                ObjectSerializer::toPathValue($key_id),
-                $resourcePath
-            );
+      );
+  }
+  
+  /**
+   * Operation pressFunctionKeyAsyncWithHttpInfo
+   *
+   * Performs the action assigned to the FunctionKey.
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the
+   *   functionKeyType. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
+  {
+    $returnType = '';
+    $request = $this->pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of, $params);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation putContact
+   *
+   * Update a contact
+   *
+   * @param string $contact_id Id of the contact to update (required)
+   * @param Contact $contact Contact-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function putContact($contact_id, $contact, $user_id = null)
+  {
+    $this->putContactWithHttpInfo($contact_id, $contact, $user_id);
+  }
+  
+  /**
+   * Operation putContactWithHttpInfo
+   *
+   * Update a contact
+   *
+   * @param string $contact_id Id of the contact to update (required)
+   * @param Contact $contact Contact-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function putContactWithHttpInfo($contact_id, $contact, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->putContactRequest($contact_id, $contact, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation pressFunctionKeyAsync
-     *
-     * Performs the action assigned to the FunctionKey.
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function pressFunctionKeyAsync($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        return $this->pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of, $params)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'putContact'
+   *
+   * @param string $contact_id Id of the contact to update (required)
+   * @param Contact $contact Contact-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function putContactRequest($contact_id, $contact, $user_id = null)
+  {
+    // verify the required parameter 'contact_id' is set
+    if ($contact_id === null || (is_array($contact_id) && count($contact_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $contact_id when calling putContact'
+      );
     }
-
-    /**
-     * Operation pressFunctionKeyAsyncWithHttpInfo
-     *
-     * Performs the action assigned to the FunctionKey.
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     * @param string[] $params An array of parameters used to perform the action. These parameters are defined by the functionKeyType. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function pressFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $act_on_behalf_of = null, $params = null)
-    {
-        $returnType = '';
-        $request = $this->pressFunctionKeyRequest($fk_set_id, $key_id, $act_on_behalf_of, $params);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'contact' is set
+    if ($contact === null || (is_array($contact) && count($contact) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $contact when calling putContact'
+      );
     }
-
-    /**
-     * Operation putContact
-     *
-     * Update a contact
-     *
-     * @param string $contact_id Id of the contact to update (required)
-     * @param Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function putContact($contact_id, $contact, $user_id = null)
-    {
-        $this->putContactWithHttpInfo($contact_id, $contact, $user_id);
+    if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
+      throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.putContact, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation putContactWithHttpInfo
-     *
-     * Update a contact
-     *
-     * @param string $contact_id Id of the contact to update (required)
-     * @param Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function putContactWithHttpInfo($contact_id, $contact, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->putContactRequest($contact_id, $contact, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    
+    $resourcePath = '/contacts/{contactId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
     }
-
-    /**
-     * Create request for operation 'putContact'
-     *
-     * @param string $contact_id Id of the contact to update (required)
-     * @param Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function putContactRequest($contact_id, $contact, $user_id = null)
-    {
-        // verify the required parameter 'contact_id' is set
-        if ($contact_id === null || (is_array($contact_id) && count($contact_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $contact_id when calling putContact'
-            );
+    
+    // path params
+    if ($contact_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'contactId' . '}',
+        ObjectSerializer::toPathValue($contact_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($contact)) {
+      $_tempBody = $contact;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'contact' is set
-        if ($contact === null || (is_array($contact) && count($contact) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $contact when calling putContact'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
-            throw new InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.putContact, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-
-        $resourcePath = '/contacts/{contactId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation putContactAsync
+   *
+   * Update a contact
+   *
+   * @param string $contact_id Id of the contact to update (required)
+   * @param Contact $contact Contact-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putContactAsync($contact_id, $contact, $user_id = null)
+  {
+    return $this->putContactAsyncWithHttpInfo($contact_id, $contact, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // path params
-        if ($contact_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'contactId' . '}',
-                ObjectSerializer::toPathValue($contact_id),
-                $resourcePath
-            );
+      );
+  }
+  
+  /**
+   * Operation putContactAsyncWithHttpInfo
+   *
+   * Update a contact
+   *
+   * @param string $contact_id Id of the contact to update (required)
+   * @param Contact $contact Contact-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putContactAsyncWithHttpInfo($contact_id, $contact, $user_id = null)
+  {
+    $returnType = '';
+    $request = $this->putContactRequest($contact_id, $contact, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($contact)) {
-            $_tempBody = $contact;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation putFmcPhone
+   *
+   * Update a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+   * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return FmcPhone
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function putFmcPhone($fmc_id, $redirection, $user_id = null)
+  {
+    list($response) = $this->putFmcPhoneWithHttpInfo($fmc_id, $redirection, $user_id);
+    return $response;
+  }
+  
+  /**
+   * Operation putFmcPhoneWithHttpInfo
+   *
+   * Update a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+   * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return array of \Swagger\Client\Model\FmcPhone, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function putFmcPhoneWithHttpInfo($fmc_id, $redirection, $user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\FmcPhone';
+    $request = $this->putFmcPhoneRequest($fmc_id, $redirection, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
-    }
-
-    /**
-     * Operation putContactAsync
-     *
-     * Update a contact
-     *
-     * @param string $contact_id Id of the contact to update (required)
-     * @param Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putContactAsync($contact_id, $contact, $user_id = null)
-    {
-        return $this->putContactAsyncWithHttpInfo($contact_id, $contact, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation putContactAsyncWithHttpInfo
-     *
-     * Update a contact
-     *
-     * @param string $contact_id Id of the contact to update (required)
-     * @param Contact $contact Contact-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putContactAsyncWithHttpInfo($contact_id, $contact, $user_id = null)
-    {
-        $returnType = '';
-        $request = $this->putContactRequest($contact_id, $contact, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Operation putFmcPhone
-     *
-     * Update a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FmcPhone
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function putFmcPhone($fmc_id, $redirection, $user_id = null)
-    {
-        list($response) = $this->putFmcPhoneWithHttpInfo($fmc_id, $redirection, $user_id);
-        return $response;
-    }
-
-    /**
-     * Operation putFmcPhoneWithHttpInfo
-     *
-     * Update a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FmcPhone, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function putFmcPhoneWithHttpInfo($fmc_id, $redirection, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone';
-        $request = $this->putFmcPhoneRequest($fmc_id, $redirection, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 204:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FmcPhone',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 204:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FmcPhone',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'putFmcPhone'
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function putFmcPhoneRequest($fmc_id, $redirection, $user_id = null)
-    {
-        // verify the required parameter 'fmc_id' is set
-        if ($fmc_id === null || (is_array($fmc_id) && count($fmc_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fmc_id when calling putFmcPhone'
-            );
-        }
-        // verify the required parameter 'redirection' is set
-        if ($redirection === null || (is_array($redirection) && count($redirection) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $redirection when calling putFmcPhone'
-            );
-        }
+  }
+  
+  /**
+   * Create request for operation 'putFmcPhone'
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+   * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function putFmcPhoneRequest($fmc_id, $redirection, $user_id = null)
+  {
+    // verify the required parameter 'fmc_id' is set
+    if ($fmc_id === null || (is_array($fmc_id) && count($fmc_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fmc_id when calling putFmcPhone'
+      );
+    }
+    // verify the required parameter 'redirection' is set
+    if ($redirection === null || (is_array($redirection) && count($redirection) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $redirection when calling putFmcPhone'
+      );
+    }
 //        if ($user_id !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $user_id)) {
 //            throw new \InvalidArgumentException("invalid value for \"user_id\" when calling DefaultApi.putFmcPhone, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
 //        }
-
-
-        $resourcePath = '/fmcPhones/{fmcId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($user_id !== null) {
-            $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+    
+    
+    $resourcePath = '/fmcPhones/{fmcId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($user_id !== null) {
+      $queryParams['userId'] = ObjectSerializer::toQueryValue($user_id);
+    }
+    
+    // path params
+    if ($fmc_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fmcId' . '}',
+        ObjectSerializer::toPathValue($fmc_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($redirection)) {
+      $_tempBody = $redirection;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        // path params
-        if ($fmc_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fmcId' . '}',
-                ObjectSerializer::toPathValue($fmc_id),
-                $resourcePath
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($redirection)) {
-            $_tempBody = $redirection;
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+      $defaultHeaders['authToken'] = $this->config->getAccessToken();
+      $defaultHeaders['X-Version'] = '2';
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation putFmcPhoneAsync
+   *
+   * Update a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+   * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putFmcPhoneAsync($fmc_id, $redirection, $user_id = null)
+  {
+    return $this->putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation putFmcPhoneAsyncWithHttpInfo
+   *
+   * Update a FmcPhone
+   *
+   * @param string $fmc_id Id of the FmcPhone that will be updated (required)
+   * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
+   * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges.
+   *   (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id = null)
+  {
+    $returnType = '\Swagger\Client\Model\FmcPhone';
+    $request = $this->putFmcPhoneRequest($fmc_id, $redirection, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-            $defaultHeaders['authToken'] = $this->config->getAccessToken();
-            $defaultHeaders['X-Version'] = '2';
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation putPhoneConfig
+   *
+   * Update the PhoneConfig
+   *
+   * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+   * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function putPhoneConfig($phone_config, $user_id)
+  {
+    $this->putPhoneConfigWithHttpInfo($phone_config, $user_id);
+  }
+  
+  /**
+   * Operation putPhoneConfigWithHttpInfo
+   *
+   * Update the PhoneConfig
+   *
+   * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+   * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function putPhoneConfigWithHttpInfo($phone_config, $user_id)
+  {
+    $returnType = '';
+    $request = $this->putPhoneConfigRequest($phone_config, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation putFmcPhoneAsync
-     *
-     * Update a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putFmcPhoneAsync($fmc_id, $redirection, $user_id = null)
-    {
-        return $this->putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'putPhoneConfig'
+   *
+   * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+   * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function putPhoneConfigRequest($phone_config, $user_id)
+  {
+    // verify the required parameter 'phone_config' is set
+    if ($phone_config === null || (is_array($phone_config) && count($phone_config) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_config when calling putPhoneConfig'
+      );
     }
-
-    /**
-     * Operation putFmcPhoneAsyncWithHttpInfo
-     *
-     * Update a FmcPhone
-     *
-     * @param string $fmc_id Id of the FmcPhone that will be updated (required)
-     * @param FmcPhone $redirection FmcPhone-Object with updated values that should be applied (required)
-     * @param string $user_id Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putFmcPhoneAsyncWithHttpInfo($fmc_id, $redirection, $user_id = null)
-    {
-        $returnType = '\Swagger\Client\Model\FmcPhone';
-        $request = $this->putFmcPhoneRequest($fmc_id, $redirection, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling putPhoneConfig'
+      );
     }
-
-    /**
-     * Operation putPhoneConfig
-     *
-     * Update the PhoneConfig
-     *
-     * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function putPhoneConfig($phone_config, $user_id)
-    {
-        $this->putPhoneConfigWithHttpInfo($phone_config, $user_id);
+    
+    $resourcePath = '/users/{userId}/phoneconfig';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation putPhoneConfigWithHttpInfo
-     *
-     * Update the PhoneConfig
-     *
-     * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function putPhoneConfigWithHttpInfo($phone_config, $user_id)
-    {
-        $returnType = '';
-        $request = $this->putPhoneConfigRequest($phone_config, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($phone_config)) {
+      $_tempBody = $phone_config;
     }
-
-    /**
-     * Create request for operation 'putPhoneConfig'
-     *
-     * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function putPhoneConfigRequest($phone_config, $user_id)
-    {
-        // verify the required parameter 'phone_config' is set
-        if ($phone_config === null || (is_array($phone_config) && count($phone_config) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_config when calling putPhoneConfig'
-            );
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling putPhoneConfig'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($phone_config)) {
-            $_tempBody = $phone_config;
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation putPhoneConfigAsync
+   *
+   * Update the PhoneConfig
+   *
+   * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+   * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putPhoneConfigAsync($phone_config, $user_id)
+  {
+    return $this->putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+      );
+  }
+  
+  /**
+   * Operation putPhoneConfigAsyncWithHttpInfo
+   *
+   * Update the PhoneConfig
+   *
+   * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
+   * @param int $user_id Id of the User thats phoneConfig will be updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
+  {
+    $returnType = '';
+    $request = $this->putPhoneConfigRequest($phone_config, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation putRedirect
+   *
+   * Update a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be updated (required)
+   * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Redirection
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function putRedirect($redirect_id, $redirection, $act_on_behalf_of = null)
+  {
+    list($response) = $this->putRedirectWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation putRedirectWithHttpInfo
+   *
+   * Update a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be updated (required)
+   * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\Redirection, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function putRedirectWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\Redirection';
+    $request = $this->putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 204:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Redirection',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation putPhoneConfigAsync
-     *
-     * Update the PhoneConfig
-     *
-     * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putPhoneConfigAsync($phone_config, $user_id)
-    {
-        return $this->putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'putRedirect'
+   *
+   * @param string $redirect_id Id of the Redirection that will be updated (required)
+   * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'redirect_id' is set
+    if ($redirect_id === null || (is_array($redirect_id) && count($redirect_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $redirect_id when calling putRedirect'
+      );
     }
-
-    /**
-     * Operation putPhoneConfigAsyncWithHttpInfo
-     *
-     * Update the PhoneConfig
-     *
-     * @param PhoneConfig $phone_config PhoneConfig-Object with updated values that should be applied (required)
-     * @param int $user_id Id of the User thats phoneConfig will be updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putPhoneConfigAsyncWithHttpInfo($phone_config, $user_id)
-    {
-        $returnType = '';
-        $request = $this->putPhoneConfigRequest($phone_config, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'redirection' is set
+    if ($redirection === null || (is_array($redirection) && count($redirection) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $redirection when calling putRedirect'
+      );
     }
-
-    /**
-     * Operation putRedirect
-     *
-     * Update a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be updated (required)
-     * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return Redirection
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function putRedirect($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        list($response) = $this->putRedirectWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of);
-        return $response;
+    if ($act_on_behalf_of !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $act_on_behalf_of)) {
+      throw new InvalidArgumentException("invalid value for \"act_on_behalf_of\" when calling DefaultApi.putRedirect, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
     }
-
-    /**
-     * Operation putRedirectWithHttpInfo
-     *
-     * Update a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be updated (required)
-     * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\Redirection, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function putRedirectWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection';
-        $request = $this->putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 204:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Redirection',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    
+    $resourcePath = '/redirects/{redirectId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Create request for operation 'putRedirect'
-     *
-     * @param string $redirect_id Id of the Redirection that will be updated (required)
-     * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'redirect_id' is set
-        if ($redirect_id === null || (is_array($redirect_id) && count($redirect_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $redirect_id when calling putRedirect'
-            );
+    
+    // path params
+    if ($redirect_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'redirectId' . '}',
+        ObjectSerializer::toPathValue($redirect_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($redirection)) {
+      $_tempBody = $redirection;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'redirection' is set
-        if ($redirection === null || (is_array($redirection) && count($redirection) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $redirection when calling putRedirect'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-        if ($act_on_behalf_of !== null && !preg_match("/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/", $act_on_behalf_of)) {
-            throw new InvalidArgumentException("invalid value for \"act_on_behalf_of\" when calling DefaultApi.putRedirect, must conform to the pattern /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.");
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-
-        $resourcePath = '/redirects/{redirectId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation putRedirectAsync
+   *
+   * Update a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be updated (required)
+   * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putRedirectAsync($redirect_id, $redirection, $act_on_behalf_of = null)
+  {
+    return $this->putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // path params
-        if ($redirect_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'redirectId' . '}',
-                ObjectSerializer::toPathValue($redirect_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-        if (isset($redirection)) {
-            $_tempBody = $redirection;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation putRedirectAsyncWithHttpInfo
+   *
+   * Update a Redirection
+   *
+   * @param string $redirect_id Id of the Redirection that will be updated (required)
+   * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\Redirection';
+    $request = $this->putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation putUser
+   *
+   * Update a user
+   *
+   * @param int $user_id Id of the User that will be updated (required)
+   * @param User $user User-Object with updated values that should be applied (required)
+   *
+   * @return User
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function putUser($user_id, $user)
+  {
+    list($response) = $this->putUserWithHttpInfo($user_id, $user);
+    return $response;
+  }
+  
+  /**
+   * Operation putUserWithHttpInfo
+   *
+   * Update a user
+   *
+   * @param int $user_id Id of the User that will be updated (required)
+   * @param User $user User-Object with updated values that should be applied (required)
+   *
+   * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function putUserWithHttpInfo($user_id, $user)
+  {
+    $returnType = '\Swagger\Client\Model\User';
+    $request = $this->putUserRequest($user_id, $user);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 204:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\User',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation putRedirectAsync
-     *
-     * Update a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be updated (required)
-     * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putRedirectAsync($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        return $this->putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'putUser'
+   *
+   * @param int $user_id Id of the User that will be updated (required)
+   * @param User $user User-Object with updated values that should be applied (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function putUserRequest($user_id, $user)
+  {
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling putUser'
+      );
     }
-
-    /**
-     * Operation putRedirectAsyncWithHttpInfo
-     *
-     * Update a Redirection
-     *
-     * @param string $redirect_id Id of the Redirection that will be updated (required)
-     * @param Redirection $redirection Redirection-Object with updated values that should be applied (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putRedirectAsyncWithHttpInfo($redirect_id, $redirection, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\Redirection';
-        $request = $this->putRedirectRequest($redirect_id, $redirection, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'user' is set
+    if ($user === null || (is_array($user) && count($user) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user when calling putUser'
+      );
     }
-
-    /**
-     * Operation putUser
-     *
-     * Update a user
-     *
-     * @param int $user_id Id of the User that will be updated (required)
-     * @param User $user User-Object with updated values that should be applied (required)
-     *
-     * @return User
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function putUser($user_id, $user)
-    {
-        list($response) = $this->putUserWithHttpInfo($user_id, $user);
-        return $response;
+    
+    $resourcePath = '/users/{userId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation putUserWithHttpInfo
-     *
-     * Update a user
-     *
-     * @param int $user_id Id of the User that will be updated (required)
-     * @param User $user User-Object with updated values that should be applied (required)
-     *
-     * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function putUserWithHttpInfo($user_id, $user)
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->putUserRequest($user_id, $user);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 204:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\User',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($user)) {
+      $_tempBody = $user;
     }
-
-    /**
-     * Create request for operation 'putUser'
-     *
-     * @param int $user_id Id of the User that will be updated (required)
-     * @param User $user User-Object with updated values that should be applied (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function putUserRequest($user_id, $user)
-    {
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling putUser'
-            );
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'user' is set
-        if ($user === null || (is_array($user) && count($user) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user when calling putUser'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($user)) {
-            $_tempBody = $user;
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation putUserAsync
+   *
+   * Update a user
+   *
+   * @param int $user_id Id of the User that will be updated (required)
+   * @param User $user User-Object with updated values that should be applied (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putUserAsync($user_id, $user)
+  {
+    return $this->putUserAsyncWithHttpInfo($user_id, $user)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation putUserAsyncWithHttpInfo
+   *
+   * Update a user
+   *
+   * @param int $user_id Id of the User that will be updated (required)
+   * @param User $user User-Object with updated values that should be applied (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function putUserAsyncWithHttpInfo($user_id, $user)
+  {
+    $returnType = '\Swagger\Client\Model\User';
+    $request = $this->putUserRequest($user_id, $user);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation setAvatar
+   *
+   * Set the Avatar
+   *
+   * @param SplFileObject $avatar The new avatar of the user (required)
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function setAvatar($avatar, $user_id)
+  {
+    $this->setAvatarWithHttpInfo($avatar, $user_id);
+  }
+  
+  /**
+   * Operation setAvatarWithHttpInfo
+   *
+   * Set the Avatar
+   *
+   * @param SplFileObject $avatar The new avatar of the user (required)
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function setAvatarWithHttpInfo($avatar, $user_id)
+  {
+    $returnType = '';
+    $request = $this->setAvatarRequest($avatar, $user_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation putUserAsync
-     *
-     * Update a user
-     *
-     * @param int $user_id Id of the User that will be updated (required)
-     * @param User $user User-Object with updated values that should be applied (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putUserAsync($user_id, $user)
-    {
-        return $this->putUserAsyncWithHttpInfo($user_id, $user)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'setAvatar'
+   *
+   * @param SplFileObject $avatar The new avatar of the user (required)
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function setAvatarRequest($avatar, $user_id)
+  {
+    // verify the required parameter 'avatar' is set
+    if ($avatar === null || (is_array($avatar) && count($avatar) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $avatar when calling setAvatar'
+      );
     }
-
-    /**
-     * Operation putUserAsyncWithHttpInfo
-     *
-     * Update a user
-     *
-     * @param int $user_id Id of the User that will be updated (required)
-     * @param User $user User-Object with updated values that should be applied (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function putUserAsyncWithHttpInfo($user_id, $user)
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->putUserRequest($user_id, $user);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling setAvatar'
+      );
     }
-
-    /**
-     * Operation setAvatar
-     *
-     * Set the Avatar
-     *
-     * @param SplFileObject $avatar The new avatar of the user (required)
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function setAvatar($avatar, $user_id)
-    {
-        $this->setAvatarWithHttpInfo($avatar, $user_id);
+    
+    $resourcePath = '/users/{userId}/avatar';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Operation setAvatarWithHttpInfo
-     *
-     * Set the Avatar
-     *
-     * @param SplFileObject $avatar The new avatar of the user (required)
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function setAvatarWithHttpInfo($avatar, $user_id)
-    {
-        $returnType = '';
-        $request = $this->setAvatarRequest($avatar, $user_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // form params
+    if ($avatar !== null) {
+      $multipart = true;
+      $formParams['avatar'] = try_fopen(ObjectSerializer::toFormValue($avatar), 'rb');
     }
-
-    /**
-     * Create request for operation 'setAvatar'
-     *
-     * @param SplFileObject $avatar The new avatar of the user (required)
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function setAvatarRequest($avatar, $user_id)
-    {
-        // verify the required parameter 'avatar' is set
-        if ($avatar === null || (is_array($avatar) && count($avatar) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $avatar when calling setAvatar'
-            );
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['multipart/form-data']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling setAvatar'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/users/{userId}/avatar';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // form params
-        if ($avatar !== null) {
-            $multipart = true;
-            $formParams['avatar'] = try_fopen(ObjectSerializer::toFormValue($avatar), 'rb');
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation setAvatarAsync
+   *
+   * Set the Avatar
+   *
+   * @param SplFileObject $avatar The new avatar of the user (required)
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function setAvatarAsync($avatar, $user_id)
+  {
+    return $this->setAvatarAsyncWithHttpInfo($avatar, $user_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['multipart/form-data']
-            );
+      );
+  }
+  
+  /**
+   * Operation setAvatarAsyncWithHttpInfo
+   *
+   * Set the Avatar
+   *
+   * @param SplFileObject $avatar The new avatar of the user (required)
+   * @param int $user_id Id of the User thats avatar will be updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function setAvatarAsyncWithHttpInfo($avatar, $user_id)
+  {
+    $returnType = '';
+    $request = $this->setAvatarRequest($avatar, $user_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation updateFunctionKey
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param FunctionKey $function_key The updated FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function updateFunctionKey($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+  {
+    list($response) = $this->updateFunctionKeyWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation updateFunctionKeyWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param FunctionKey $function_key The updated FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function updateFunctionKeyWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 204:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation setAvatarAsync
-     *
-     * Set the Avatar
-     *
-     * @param SplFileObject $avatar The new avatar of the user (required)
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function setAvatarAsync($avatar, $user_id)
-    {
-        return $this->setAvatarAsyncWithHttpInfo($avatar, $user_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'updateFunctionKey'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param FunctionKey $function_key The updated FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling updateFunctionKey'
+      );
     }
-
-    /**
-     * Operation setAvatarAsyncWithHttpInfo
-     *
-     * Set the Avatar
-     *
-     * @param SplFileObject $avatar The new avatar of the user (required)
-     * @param int $user_id Id of the User thats avatar will be updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function setAvatarAsyncWithHttpInfo($avatar, $user_id)
-    {
-        $returnType = '';
-        $request = $this->setAvatarRequest($avatar, $user_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'key_id' is set
+    if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $key_id when calling updateFunctionKey'
+      );
     }
-
-    /**
-     * Operation updateFunctionKey
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param FunctionKey $function_key The updated FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function updateFunctionKey($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        list($response) = $this->updateFunctionKeyWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
-        return $response;
+    // verify the required parameter 'function_key' is set
+    if ($function_key === null || (is_array($function_key) && count($function_key) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $function_key when calling updateFunctionKey'
+      );
     }
-
-    /**
-     * Operation updateFunctionKeyWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param FunctionKey $function_key The updated FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function updateFunctionKeyWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 204:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Create request for operation 'updateFunctionKey'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param FunctionKey $function_key The updated FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling updateFunctionKey'
-            );
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
+    }
+    // path params
+    if ($key_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'keyId' . '}',
+        ObjectSerializer::toPathValue($key_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($function_key)) {
+      $_tempBody = $function_key;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'key_id' is set
-        if ($key_id === null || (is_array($key_id) && count($key_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $key_id when calling updateFunctionKey'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-        // verify the required parameter 'function_key' is set
-        if ($function_key === null || (is_array($function_key) && count($function_key) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $function_key when calling updateFunctionKey'
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}/keys/{keyId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation updateFunctionKeyAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param FunctionKey $function_key The updated FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function updateFunctionKeyAsync($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+  {
+    return $this->updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
-        }
-        // path params
-        if ($key_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'keyId' . '}',
-                ObjectSerializer::toPathValue($key_id),
-                $resourcePath
-            );
-        }
-
-        // body params
-        $_tempBody = null;
-        if (isset($function_key)) {
-            $_tempBody = $function_key;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation updateFunctionKeyAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param string $key_id The Id of the FunctionKey (required)
+   * @param FunctionKey $function_key The updated FunctionKey (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation updateFunctionKeySet
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return FunctionKey
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function updateFunctionKeySet($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+  {
+    list($response) = $this->updateFunctionKeySetWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of);
+    return $response;
+  }
+  
+  /**
+   * Operation updateFunctionKeySetWithHttpInfo
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function updateFunctionKeySetWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
+        }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 204:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\FunctionKey',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation updateFunctionKeyAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param FunctionKey $function_key The updated FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function updateFunctionKeyAsync($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        return $this->updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'updateFunctionKeySet'
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+  {
+    // verify the required parameter 'fk_set_id' is set
+    if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $fk_set_id when calling updateFunctionKeySet'
+      );
     }
-
-    /**
-     * Operation updateFunctionKeyAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param string $key_id The Id of the FunctionKey (required)
-     * @param FunctionKey $function_key The updated FunctionKey (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function updateFunctionKeyAsyncWithHttpInfo($fk_set_id, $key_id, $function_key, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->updateFunctionKeyRequest($fk_set_id, $key_id, $function_key, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'function_key_set' is set
+    if ($function_key_set === null || (is_array($function_key_set) && count($function_key_set) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $function_key_set when calling updateFunctionKeySet'
+      );
     }
-
-    /**
-     * Operation updateFunctionKeySet
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return FunctionKey
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function updateFunctionKeySet($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        list($response) = $this->updateFunctionKeySetWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of);
-        return $response;
+    
+    $resourcePath = '/functionkeysets/{fkSetId}';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    // query params
+    if ($act_on_behalf_of !== null) {
+      $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
     }
-
-    /**
-     * Operation updateFunctionKeySetWithHttpInfo
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return array of \Swagger\Client\Model\FunctionKey, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function updateFunctionKeySetWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 204:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\FunctionKey',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    // path params
+    if ($fk_set_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'fkSetId' . '}',
+        ObjectSerializer::toPathValue($fk_set_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'updateFunctionKeySet'
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        // verify the required parameter 'fk_set_id' is set
-        if ($fk_set_id === null || (is_array($fk_set_id) && count($fk_set_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $fk_set_id when calling updateFunctionKeySet'
-            );
+    
+    // body params
+    $_tempBody = null;
+    if (isset($function_key_set)) {
+      $_tempBody = $function_key_set;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'function_key_set' is set
-        if ($function_key_set === null || (is_array($function_key_set) && count($function_key_set) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $function_key_set when calling updateFunctionKeySet'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-
-        $resourcePath = '/functionkeysets/{fkSetId}';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-        // query params
-        if ($act_on_behalf_of !== null) {
-            $queryParams['actOnBehalfOf'] = ObjectSerializer::toQueryValue($act_on_behalf_of);
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        // path params
-        if ($fk_set_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'fkSetId' . '}',
-                ObjectSerializer::toPathValue($fk_set_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation updateFunctionKeySetAsync
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function updateFunctionKeySetAsync($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+  {
+    return $this->updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($function_key_set)) {
-            $_tempBody = $function_key_set;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+      );
+  }
+  
+  /**
+   * Operation updateFunctionKeySetAsyncWithHttpInfo
+   *
+   *
+   *
+   * @param string $fk_set_id The Id of the FunctionKeySet (required)
+   * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
+   * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative
+   *   privileges. (optional)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
+  {
+    $returnType = '\Swagger\Client\Model\FunctionKey';
+    $request = $this->updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation updateNumbersForAssignedPhones
+   *
+   * Updates the list of NumberForPhoneAssignment
+   *
+   * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update
+   *   assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+   *
+   * @return void
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function updateNumbersForAssignedPhones($number_for_phone_assignments, $user_id, $phone_id)
+  {
+    $this->updateNumbersForAssignedPhonesWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id);
+  }
+  
+  /**
+   * Operation updateNumbersForAssignedPhonesWithHttpInfo
+   *
+   * Updates the list of NumberForPhoneAssignment
+   *
+   * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update
+   *   assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+   *
+   * @return array of null, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function updateNumbersForAssignedPhonesWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
+  {
+    $returnType = '';
+    $request = $this->updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id);
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
+      }
+      
+      return [null, $statusCode, $response->getHeaders()];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Operation updateFunctionKeySetAsync
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function updateFunctionKeySetAsync($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        return $this->updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
+  }
+  
+  /**
+   * Create request for operation 'updateNumbersForAssignedPhones'
+   *
+   * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update
+   *   assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id)
+  {
+    // verify the required parameter 'number_for_phone_assignments' is set
+    if ($number_for_phone_assignments === null || (is_array($number_for_phone_assignments) && count($number_for_phone_assignments) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $number_for_phone_assignments when calling updateNumbersForAssignedPhones'
+      );
     }
-
-    /**
-     * Operation updateFunctionKeySetAsyncWithHttpInfo
-     *
-     *
-     *
-     * @param string $fk_set_id The Id of the FunctionKeySet (required)
-     * @param FunctionKeySet $function_key_set The updated FunctionKeySet to reorder FunctionKeys (required)
-     * @param string $act_on_behalf_of Perform an operation on behalf of another user. This requires administrative privileges. (optional)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function updateFunctionKeySetAsyncWithHttpInfo($fk_set_id, $function_key_set, $act_on_behalf_of = null)
-    {
-        $returnType = '\Swagger\Client\Model\FunctionKey';
-        $request = $this->updateFunctionKeySetRequest($fk_set_id, $function_key_set, $act_on_behalf_of);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
+    // verify the required parameter 'user_id' is set
+    if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $user_id when calling updateNumbersForAssignedPhones'
+      );
     }
-
-    /**
-     * Operation updateNumbersForAssignedPhones
-     *
-     * Updates the list of NumberForPhoneAssignment
-     *
-     * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function updateNumbersForAssignedPhones($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        $this->updateNumbersForAssignedPhonesWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id);
+    // verify the required parameter 'phone_id' is set
+    if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
+      throw new InvalidArgumentException(
+        'Missing the required parameter $phone_id when calling updateNumbersForAssignedPhones'
+      );
     }
-
-    /**
-     * Operation updateNumbersForAssignedPhonesWithHttpInfo
-     *
-     * Updates the list of NumberForPhoneAssignment
-     *
-     * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @return array of null, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function updateNumbersForAssignedPhonesWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        $returnType = '';
-        $request = $this->updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            return [null, $statusCode, $response->getHeaders()];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
-        }
+    
+    $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}/numbers';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // path params
+    if ($user_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'userId' . '}',
+        ObjectSerializer::toPathValue($user_id),
+        $resourcePath
+      );
     }
-
-    /**
-     * Create request for operation 'updateNumbersForAssignedPhones'
-     *
-     * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        // verify the required parameter 'number_for_phone_assignments' is set
-        if ($number_for_phone_assignments === null || (is_array($number_for_phone_assignments) && count($number_for_phone_assignments) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $number_for_phone_assignments when calling updateNumbersForAssignedPhones'
-            );
+    // path params
+    if ($phone_id !== null) {
+      $resourcePath = str_replace(
+        '{' . 'phoneId' . '}',
+        ObjectSerializer::toPathValue($phone_id),
+        $resourcePath
+      );
+    }
+    
+    // body params
+    $_tempBody = null;
+    if (isset($number_for_phone_assignments)) {
+      $_tempBody = $number_for_phone_assignments;
+    }
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-        // verify the required parameter 'user_id' is set
-        if ($user_id === null || (is_array($user_id) && count($user_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $user_id when calling updateNumbersForAssignedPhones'
-            );
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
         }
-        // verify the required parameter 'phone_id' is set
-        if ($phone_id === null || (is_array($phone_id) && count($phone_id) === 0)) {
-            throw new InvalidArgumentException(
-                'Missing the required parameter $phone_id when calling updateNumbersForAssignedPhones'
-            );
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
         }
-
-        $resourcePath = '/users/{userId}/phoneconfig/phones/{phoneId}/numbers';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // path params
-        if ($user_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'userId' . '}',
-                ObjectSerializer::toPathValue($user_id),
-                $resourcePath
-            );
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'PUT',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation updateNumbersForAssignedPhonesAsync
+   *
+   * Updates the list of NumberForPhoneAssignment
+   *
+   * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update
+   *   assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function updateNumbersForAssignedPhonesAsync($number_for_phone_assignments, $user_id, $phone_id)
+  {
+    return $this->updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
+      ->then(
+        function ($response) {
+          return $response[0];
         }
-        // path params
-        if ($phone_id !== null) {
-            $resourcePath = str_replace(
-                '{' . 'phoneId' . '}',
-                ObjectSerializer::toPathValue($phone_id),
-                $resourcePath
-            );
+      );
+  }
+  
+  /**
+   * Operation updateNumbersForAssignedPhonesAsyncWithHttpInfo
+   *
+   * Updates the list of NumberForPhoneAssignment
+   *
+   * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update
+   *   assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
+   * @param int $user_id Id of the User (required)
+   * @param int $phone_id Id of the Phone thats number assignments are updated (required)
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
+  {
+    $returnType = '';
+    $request = $this->updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id);
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          return [null, $response->getStatusCode(), $response->getHeaders()];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-        // body params
-        $_tempBody = null;
-        if (isset($number_for_phone_assignments)) {
-            $_tempBody = $number_for_phone_assignments;
-        }
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
-        }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
-            }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
-        }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+      );
+  }
+  
+  /**
+   * Operation usersMeGet
+   *
+   *
+   * @return User
+   * @throws InvalidArgumentException
+   * @throws ApiException on non-2xx response
+   */
+  public function usersMeGet()
+  {
+    list($response) = $this->usersMeGetWithHttpInfo();
+    return $response;
+  }
+  
+  /**
+   * Operation usersMeGetWithHttpInfo
+   *
+   *
+   * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
+   * @throws ApiException on non-2xx response
+   * @throws GuzzleException
+   */
+  public function usersMeGetWithHttpInfo()
+  {
+    $returnType = '\Swagger\Client\Model\User';
+    $request = $this->usersMeGetRequest();
+    
+    try {
+      $options = $this->createHttpClientOption();
+      try {
+        $response = $this->client->send($request, $options);
+      } catch (RequestException $e) {
+        throw new ApiException(
+          "[{$e->getCode()}] {$e->getMessage()}",
+          $e->getCode(),
+          $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+          $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
         );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+      }
+      
+      $statusCode = $response->getStatusCode();
+      
+      if ($statusCode < 200 || $statusCode > 299) {
+        throw new ApiException(
+          sprintf(
+            '[%d] Error connecting to the API (%s)',
+            $statusCode,
+            $request->getUri()
+          ),
+          $statusCode,
+          $response->getHeaders(),
+          $response->getBody()
         );
-    }
-
-    /**
-     * Operation updateNumbersForAssignedPhonesAsync
-     *
-     * Updates the list of NumberForPhoneAssignment
-     *
-     * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function updateNumbersForAssignedPhonesAsync($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        return $this->updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation updateNumbersForAssignedPhonesAsyncWithHttpInfo
-     *
-     * Updates the list of NumberForPhoneAssignment
-     *
-     * @param NumberForPhoneAssignment[] $number_for_phone_assignments List of NumberForPhoneAssignment-Objects to update assigned numbers for the Phone with the given {phoneId} of the User with the given {userId} (required)
-     * @param int $user_id Id of the User (required)
-     * @param int $phone_id Id of the Phone thats number assignments are updated (required)
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function updateNumbersForAssignedPhonesAsyncWithHttpInfo($number_for_phone_assignments, $user_id, $phone_id)
-    {
-        $returnType = '';
-        $request = $this->updateNumbersForAssignedPhonesRequest($number_for_phone_assignments, $user_id, $phone_id);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    return [null, $response->getStatusCode(), $response->getHeaders()];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Operation usersMeGet
-     *
-     *
-     * @return User
-     * @throws InvalidArgumentException
-     * @throws \Swagger\Client\ApiException on non-2xx response
-     */
-    public function usersMeGet()
-    {
-        list($response) = $this->usersMeGetWithHttpInfo();
-        return $response;
-    }
-
-    /**
-     * Operation usersMeGetWithHttpInfo
-     *
-     *
-     * @return array of \Swagger\Client\Model\User, HTTP status code, HTTP response headers (array of strings)
-     * @throws ApiException on non-2xx response
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function usersMeGetWithHttpInfo()
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->usersMeGetRequest();
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
-
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
-            } else {
-                $content = $responseBody->getContents();
-                if ($returnType !== 'string') {
-                    $content = json_decode($content);
-                }
-            }
-
-            return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
-            ];
-
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\User',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-                default:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Swagger\Client\Model\Error',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    break;
-            }
-            throw $e;
+      }
+      
+      $responseBody = $response->getBody();
+      if ($returnType === '\SplFileObject') {
+        $content = $responseBody; //stream goes to serializer
+      } else {
+        $content = $responseBody->getContents();
+        if ($returnType !== 'string') {
+          $content = json_decode($content);
         }
+      }
+      
+      return [
+        ObjectSerializer::deserialize($content, $returnType, []),
+        $response->getStatusCode(),
+        $response->getHeaders()
+      ];
+      
+    } catch (ApiException $e) {
+      switch ($e->getCode()) {
+        case 200:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\User',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+        default:
+          $data = ObjectSerializer::deserialize(
+            $e->getResponseBody(),
+            '\Swagger\Client\Model\Error',
+            $e->getResponseHeaders()
+          );
+          $e->setResponseObject($data);
+          break;
+      }
+      throw $e;
     }
-
-    /**
-     * Create request for operation 'usersMeGet'
-     *
-     *
-     * @return \GuzzleHttp\Psr7\Request
-     * @throws InvalidArgumentException
-     */
-    protected function usersMeGetRequest()
-    {
-
-        $resourcePath = '/users/me';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // body params
-        $_tempBody = null;
-
-        if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
-        } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json']
-            );
+  }
+  
+  /**
+   * Create request for operation 'usersMeGet'
+   *
+   *
+   * @return Request
+   * @throws InvalidArgumentException
+   */
+  protected function usersMeGetRequest()
+  {
+    
+    $resourcePath = '/users/me';
+    $formParams = [];
+    $queryParams = [];
+    $headerParams = [];
+    $httpBody = '';
+    $multipart = false;
+    
+    
+    // body params
+    $_tempBody = null;
+    
+    if ($multipart) {
+      $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+      );
+    } else {
+      $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json']
+      );
+    }
+    
+    // for model (json/xml)
+    if (isset($_tempBody)) {
+      // $_tempBody is the method argument, if present
+      $httpBody = $_tempBody;
+      
+      if ($headers['Content-Type'] === 'application/json') {
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof stdClass) {
+          $httpBody = \GuzzleHttp\json_encode($httpBody);
         }
-
-        // for model (json/xml)
-        if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-
-            if ($headers['Content-Type'] === 'application/json') {
-                // \stdClass has no __toString(), so we should encode it manually
-                if ($httpBody instanceof stdClass) {
-                    $httpBody = \GuzzleHttp\json_encode($httpBody);
-                }
-                // array has no __toString(), so we should encode it manually
-                if (is_array($httpBody)) {
-                    $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
-                }
+        // array has no __toString(), so we should encode it manually
+        if (is_array($httpBody)) {
+          $httpBody = \GuzzleHttp\json_encode(ObjectSerializer::sanitizeForSerialization($httpBody));
+        }
+      }
+    } elseif (count($formParams) > 0) {
+      if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+          $multipartContents[] = [
+            'name' => $formParamName,
+            'contents' => $formParamValue
+          ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+        
+      } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+        
+      } else {
+        // for HTTP post (form)
+        $httpBody = build_query($formParams);
+      }
+    }
+    
+    
+    $defaultHeaders = [];
+    if ($this->config->getUserAgent()) {
+      $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+    }
+    
+    $headers = array_merge(
+      $defaultHeaders,
+      $headerParams,
+      $headers
+    );
+    
+    $query = build_query($queryParams);
+    return new Request(
+      'GET',
+      $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+      $headers,
+      $httpBody
+    );
+  }
+  
+  /**
+   * Operation usersMeGetAsync
+   *
+   *
+   *
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function usersMeGetAsync()
+  {
+    return $this->usersMeGetAsyncWithHttpInfo()
+      ->then(
+        function ($response) {
+          return $response[0];
+        }
+      );
+  }
+  
+  /**
+   * Operation usersMeGetAsyncWithHttpInfo
+   *
+   *
+   *
+   *
+   * @return PromiseInterface
+   * @throws InvalidArgumentException
+   */
+  public function usersMeGetAsyncWithHttpInfo()
+  {
+    $returnType = '\Swagger\Client\Model\User';
+    $request = $this->usersMeGetRequest();
+    
+    return $this->client
+      ->sendAsync($request, $this->createHttpClientOption())
+      ->then(
+        function ($response) use ($returnType) {
+          $responseBody = $response->getBody();
+          if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+          } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+              $content = json_decode($content);
             }
-        } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = build_query($formParams);
-            }
+          }
+          
+          return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+          ];
+        },
+        function ($exception) {
+          $response = $exception->getResponse();
+          $statusCode = $response->getStatusCode();
+          throw new ApiException(
+            sprintf(
+              '[%d] Error connecting to the API (%s)',
+              $statusCode,
+              $exception->getRequest()->getUri()
+            ),
+            $statusCode,
+            $response->getHeaders(),
+            $response->getBody()
+          );
         }
-
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
-        }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $query = build_query($queryParams);
-        return new Request(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation usersMeGetAsync
-     *
-     *
-     *
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function usersMeGetAsync()
-    {
-        return $this->usersMeGetAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation usersMeGetAsyncWithHttpInfo
-     *
-     *
-     *
-     *
-     * @return PromiseInterface
-     * @throws InvalidArgumentException
-     */
-    public function usersMeGetAsyncWithHttpInfo()
-    {
-        $returnType = '\Swagger\Client\Model\User';
-        $request = $this->usersMeGetRequest();
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+      );
+  }
 }

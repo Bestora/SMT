@@ -11,8 +11,8 @@ template::setText('closed', $db->getValue());
 
 
 if (isset($_SESSION ['temp_passwd'])) {
-    template::setText('temp_passwd', $_SESSION ['temp_passwd']);
-    unset($_SESSION ['temp_passwd']);
+  template::setText('temp_passwd', $_SESSION ['temp_passwd']);
+  unset($_SESSION ['temp_passwd']);
 }
 
 

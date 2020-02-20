@@ -22,48 +22,48 @@ echo '<title>Install SMT</title>
 
 
 if (isset($_POST['aktion']) && $_POST['aktion'] == 'install') {
-
-    $file = project_path . '/assets/config/' . project_base . '.ini';
-    $current = "";
-    $current .= "project = SMT\n";
-    $current .= "getPath = " . $_POST['getPath'] . "\n";
-    $current .= "iAnzahl = " . $_POST['iAnzahl'] . "\n";
-    $current .= "language = " . $_POST['language'] . "\n";
-    $current .= "country = " . $_POST['language'] . "\n";
-    $current .= "logfiles = " . $_POST['logfiles'] . "\n";
-    $current .= "loader = Handler,Texte\n\n";
-    $current .= "[SMT-ADMIN]\n";
-    $current .= "db_host = " . $_POST['db_host'] . "\n";
-    $current .= "db_user = " . $_POST['db_user'] . "\n";
-    $current .= "db_pass = " . $_POST['db_pass'] . "\n";
-    $current .= "db_base = " . $_POST['db_name'] . "\n";
-    $current .= "db_port = 3306\n";
-    $current .= "db_charset=utf8\n\n";
-    $current .= "[SMT-MONITOR]\n";
-    $current .= "db_host = " . $_POST['db_host'] . "\n";
-    $current .= "db_user = " . $_POST['db_user'] . "\n";
-    $current .= "db_pass = " . $_POST['db_pass'] . "\n";
-    $current .= "db_base = " . $_POST['db_name'] . "\n";
-    $current .= "db_port = 3306\n";
-    $current .= "db_charset=utf8\n\n";
-    $current .= "[SMT-USER]\n";
-    $current .= "db_host = " . $_POST['db_host'] . "\n";
-    $current .= "db_user = " . $_POST['db_user'] . "\n";
-    $current .= "db_pass = " . $_POST['db_pass'] . "\n";
-    $current .= "db_base = " . $_POST['db_name'] . "\n";
-    $current .= "db_port = 3306\n";
-    $current .= "db_charset=utf8\n";
-    file_put_contents($file, $current);
-
-    $db = new Database('SMT-ADMIN');
-    $db->importSQL(project_path . '/install/server_admin_structure.sql');
-    $db->importSQL(project_path . '/install/server_admin_data.sql');
-
-    echo '<center><h4>Installation successful !!!<br /><br />';
-    echo '<a href="' . $_POST['getPath'] . '">click here to continue</a></h4></center>';
+  
+  $file = project_path . '/assets/config/' . project_base . '.ini';
+  $current = "";
+  $current .= "project = SMT\n";
+  $current .= "getPath = " . $_POST['getPath'] . "\n";
+  $current .= "iAnzahl = " . $_POST['iAnzahl'] . "\n";
+  $current .= "language = " . $_POST['language'] . "\n";
+  $current .= "country = " . $_POST['language'] . "\n";
+  $current .= "logfiles = " . $_POST['logfiles'] . "\n";
+  $current .= "loader = Handler,Texte\n\n";
+  $current .= "[SMT-ADMIN]\n";
+  $current .= "db_host = " . $_POST['db_host'] . "\n";
+  $current .= "db_user = " . $_POST['db_user'] . "\n";
+  $current .= "db_pass = " . $_POST['db_pass'] . "\n";
+  $current .= "db_base = " . $_POST['db_name'] . "\n";
+  $current .= "db_port = 3306\n";
+  $current .= "db_charset=utf8\n\n";
+  $current .= "[SMT-MONITOR]\n";
+  $current .= "db_host = " . $_POST['db_host'] . "\n";
+  $current .= "db_user = " . $_POST['db_user'] . "\n";
+  $current .= "db_pass = " . $_POST['db_pass'] . "\n";
+  $current .= "db_base = " . $_POST['db_name'] . "\n";
+  $current .= "db_port = 3306\n";
+  $current .= "db_charset=utf8\n\n";
+  $current .= "[SMT-USER]\n";
+  $current .= "db_host = " . $_POST['db_host'] . "\n";
+  $current .= "db_user = " . $_POST['db_user'] . "\n";
+  $current .= "db_pass = " . $_POST['db_pass'] . "\n";
+  $current .= "db_base = " . $_POST['db_name'] . "\n";
+  $current .= "db_port = 3306\n";
+  $current .= "db_charset=utf8\n";
+  file_put_contents($file, $current);
+  
+  $db = new Database('SMT-ADMIN');
+  $db->importSQL(project_path . '/install/server_admin_structure.sql');
+  $db->importSQL(project_path . '/install/server_admin_data.sql');
+  
+  echo '<center><h4>Installation successful !!!<br /><br />';
+  echo '<a href="' . $_POST['getPath'] . '">click here to continue</a></h4></center>';
 } else {
-
-    echo '<div class="content">
+  
+  echo '<div class="content">
           <h4>Installation von SMT 2.1</h4>
           <form name="install" method="post" action="/index.php">
           <input type="hidden" name="aktion" value="install" />
@@ -99,8 +99,8 @@ if (isset($_POST['aktion']) && $_POST['aktion'] == 'install') {
       
           <br /><input type="submit" value="Start the installation" class="btn btn-success">
           </form>';
-
-    echo '</div>';
+  
+  echo '</div>';
 }
 
 ?>

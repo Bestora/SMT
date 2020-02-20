@@ -67,7 +67,7 @@
             endAngle = deg((step * count) * 360);
             that.drawArc(endAngle);
         }, that.options.speed);
-    }
+    };
 
     Cirque.prototype.drawArc = function (endAngle) {
         this.arcContext.clearRect(0, 0, this.options.radius * 2, this.options.radius * 2);
@@ -76,7 +76,7 @@
         this.arcContext.arc(this.options.radius, this.options.radius, this.options.radius - this.options.lineWidth, deg(0), endAngle);
         this.arcContext.lineWidth = this.options.lineWidth;
         this.arcContext.stroke();
-    }
+    };
 
 
     $.fn['cirque'] = function (options) {
@@ -95,7 +95,7 @@
         this.trackContext.fillStyle = this.options.trackFill;
         this.trackContext.fill();
         this.trackContext.stroke();
-    }
+    };
 
     function deg(deg) {
         return (Math.PI / 180) * deg - (Math.PI / 180) * 90;
@@ -121,7 +121,7 @@
             .css({'width': this.options.radius * 2})
             .css({'height': this.options.radius * 2})
             .css({'line-height': this.options.radius * 2 + 'px'});
-    }
+    };
 
     Cirque.prototype.makeCanvas = function () {
         return $('<canvas/>', {})
@@ -129,7 +129,7 @@
             .attr('width', this.options.radius * 2)
             .attr('height', this.options.radius * 2)
             .addClass('cirque-fill');
-    }
+    };
 
     Cirque.prototype.makeTrack = function () {
         return $('<canvas/>', {})
@@ -137,7 +137,7 @@
             .attr('width', this.options.radius * 2)
             .attr('height', this.options.radius * 2)
             .addClass('cirque-track');
-    }
+    };
 
     Cirque.prototype.makeContainer = function () {
         return $(this.element).addClass('cirque-container')

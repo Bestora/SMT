@@ -13,6 +13,7 @@ $db = new Database('SMT-FTP');
 
 /**
  * FTP Klasse initiieren
+ *
  * @param array $config entählt die Variablen proftpd_server, proftp_username und proftp_password
  * Diese Daten werden aus der "wos_config" geladen
  */
@@ -24,9 +25,9 @@ include_once project_path . '/controller/' . base::get('controller') . '/' . bas
  * AB HIER NICHTS MEHR ÄNDERN
  */
 for ($m = 0; $m < $i; $m++) {
-    if ($url['2'] == substr($menu[$m]['link'], -strlen($url['2']))) {
-        $menu[$m]['aktiv'] = 'active';
-    }
+  if ($url['2'] == substr($menu[$m]['link'], -strlen($url['2']))) {
+    $menu[$m]['aktiv'] = 'active';
+  }
 }
 
 /**

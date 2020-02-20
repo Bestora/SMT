@@ -44,7 +44,7 @@
                 <tr tal:repeat="ip listip" style="height:35px;">
                     <td style="width:25px;">
                         <img border="0" style="width:20px;height:20px;"
-                             src="https://smt.df-automotive.de/assets/dist/img/${ip/existSystem}.png"/>
+                             src="${getPath}/assets/dist/img/${ip/existSystem}.png"/>
                     </td>
                     <td>${ip/ip}</td>
                     <td>${ip/port}</td>

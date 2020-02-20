@@ -44,449 +44,449 @@ use Swagger\Client\ObjectSerializer;
  */
 class Attribute implements ModelInterface, ArrayAccess
 {
-    const DISCRIMINATOR = null;
-    const DISPLAY_KEY_NAME = 'NAME';
-    const DISPLAY_KEY_SURNAME = 'SURNAME';
-    const DISPLAY_KEY_SALUTATION = 'SALUTATION';
-    const DISPLAY_KEY_TITLE = 'TITLE';
-    const DISPLAY_KEY_EMAIL = 'EMAIL';
-    const DISPLAY_KEY_COUNTRY = 'COUNTRY';
-    const DISPLAY_KEY_CITY = 'CITY';
-    const DISPLAY_KEY_STATE = 'STATE';
-    const DISPLAY_KEY_POSTAL_CODE = 'POSTAL_CODE';
-    const DISPLAY_KEY_STREET = 'STREET';
-    const DISPLAY_KEY_URL = 'URL';
-    const DISPLAY_KEY_COMPANY = 'COMPANY';
-    const DISPLAY_KEY_MESSENGER = 'MESSENGER';
-    const DISPLAY_KEY_BIRTHDAY = 'BIRTHDAY';
-    const DISPLAY_KEY_NOTE = 'NOTE';
-    const DISPLAY_KEY_JOB_TITLE = 'JOB_TITLE';
-    const DISPLAY_KEY_PHONE_NUMBER = 'PHONE_NUMBER';
-    const DISPLAY_KEY_PRIVATE_PHONE_NUMBER = 'PRIVATE_PHONE_NUMBER';
-    const DISPLAY_KEY_OFFICE_PHONE_NUMBER = 'OFFICE_PHONE_NUMBER';
-    const DISPLAY_KEY_MOBILE_PHONE_NUMBER = 'MOBILE_PHONE_NUMBER';
-    const DISPLAY_KEY_FAX_NUMBER = 'FAX_NUMBER';
-    const DISPLAY_KEY_DESCRIPTION = 'DESCRIPTION';
-    const DISPLAY_KEY_USER_DEFINED = 'USER_DEFINED';
-    /**
-     * The original name of the model.
-     *
-     * @var string
-     */
-    protected static $swaggerModelName = 'Attribute';
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerTypes = [
-        'display_key' => 'string',
-        'name' => 'string',
-        'value' => 'string',
-        'additional_values' => 'map[string,string]',
-        'i18n_display_name' => 'string'
+  const DISCRIMINATOR = null;
+  const DISPLAY_KEY_NAME = 'NAME';
+  const DISPLAY_KEY_SURNAME = 'SURNAME';
+  const DISPLAY_KEY_SALUTATION = 'SALUTATION';
+  const DISPLAY_KEY_TITLE = 'TITLE';
+  const DISPLAY_KEY_EMAIL = 'EMAIL';
+  const DISPLAY_KEY_COUNTRY = 'COUNTRY';
+  const DISPLAY_KEY_CITY = 'CITY';
+  const DISPLAY_KEY_STATE = 'STATE';
+  const DISPLAY_KEY_POSTAL_CODE = 'POSTAL_CODE';
+  const DISPLAY_KEY_STREET = 'STREET';
+  const DISPLAY_KEY_URL = 'URL';
+  const DISPLAY_KEY_COMPANY = 'COMPANY';
+  const DISPLAY_KEY_MESSENGER = 'MESSENGER';
+  const DISPLAY_KEY_BIRTHDAY = 'BIRTHDAY';
+  const DISPLAY_KEY_NOTE = 'NOTE';
+  const DISPLAY_KEY_JOB_TITLE = 'JOB_TITLE';
+  const DISPLAY_KEY_PHONE_NUMBER = 'PHONE_NUMBER';
+  const DISPLAY_KEY_PRIVATE_PHONE_NUMBER = 'PRIVATE_PHONE_NUMBER';
+  const DISPLAY_KEY_OFFICE_PHONE_NUMBER = 'OFFICE_PHONE_NUMBER';
+  const DISPLAY_KEY_MOBILE_PHONE_NUMBER = 'MOBILE_PHONE_NUMBER';
+  const DISPLAY_KEY_FAX_NUMBER = 'FAX_NUMBER';
+  const DISPLAY_KEY_DESCRIPTION = 'DESCRIPTION';
+  const DISPLAY_KEY_USER_DEFINED = 'USER_DEFINED';
+  /**
+   * The original name of the model.
+   *
+   * @var string
+   */
+  protected static $swaggerModelName = 'Attribute';
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerTypes = [
+    'display_key' => 'string',
+    'name' => 'string',
+    'value' => 'string',
+    'additional_values' => 'map[string,string]',
+    'i18n_display_name' => 'string'
+  ];
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerFormats = [
+    'display_key' => null,
+    'name' => null,
+    'value' => null,
+    'additional_values' => null,
+    'i18n_display_name' => null
+  ];
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @var string[]
+   */
+  protected static $attributeMap = [
+    'display_key' => 'displayKey',
+    'name' => 'name',
+    'value' => 'value',
+    'additional_values' => 'additionalValues',
+    'i18n_display_name' => 'i18nDisplayName'
+  ];
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @var string[]
+   */
+  protected static $setters = [
+    'display_key' => 'setDisplayKey',
+    'name' => 'setName',
+    'value' => 'setValue',
+    'additional_values' => 'setAdditionalValues',
+    'i18n_display_name' => 'setI18nDisplayName'
+  ];
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @var string[]
+   */
+  protected static $getters = [
+    'display_key' => 'getDisplayKey',
+    'name' => 'getName',
+    'value' => 'getValue',
+    'additional_values' => 'getAdditionalValues',
+    'i18n_display_name' => 'getI18nDisplayName'
+  ];
+  /**
+   * Associative array for storing property values
+   *
+   * @var mixed[]
+   */
+  protected $container = [];
+  
+  /**
+   * Constructor
+   *
+   * @param mixed[] $data Associated array of property values
+   *                      initializing the model
+   */
+  public function __construct(array $data = null)
+  {
+    $this->container['display_key'] = isset($data['display_key']) ? $data['display_key'] : null;
+    $this->container['name'] = isset($data['name']) ? $data['name'] : null;
+    $this->container['value'] = isset($data['value']) ? $data['value'] : null;
+    $this->container['additional_values'] = isset($data['additional_values']) ? $data['additional_values'] : null;
+    $this->container['i18n_display_name'] = isset($data['i18n_display_name']) ? $data['i18n_display_name'] : null;
+  }
+  
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerTypes()
+  {
+    return self::$swaggerTypes;
+  }
+  
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerFormats()
+  {
+    return self::$swaggerFormats;
+  }
+  
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @return array
+   */
+  public static function attributeMap()
+  {
+    return self::$attributeMap;
+  }
+  
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @return array
+   */
+  public static function setters()
+  {
+    return self::$setters;
+  }
+  
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @return array
+   */
+  public static function getters()
+  {
+    return self::$getters;
+  }
+  
+  /**
+   * The original name of the model.
+   *
+   * @return string
+   */
+  public function getModelName()
+  {
+    return self::$swaggerModelName;
+  }
+  
+  /**
+   * Validate all the properties in the model
+   * return true if all passed
+   *
+   * @return bool True if all properties are valid
+   */
+  public function valid()
+  {
+    return count($this->listInvalidProperties()) === 0;
+  }
+  
+  /**
+   * Show all the invalid properties with reasons.
+   *
+   * @return array invalid properties with reasons
+   */
+  public function listInvalidProperties()
+  {
+    $invalidProperties = [];
+    
+    if ($this->container['display_key'] === null) {
+      $invalidProperties[] = "'display_key' can't be null";
+    }
+    $allowedValues = $this->getDisplayKeyAllowableValues();
+    if (!is_null($this->container['display_key']) && !in_array($this->container['display_key'], $allowedValues, true)) {
+      $invalidProperties[] = sprintf(
+        "invalid value for 'display_key', must be one of '%s'",
+        implode("', '", $allowedValues)
+      );
+    }
+    
+    if ($this->container['name'] === null) {
+      $invalidProperties[] = "'name' can't be null";
+    }
+    return $invalidProperties;
+  }
+  
+  /**
+   * Gets allowable values of the enum
+   *
+   * @return string[]
+   */
+  public function getDisplayKeyAllowableValues()
+  {
+    return [
+      self::DISPLAY_KEY_NAME,
+      self::DISPLAY_KEY_SURNAME,
+      self::DISPLAY_KEY_SALUTATION,
+      self::DISPLAY_KEY_TITLE,
+      self::DISPLAY_KEY_EMAIL,
+      self::DISPLAY_KEY_COUNTRY,
+      self::DISPLAY_KEY_CITY,
+      self::DISPLAY_KEY_STATE,
+      self::DISPLAY_KEY_POSTAL_CODE,
+      self::DISPLAY_KEY_STREET,
+      self::DISPLAY_KEY_URL,
+      self::DISPLAY_KEY_COMPANY,
+      self::DISPLAY_KEY_MESSENGER,
+      self::DISPLAY_KEY_BIRTHDAY,
+      self::DISPLAY_KEY_NOTE,
+      self::DISPLAY_KEY_JOB_TITLE,
+      self::DISPLAY_KEY_PHONE_NUMBER,
+      self::DISPLAY_KEY_PRIVATE_PHONE_NUMBER,
+      self::DISPLAY_KEY_OFFICE_PHONE_NUMBER,
+      self::DISPLAY_KEY_MOBILE_PHONE_NUMBER,
+      self::DISPLAY_KEY_FAX_NUMBER,
+      self::DISPLAY_KEY_DESCRIPTION,
+      self::DISPLAY_KEY_USER_DEFINED,
     ];
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerFormats = [
-        'display_key' => null,
-        'name' => null,
-        'value' => null,
-        'additional_values' => null,
-        'i18n_display_name' => null
-    ];
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @var string[]
-     */
-    protected static $attributeMap = [
-        'display_key' => 'displayKey',
-        'name' => 'name',
-        'value' => 'value',
-        'additional_values' => 'additionalValues',
-        'i18n_display_name' => 'i18nDisplayName'
-    ];
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @var string[]
-     */
-    protected static $setters = [
-        'display_key' => 'setDisplayKey',
-        'name' => 'setName',
-        'value' => 'setValue',
-        'additional_values' => 'setAdditionalValues',
-        'i18n_display_name' => 'setI18nDisplayName'
-    ];
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @var string[]
-     */
-    protected static $getters = [
-        'display_key' => 'getDisplayKey',
-        'name' => 'getName',
-        'value' => 'getValue',
-        'additional_values' => 'getAdditionalValues',
-        'i18n_display_name' => 'getI18nDisplayName'
-    ];
-    /**
-     * Associative array for storing property values
-     *
-     * @var mixed[]
-     */
-    protected $container = [];
-
-    /**
-     * Constructor
-     *
-     * @param mixed[] $data Associated array of property values
-     *                      initializing the model
-     */
-    public function __construct(array $data = null)
-    {
-        $this->container['display_key'] = isset($data['display_key']) ? $data['display_key'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['value'] = isset($data['value']) ? $data['value'] : null;
-        $this->container['additional_values'] = isset($data['additional_values']) ? $data['additional_values'] : null;
-        $this->container['i18n_display_name'] = isset($data['i18n_display_name']) ? $data['i18n_display_name'] : null;
+  }
+  
+  /**
+   * Gets display_key
+   *
+   * @return string
+   */
+  public function getDisplayKey()
+  {
+    return $this->container['display_key'];
+  }
+  
+  /**
+   * Sets display_key
+   *
+   * @param string $display_key Enum key of the Attribute
+   *
+   * @return $this
+   */
+  public function setDisplayKey($display_key)
+  {
+    $allowedValues = $this->getDisplayKeyAllowableValues();
+    if (!in_array($display_key, $allowedValues, true)) {
+      throw new InvalidArgumentException(
+        sprintf(
+          "Invalid value for 'display_key', must be one of '%s'",
+          implode("', '", $allowedValues)
+        )
+      );
     }
-
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerTypes()
-    {
-        return self::$swaggerTypes;
+    $this->container['display_key'] = $display_key;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets name
+   *
+   * @return string
+   */
+  public function getName()
+  {
+    return $this->container['name'];
+  }
+  
+  /**
+   * Sets name
+   *
+   * @param string $name name
+   *
+   * @return $this
+   */
+  public function setName($name)
+  {
+    $this->container['name'] = $name;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets value
+   *
+   * @return string
+   */
+  public function getValue()
+  {
+    return $this->container['value'];
+  }
+  
+  /**
+   * Sets value
+   *
+   * @param string $value value
+   *
+   * @return $this
+   */
+  public function setValue($value)
+  {
+    $this->container['value'] = $value;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets additional_values
+   *
+   * @return map[string,string]
+   */
+  public function getAdditionalValues()
+  {
+    return $this->container['additional_values'];
+  }
+  
+  /**
+   * Sets additional_values
+   *
+   * @param map[string,string] $additional_values Additional values for this Attribute, for example SHORTDIAL
+   *
+   * @return $this
+   */
+  public function setAdditionalValues($additional_values)
+  {
+    $this->container['additional_values'] = $additional_values;
+    
+    return $this;
+  }
+  
+  /**
+   * Gets i18n_display_name
+   *
+   * @return string
+   */
+  public function getI18nDisplayName()
+  {
+    return $this->container['i18n_display_name'];
+  }
+  
+  /**
+   * Sets i18n_display_name
+   *
+   * @param string $i18n_display_name A string representation of this displayKey in its respective user language
+   *
+   * @return $this
+   */
+  public function setI18nDisplayName($i18n_display_name)
+  {
+    $this->container['i18n_display_name'] = $i18n_display_name;
+    
+    return $this;
+  }
+  
+  /**
+   * Returns true if offset exists. False otherwise.
+   *
+   * @param integer $offset Offset
+   *
+   * @return boolean
+   */
+  public function offsetExists($offset)
+  {
+    return isset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return mixed
+   */
+  public function offsetGet($offset)
+  {
+    return isset($this->container[$offset]) ? $this->container[$offset] : null;
+  }
+  
+  /**
+   * Sets value based on offset.
+   *
+   * @param integer $offset Offset
+   * @param mixed $value Value to be set
+   *
+   * @return void
+   */
+  public function offsetSet($offset, $value)
+  {
+    if (is_null($offset)) {
+      $this->container[] = $value;
+    } else {
+      $this->container[$offset] = $value;
     }
-
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerFormats()
-    {
-        return self::$swaggerFormats;
+  }
+  
+  /**
+   * Unsets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return void
+   */
+  public function offsetUnset($offset)
+  {
+    unset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets the string presentation of the object
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
+      return json_encode(
+        ObjectSerializer::sanitizeForSerialization($this),
+        JSON_PRETTY_PRINT
+      );
     }
-
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @return array
-     */
-    public static function attributeMap()
-    {
-        return self::$attributeMap;
-    }
-
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @return array
-     */
-    public static function setters()
-    {
-        return self::$setters;
-    }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @return array
-     */
-    public static function getters()
-    {
-        return self::$getters;
-    }
-
-    /**
-     * The original name of the model.
-     *
-     * @return string
-     */
-    public function getModelName()
-    {
-        return self::$swaggerModelName;
-    }
-
-    /**
-     * Validate all the properties in the model
-     * return true if all passed
-     *
-     * @return bool True if all properties are valid
-     */
-    public function valid()
-    {
-        return count($this->listInvalidProperties()) === 0;
-    }
-
-    /**
-     * Show all the invalid properties with reasons.
-     *
-     * @return array invalid properties with reasons
-     */
-    public function listInvalidProperties()
-    {
-        $invalidProperties = [];
-
-        if ($this->container['display_key'] === null) {
-            $invalidProperties[] = "'display_key' can't be null";
-        }
-        $allowedValues = $this->getDisplayKeyAllowableValues();
-        if (!is_null($this->container['display_key']) && !in_array($this->container['display_key'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value for 'display_key', must be one of '%s'",
-                implode("', '", $allowedValues)
-            );
-        }
-
-        if ($this->container['name'] === null) {
-            $invalidProperties[] = "'name' can't be null";
-        }
-        return $invalidProperties;
-    }
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getDisplayKeyAllowableValues()
-    {
-        return [
-            self::DISPLAY_KEY_NAME,
-            self::DISPLAY_KEY_SURNAME,
-            self::DISPLAY_KEY_SALUTATION,
-            self::DISPLAY_KEY_TITLE,
-            self::DISPLAY_KEY_EMAIL,
-            self::DISPLAY_KEY_COUNTRY,
-            self::DISPLAY_KEY_CITY,
-            self::DISPLAY_KEY_STATE,
-            self::DISPLAY_KEY_POSTAL_CODE,
-            self::DISPLAY_KEY_STREET,
-            self::DISPLAY_KEY_URL,
-            self::DISPLAY_KEY_COMPANY,
-            self::DISPLAY_KEY_MESSENGER,
-            self::DISPLAY_KEY_BIRTHDAY,
-            self::DISPLAY_KEY_NOTE,
-            self::DISPLAY_KEY_JOB_TITLE,
-            self::DISPLAY_KEY_PHONE_NUMBER,
-            self::DISPLAY_KEY_PRIVATE_PHONE_NUMBER,
-            self::DISPLAY_KEY_OFFICE_PHONE_NUMBER,
-            self::DISPLAY_KEY_MOBILE_PHONE_NUMBER,
-            self::DISPLAY_KEY_FAX_NUMBER,
-            self::DISPLAY_KEY_DESCRIPTION,
-            self::DISPLAY_KEY_USER_DEFINED,
-        ];
-    }
-
-    /**
-     * Gets display_key
-     *
-     * @return string
-     */
-    public function getDisplayKey()
-    {
-        return $this->container['display_key'];
-    }
-
-    /**
-     * Sets display_key
-     *
-     * @param string $display_key Enum key of the Attribute
-     *
-     * @return $this
-     */
-    public function setDisplayKey($display_key)
-    {
-        $allowedValues = $this->getDisplayKeyAllowableValues();
-        if (!in_array($display_key, $allowedValues, true)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    "Invalid value for 'display_key', must be one of '%s'",
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['display_key'] = $display_key;
-
-        return $this;
-    }
-
-    /**
-     * Gets name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->container['name'];
-    }
-
-    /**
-     * Sets name
-     *
-     * @param string $name name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->container['name'] = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets value
-     *
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->container['value'];
-    }
-
-    /**
-     * Sets value
-     *
-     * @param string $value value
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        $this->container['value'] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Gets additional_values
-     *
-     * @return map[string,string]
-     */
-    public function getAdditionalValues()
-    {
-        return $this->container['additional_values'];
-    }
-
-    /**
-     * Sets additional_values
-     *
-     * @param map[string,string] $additional_values Additional values for this Attribute, for example SHORTDIAL
-     *
-     * @return $this
-     */
-    public function setAdditionalValues($additional_values)
-    {
-        $this->container['additional_values'] = $additional_values;
-
-        return $this;
-    }
-
-    /**
-     * Gets i18n_display_name
-     *
-     * @return string
-     */
-    public function getI18nDisplayName()
-    {
-        return $this->container['i18n_display_name'];
-    }
-
-    /**
-     * Sets i18n_display_name
-     *
-     * @param string $i18n_display_name A string representation of this displayKey in its respective user language
-     *
-     * @return $this
-     */
-    public function setI18nDisplayName($i18n_display_name)
-    {
-        $this->container['i18n_display_name'] = $i18n_display_name;
-
-        return $this;
-    }
-
-    /**
-     * Returns true if offset exists. False otherwise.
-     *
-     * @param integer $offset Offset
-     *
-     * @return boolean
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->container[$offset]);
-    }
-
-    /**
-     * Gets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-
-    /**
-     * Sets value based on offset.
-     *
-     * @param integer $offset Offset
-     * @param mixed $value Value to be set
-     *
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->container[] = $value;
-        } else {
-            $this->container[$offset] = $value;
-        }
-    }
-
-    /**
-     * Unsets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->container[$offset]);
-    }
-
-    /**
-     * Gets the string presentation of the object
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(
-                ObjectSerializer::sanitizeForSerialization($this),
-                JSON_PRETTY_PRINT
-            );
-        }
-
-        return json_encode(ObjectSerializer::sanitizeForSerialization($this));
-    }
+    
+    return json_encode(ObjectSerializer::sanitizeForSerialization($this));
+  }
 }
 
 

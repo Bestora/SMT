@@ -6,14 +6,14 @@ $res = $wos->getSystemIPs();
 
 
 if (end($url) == 'export') {
-    $fp = fopen(project_path . '/assets/export/ipadressen.csv', 'w');
-
-    foreach ($res as $fields) {
-        fputcsv($fp, $fields);
-    }
-    fclose($fp);
-
-    header("Location: " . base::get('getPath') . "/assets/export/ipadressen.csv");
+  $fp = fopen(project_path . '/assets/export/ipadressen.csv', 'w');
+  
+  foreach ($res as $fields) {
+    fputcsv($fp, $fields);
+  }
+  fclose($fp);
+  
+  header("Location: " . base::get('getPath') . "/assets/export/ipadressen.csv");
 }
 
 template::setText('server_liste', $res);

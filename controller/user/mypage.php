@@ -6,7 +6,7 @@ $wos = new Server();
 $server = $user_daten['favorite'];
 
 for ($i = 0; $i < count($server); $i++) {
-    $server[$i] = $wos->getSystem($server[$i]['server_id']);
+  $server[$i] = $wos->getSystem($server[$i]['server_id']);
 }
 
 template::SetText('list_art', 'server_liste');

@@ -44,290 +44,291 @@ use Swagger\Client\ObjectSerializer;
  */
 class RedirectTrigger implements ModelInterface, ArrayAccess
 {
-    const DISCRIMINATOR = 'redirectTriggerType';
-    const REDIRECT_TRIGGER_TYPE_ALWAYS = 'ALWAYS';
-    const REDIRECT_TRIGGER_TYPE_BUSY = 'BUSY';
-    const REDIRECT_TRIGGER_TYPE_TIMEOUT = 'TIMEOUT';
-    /**
-     * The original name of the model.
-     *
-     * @var string
-     */
-    protected static $swaggerModelName = 'RedirectTrigger';
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerTypes = [
-        'redirect_trigger_type' => 'string'
+  const DISCRIMINATOR = 'redirectTriggerType';
+  const REDIRECT_TRIGGER_TYPE_ALWAYS = 'ALWAYS';
+  const REDIRECT_TRIGGER_TYPE_BUSY = 'BUSY';
+  const REDIRECT_TRIGGER_TYPE_TIMEOUT = 'TIMEOUT';
+  /**
+   * The original name of the model.
+   *
+   * @var string
+   */
+  protected static $swaggerModelName = 'RedirectTrigger';
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerTypes = [
+    'redirect_trigger_type' => 'string'
+  ];
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @var string[]
+   */
+  protected static $swaggerFormats = [
+    'redirect_trigger_type' => null
+  ];
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @var string[]
+   */
+  protected static $attributeMap = [
+    'redirect_trigger_type' => 'redirectTriggerType'
+  ];
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @var string[]
+   */
+  protected static $setters = [
+    'redirect_trigger_type' => 'setRedirectTriggerType'
+  ];
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @var string[]
+   */
+  protected static $getters = [
+    'redirect_trigger_type' => 'getRedirectTriggerType'
+  ];
+  /**
+   * Associative array for storing property values
+   *
+   * @var mixed[]
+   */
+  protected $container = [];
+  
+  /**
+   * Constructor
+   *
+   * @param mixed[] $data Associated array of property values
+   *                      initializing the model
+   */
+  public function __construct(array $data = null)
+  {
+    $this->container['redirect_trigger_type'] = isset($data['redirect_trigger_type']) ? $data['redirect_trigger_type'] : null;
+    
+    // Initialize discriminator property with the model name.
+    $discriminator = array_search('redirectTriggerType', self::$attributeMap, true);
+    $this->container[$discriminator] = static::$swaggerModelName;
+  }
+  
+  /**
+   * Array of property to type mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerTypes()
+  {
+    return self::$swaggerTypes;
+  }
+  
+  /**
+   * Array of property to format mappings. Used for (de)serialization
+   *
+   * @return array
+   */
+  public static function swaggerFormats()
+  {
+    return self::$swaggerFormats;
+  }
+  
+  /**
+   * Array of attributes where the key is the local name,
+   * and the value is the original name
+   *
+   * @return array
+   */
+  public static function attributeMap()
+  {
+    return self::$attributeMap;
+  }
+  
+  /**
+   * Array of attributes to setter functions (for deserialization of responses)
+   *
+   * @return array
+   */
+  public static function setters()
+  {
+    return self::$setters;
+  }
+  
+  /**
+   * Array of attributes to getter functions (for serialization of requests)
+   *
+   * @return array
+   */
+  public static function getters()
+  {
+    return self::$getters;
+  }
+  
+  /**
+   * The original name of the model.
+   *
+   * @return string
+   */
+  public function getModelName()
+  {
+    return self::$swaggerModelName;
+  }
+  
+  /**
+   * Validate all the properties in the model
+   * return true if all passed
+   *
+   * @return bool True if all properties are valid
+   */
+  public function valid()
+  {
+    return count($this->listInvalidProperties()) === 0;
+  }
+  
+  /**
+   * Show all the invalid properties with reasons.
+   *
+   * @return array invalid properties with reasons
+   */
+  public function listInvalidProperties()
+  {
+    $invalidProperties = [];
+    
+    if ($this->container['redirect_trigger_type'] === null) {
+      $invalidProperties[] = "'redirect_trigger_type' can't be null";
+    }
+    $allowedValues = $this->getRedirectTriggerTypeAllowableValues();
+    if (!is_null($this->container['redirect_trigger_type']) && !in_array($this->container['redirect_trigger_type'], $allowedValues, true)) {
+      $invalidProperties[] = sprintf(
+        "invalid value for 'redirect_trigger_type', must be one of '%s'",
+        implode("', '", $allowedValues)
+      );
+    }
+    
+    return $invalidProperties;
+  }
+  
+  /**
+   * Gets allowable values of the enum
+   *
+   * @return string[]
+   */
+  public function getRedirectTriggerTypeAllowableValues()
+  {
+    return [
+      self::REDIRECT_TRIGGER_TYPE_ALWAYS,
+      self::REDIRECT_TRIGGER_TYPE_BUSY,
+      self::REDIRECT_TRIGGER_TYPE_TIMEOUT,
     ];
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @var string[]
-     */
-    protected static $swaggerFormats = [
-        'redirect_trigger_type' => null
-    ];
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @var string[]
-     */
-    protected static $attributeMap = [
-        'redirect_trigger_type' => 'redirectTriggerType'
-    ];
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @var string[]
-     */
-    protected static $setters = [
-        'redirect_trigger_type' => 'setRedirectTriggerType'
-    ];
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @var string[]
-     */
-    protected static $getters = [
-        'redirect_trigger_type' => 'getRedirectTriggerType'
-    ];
-    /**
-     * Associative array for storing property values
-     *
-     * @var mixed[]
-     */
-    protected $container = [];
-
-    /**
-     * Constructor
-     *
-     * @param mixed[] $data Associated array of property values
-     *                      initializing the model
-     */
-    public function __construct(array $data = null)
-    {
-        $this->container['redirect_trigger_type'] = isset($data['redirect_trigger_type']) ? $data['redirect_trigger_type'] : null;
-
-        // Initialize discriminator property with the model name.
-        $discriminator = array_search('redirectTriggerType', self::$attributeMap, true);
-        $this->container[$discriminator] = static::$swaggerModelName;
+  }
+  
+  /**
+   * Gets redirect_trigger_type
+   *
+   * @return string
+   */
+  public function getRedirectTriggerType()
+  {
+    return $this->container['redirect_trigger_type'];
+  }
+  
+  /**
+   * Sets redirect_trigger_type
+   *
+   * @param string $redirect_trigger_type The type of the RedirectTrigger determining the concrete RedirectTrigger
+   *   implementation
+   *
+   * @return $this
+   */
+  public function setRedirectTriggerType($redirect_trigger_type)
+  {
+    $allowedValues = $this->getRedirectTriggerTypeAllowableValues();
+    if (!in_array($redirect_trigger_type, $allowedValues, true)) {
+      throw new InvalidArgumentException(
+        sprintf(
+          "Invalid value for 'redirect_trigger_type', must be one of '%s'",
+          implode("', '", $allowedValues)
+        )
+      );
     }
-
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerTypes()
-    {
-        return self::$swaggerTypes;
+    $this->container['redirect_trigger_type'] = $redirect_trigger_type;
+    
+    return $this;
+  }
+  
+  /**
+   * Returns true if offset exists. False otherwise.
+   *
+   * @param integer $offset Offset
+   *
+   * @return boolean
+   */
+  public function offsetExists($offset)
+  {
+    return isset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return mixed
+   */
+  public function offsetGet($offset)
+  {
+    return isset($this->container[$offset]) ? $this->container[$offset] : null;
+  }
+  
+  /**
+   * Sets value based on offset.
+   *
+   * @param integer $offset Offset
+   * @param mixed $value Value to be set
+   *
+   * @return void
+   */
+  public function offsetSet($offset, $value)
+  {
+    if (is_null($offset)) {
+      $this->container[] = $value;
+    } else {
+      $this->container[$offset] = $value;
     }
-
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerFormats()
-    {
-        return self::$swaggerFormats;
+  }
+  
+  /**
+   * Unsets offset.
+   *
+   * @param integer $offset Offset
+   *
+   * @return void
+   */
+  public function offsetUnset($offset)
+  {
+    unset($this->container[$offset]);
+  }
+  
+  /**
+   * Gets the string presentation of the object
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
+      return json_encode(
+        ObjectSerializer::sanitizeForSerialization($this),
+        JSON_PRETTY_PRINT
+      );
     }
-
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @return array
-     */
-    public static function attributeMap()
-    {
-        return self::$attributeMap;
-    }
-
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @return array
-     */
-    public static function setters()
-    {
-        return self::$setters;
-    }
-
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @return array
-     */
-    public static function getters()
-    {
-        return self::$getters;
-    }
-
-    /**
-     * The original name of the model.
-     *
-     * @return string
-     */
-    public function getModelName()
-    {
-        return self::$swaggerModelName;
-    }
-
-    /**
-     * Validate all the properties in the model
-     * return true if all passed
-     *
-     * @return bool True if all properties are valid
-     */
-    public function valid()
-    {
-        return count($this->listInvalidProperties()) === 0;
-    }
-
-    /**
-     * Show all the invalid properties with reasons.
-     *
-     * @return array invalid properties with reasons
-     */
-    public function listInvalidProperties()
-    {
-        $invalidProperties = [];
-
-        if ($this->container['redirect_trigger_type'] === null) {
-            $invalidProperties[] = "'redirect_trigger_type' can't be null";
-        }
-        $allowedValues = $this->getRedirectTriggerTypeAllowableValues();
-        if (!is_null($this->container['redirect_trigger_type']) && !in_array($this->container['redirect_trigger_type'], $allowedValues, true)) {
-            $invalidProperties[] = sprintf(
-                "invalid value for 'redirect_trigger_type', must be one of '%s'",
-                implode("', '", $allowedValues)
-            );
-        }
-
-        return $invalidProperties;
-    }
-
-    /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
-    public function getRedirectTriggerTypeAllowableValues()
-    {
-        return [
-            self::REDIRECT_TRIGGER_TYPE_ALWAYS,
-            self::REDIRECT_TRIGGER_TYPE_BUSY,
-            self::REDIRECT_TRIGGER_TYPE_TIMEOUT,
-        ];
-    }
-
-    /**
-     * Gets redirect_trigger_type
-     *
-     * @return string
-     */
-    public function getRedirectTriggerType()
-    {
-        return $this->container['redirect_trigger_type'];
-    }
-
-    /**
-     * Sets redirect_trigger_type
-     *
-     * @param string $redirect_trigger_type The type of the RedirectTrigger determining the concrete RedirectTrigger implementation
-     *
-     * @return $this
-     */
-    public function setRedirectTriggerType($redirect_trigger_type)
-    {
-        $allowedValues = $this->getRedirectTriggerTypeAllowableValues();
-        if (!in_array($redirect_trigger_type, $allowedValues, true)) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    "Invalid value for 'redirect_trigger_type', must be one of '%s'",
-                    implode("', '", $allowedValues)
-                )
-            );
-        }
-        $this->container['redirect_trigger_type'] = $redirect_trigger_type;
-
-        return $this;
-    }
-
-    /**
-     * Returns true if offset exists. False otherwise.
-     *
-     * @param integer $offset Offset
-     *
-     * @return boolean
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->container[$offset]);
-    }
-
-    /**
-     * Gets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-
-    /**
-     * Sets value based on offset.
-     *
-     * @param integer $offset Offset
-     * @param mixed $value Value to be set
-     *
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->container[] = $value;
-        } else {
-            $this->container[$offset] = $value;
-        }
-    }
-
-    /**
-     * Unsets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->container[$offset]);
-    }
-
-    /**
-     * Gets the string presentation of the object
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(
-                ObjectSerializer::sanitizeForSerialization($this),
-                JSON_PRETTY_PRINT
-            );
-        }
-
-        return json_encode(ObjectSerializer::sanitizeForSerialization($this));
-    }
+    
+    return json_encode(ObjectSerializer::sanitizeForSerialization($this));
+  }
 }
 
 

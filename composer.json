@@ -7,6 +7,7 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-mbstring": "*",
-    "guzzlehttp/guzzle": "^6.2"
+    "guzzlehttp/guzzle": "^6.2",
+    "phpunit/phpunit": "^9.0"
   }
 }

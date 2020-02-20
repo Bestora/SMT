@@ -28,163 +28,177 @@
 
 class LDAP
 {
-
-    // Active Directory server
-    public $ldap_host;
-    // Active Directory DN
-    public $ldap_dn;
-    // Active Directory user group
-    public $ldap_user_group;
-    // Active Directory manager group
-    public $ldap_manager_group;
-    // Domain, for purposes of constructing $user
-    public $ldap_usr_dom;
-    // ldap User
-    public $isAuth = False;
-    // ldap Pass
-    protected $ldap_user;
-    // Verbindung wird hier zwischengepseichert
-    protected $ldap_pass;
-    // Benutzerlogin speichern
-    protected $ldap;
-
-    /**
-     * Konstruktor, Config setzen und authentifizieren
-     * @param type $user
-     * @param type $pass
-     * @param type $conf
-     * @throws Exception
-     */
-    public function __construct($user, $pass, $conf)
-    {
-        $this->setConfig($conf);
-        $this->ldapAuth($user, $pass);
+  
+  // Active Directory server
+  public $ldap_host;
+  // Active Directory DN
+  public $ldap_dn;
+  // Active Directory user group
+  public $ldap_user_group;
+  // Active Directory manager group
+  public $ldap_manager_group;
+  // Domain, for purposes of constructing $user
+  public $ldap_usr_dom;
+  // ldap User
+  public $isAuth = False;
+  // ldap Pass
+  protected $ldap_user;
+  // Verbindung wird hier zwischengepseichert
+  protected $ldap_pass;
+  // Benutzerlogin speichern
+  protected $ldap;
+  
+  /**
+   * Konstruktor, Config setzen und authentifizieren
+   *
+   * @param type $user
+   * @param type $pass
+   * @param type $conf
+   *
+   * @throws Exception
+   */
+  public function __construct($user, $pass, $conf)
+  {
+    $this->setConfig($conf);
+    $this->ldapAuth($user, $pass);
+  }
+  
+  /**
+   * Methode zum setzen der Konfiguration
+   *
+   * @param type $conf
+   */
+  public function setConfig($conf)
+  {
+    $this->ldap_host = $conf['ldap_host'];
+    $this->ldap_dn = $conf['ldap_dn'];
+    $this->ldap_user_group = $conf['ldap_user_group'];
+    $this->ldap_manager_group = $conf['ldap_manager_group'];
+    $this->ldap_usr_dom = $conf['ldap_usr_dom'];
+    $this->ldap_user = $conf['ldap_user'];
+    $this->ldap_pass = $conf['ldap_pass'];
+    $this->user_auth_field = $conf['ldap_user_auth_field'];
+  }
+  
+  /**
+   * Methode zum verbinden zum LDAP
+   *
+   * @param type $user
+   * @param type $pass
+   *
+   * @return void
+   */
+  public function ldapAuth($user, $pass)
+  {
+    $ldap = ldap_connect($this->ldap_host) OR DIE ('LDAP connect failed');
+    
+    ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+    
+    $res = ldap_bind($ldap, $user, $pass);
+    $this->isAuth = $res;
+  }
+  
+  /**
+   * Methode zur Prüfung ob der Benutzer eingeloggt ist
+   *
+   * @return boolean
+   */
+  public function getAuth()
+  {
+    return $isAuth;
+  }
+  
+  /**
+   * Prüfung ob der User eingeloggt ist
+   *
+   * @param $sUser
+   *
+   * @throws Exception
+   */
+  public function checkUser($sUser)
+  {
+    $session = Session::getInstance();
+    // Gruppe prüfen ob er berechtigt ist
+    if ($this->ldapGroupSearch($this->ldap_manager_group, $sUser)) {
+      $session->set('admin', True);
+    } else {
+      $session->destroy();
     }
-
-    /**
-     * Methode zum setzen der Konfiguration
-     * @param type $conf
-     */
-    public function setConfig($conf)
-    {
-        $this->ldap_host = $conf['ldap_host'];
-        $this->ldap_dn = $conf['ldap_dn'];
-        $this->ldap_user_group = $conf['ldap_user_group'];
-        $this->ldap_manager_group = $conf['ldap_manager_group'];
-        $this->ldap_usr_dom = $conf['ldap_usr_dom'];
-        $this->ldap_user = $conf['ldap_user'];
-        $this->ldap_pass = $conf['ldap_pass'];
-        $this->user_auth_field = $conf['ldap_user_auth_field'];
+  }
+  
+  /**
+   * Prüfung ob der User in einer bestimmten Gruppe ist
+   *
+   * @param type $group
+   * @param type $search
+   *
+   * @return boolean
+   * @throws Exception
+   */
+  public function ldapGroupSearch($group, $search)
+  {
+    $return = False;
+    $this->ldap = $this->ldapConnect($this->ldap_user, $this->ldap_pass);
+    $result = ldap_search($this->ldap, $this->ldap_dn, "(" . $this->user_auth_field . "=" . $search . ")", array('memberof')) or exit("Unable to search LDAP server");
+    $entries = ldap_get_entries($this->ldap, $result);
+    
+    unset($entries['0']['memberof']['count']);
+    $groups = array_merge($entries['0']['memberof']);
+    
+    for ($i = 0; $i < count($groups); $i++) {
+      if (preg_match("/$group/i", $groups[$i]))
+        $return = True;
     }
-
-    /**
-     * Methode zum verbinden zum LDAP
-     * @param type $user
-     * @param type $pass
-     * @return void
-     */
-    public function ldapAuth($user, $pass)
-    {
-        $ldap = ldap_connect($this->ldap_host) OR DIE ('LDAP connect failed');
-
-        ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-
-        $res = ldap_bind($ldap, $user, $pass);
-        $this->isAuth = $res;
+    
+    return $return;
+  }
+  
+  /**
+   * Methode zum verbinden zum LDAP
+   *
+   * @param type $user
+   * @param type $pass
+   *
+   * @return false|resource
+   * @throws Exception
+   */
+  public function ldapConnect($user, $pass)
+  {
+    $ldap = ldap_connect($this->ldap_host);
+    
+    if ($ldap === false) {
+      throw new Exception('LDAP connnect failed');
     }
-
-    /**
-     * Methode zur Prüfung ob der Benutzer eingeloggt ist
-     * @return boolean
-     */
-    public function getAuth()
-    {
-        return $isAuth;
+    
+    ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+    
+    $res = ldap_bind($ldap, $user . $this->ldap_usr_dom, $pass);
+    
+    if ($res === True && !isset($_SESSION['username'])) {
+      $_SESSION['username'] = $user;
     }
-
-    /**
-     * Prüfung ob der User eingeloggt ist
-     * @param $sUser
-     * @throws Exception
-     */
-    public function checkUser($sUser)
-    {
-        $session = Session::getInstance();
-        // Gruppe prüfen ob er berechtigt ist
-        if ($this->ldapGroupSearch($this->ldap_manager_group, $sUser)) {
-            $session->set('admin', True);
-        } else {
-            $session->destroy();
-        }
-    }
-
-    /**
-     * Prüfung ob der User in einer bestimmten Gruppe ist
-     * @param type $group
-     * @param type $search
-     * @return boolean
-     * @throws Exception
-     */
-    public function ldapGroupSearch($group, $search)
-    {
-        $return = False;
-        $this->ldap = $this->ldapConnect($this->ldap_user, $this->ldap_pass);
-        $result = ldap_search($this->ldap, $this->ldap_dn, "(" . $this->user_auth_field . "=" . $search . ")", array('memberof')) or exit("Unable to search LDAP server");
-        $entries = ldap_get_entries($this->ldap, $result);
-
-        unset($entries['0']['memberof']['count']);
-        $groups = array_merge($entries['0']['memberof']);
-
-        for ($i = 0; $i < count($groups); $i++) {
-            if (preg_match("/$group/i", $groups[$i]))
-                $return = True;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Methode zum verbinden zum LDAP
-     * @param type $user
-     * @param type $pass
-     * @return false|resource
-     * @throws Exception
-     */
-    public function ldapConnect($user, $pass)
-    {
-        $ldap = ldap_connect($this->ldap_host);
-
-        if ($ldap === false) {
-            throw new Exception('LDAP connnect failed');
-        }
-
-        ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-
-        $res = ldap_bind($ldap, $user . $this->ldap_usr_dom, $pass);
-
-        if ($res === True && !isset($_SESSION['username'])) {
-            $_SESSION['username'] = $user;
-        }
-
-        return $ldap;
-    }
-
-    /**
-     * Auslesen der Email Adresse zu einem Benutzerkürzel
-     * @param type $field
-     * @param $sUser
-     * @return type
-     * @throws Exception
-     */
-    public function ldapSearch($field, $sUser)
-    {
-        $this->ldap = $this->ldapConnect($this->ldap_user, $this->ldap_pass);
-        $result = ldap_search($this->ldap, $this->ldap_dn, "(" . $this->user_auth_field . "=" . $sUser . ")", $field) or exit("Unable to search LDAP server");
-        $entries = ldap_get_entries($this->ldap, $result);
-
-        return $entries['0'];
-    }
-
+    
+    return $ldap;
+  }
+  
+  /**
+   * Auslesen der Email Adresse zu einem Benutzerkürzel
+   *
+   * @param type $field
+   * @param $sUser
+   *
+   * @return type
+   * @throws Exception
+   */
+  public function ldapSearch($field, $sUser)
+  {
+    $this->ldap = $this->ldapConnect($this->ldap_user, $this->ldap_pass);
+    $result = ldap_search($this->ldap, $this->ldap_dn, "(" . $this->user_auth_field . "=" . $sUser . ")", $field) or exit("Unable to search LDAP server");
+    $entries = ldap_get_entries($this->ldap, $result);
+    
+    return $entries['0'];
+  }
+  
 }

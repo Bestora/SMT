@@ -29,91 +29,98 @@ declare(strict_types=1);
  **/
 class Password
 {
-
-    public function getAll()
-    {
-        $db = new Database('SMT-ADMIN');
-        $session = Session::getInstance();
-
-        if ($session->get('sysadmin') == 1) {
-            $query = "SELECT * FROM wos_password WHERE private=:privateAdmin || private=:privateAll || private=:privateOwn && user=:user ORDER BY id";
-            $value = array(':privateAdmin' => '2', ':privateAll' => '0', ':privateOwn' => '1', ':user' => $_SESSION['username']);
-        } else {
-            $query = "SELECT * FROM wos_password WHERE private=:privateAll || private=:privateOwn && user=:user ORDER BY id";
-            $value = array(':privateAll' => '0', ':privateOwn' => '1', ':user' => $_SESSION['username']);
-        }
-
-
-        return $db->getQuery($query, $value, True);
+  
+  public function getAll()
+  {
+    $db = new Database('SMT-ADMIN');
+    $session = Session::getInstance();
+    
+    if ($session->get('sysadmin') == 1) {
+      $query = "SELECT * FROM wos_password WHERE private=:privateAdmin || private=:privateAll || private=:privateOwn && user=:user ORDER BY id";
+      $value = array(':privateAdmin' => '2', ':privateAll' => '0', ':privateOwn' => '1', ':user' => $_SESSION['username']);
+    } else {
+      $query = "SELECT * FROM wos_password WHERE private=:privateAll || private=:privateOwn && user=:user ORDER BY id";
+      $value = array(':privateAll' => '0', ':privateOwn' => '1', ':user' => $_SESSION['username']);
     }
-
-    /**
-     * Löschen einer Lizenz
-     * @param type $id
-     */
-    public function deletePassword($id)
-    {
-        $db = new Database('SMT-ADMIN');
-
-        $query = "DELETE FROM wos_password WHERE id=:id";
-        $db->getQuery($query, array(':id' => $id));
+    
+    
+    return $db->getQuery($query, $value, True);
+  }
+  
+  /**
+   * Löschen einer Lizenz
+   *
+   * @param type $id
+   */
+  public function deletePassword($id)
+  {
+    $db = new Database('SMT-ADMIN');
+    
+    $query = "DELETE FROM wos_password WHERE id=:id";
+    $db->getQuery($query, array(':id' => $id));
+  }
+  
+  /**
+   * Methode zum speichern von Lizenzen
+   *
+   * @param type $post
+   *
+   * @return void
+   */
+  public function savePassword($post)
+  {
+    $db = new Database('SMT-ADMIN');
+    
+    $query = "INSERT INTO wos_password (user) VALUES (:user)";
+    $value = array(':user' => $_SESSION['username']);
+    
+    $db->getQuery($query, $value);
+    $this->updatePassword($db->getLastID(), $post);
+  }
+  
+  /**
+   * Methode zum speichern von Lizenzen
+   *
+   * @param $id
+   * @param type $post
+   *
+   * @return void
+   */
+  public function updatePassword($id, $post)
+  {
+    $db = new Database('SMT-ADMIN');
+    
+    foreach ($post as $key => $value) {
+      if ($value != '') {
+        $query = "UPDATE wos_password SET $key=:value WHERE id=:id";
+        $nvalue = array(':value' => $value, ':id' => $id);
+      }
+      
+      $db->getQuery($query, $nvalue);
     }
-
-    /**
-     * Methode zum speichern von Lizenzen
-     * @param type $post
-     * @return void
-     */
-    public function savePassword($post)
-    {
-        $db = new Database('SMT-ADMIN');
-
-        $query = "INSERT INTO wos_password (user) VALUES (:user)";
-        $value = array(':user' => $_SESSION['username']);
-
-        $db->getQuery($query, $value);
-        $this->updatePassword($db->getLastID(), $post);
+  }
+  
+  /**
+   * Methode zum auslesen eines Eintrags zu einem Systen
+   *
+   * @param type int $id
+   *
+   * @return Exception
+   */
+  
+  public function getSystemPassword($id)
+  {
+    $db = new Database('SMT-ADMIN');
+    $session = Session::getInstance();
+    
+    if ($session->get('sysadmin') == 1) {
+      $query = "SELECT * FROM wos_password WHERE system=:system && private=:privateAdmin || system=:system && private=:privateAll || system=:system && private=:privateOwn";
+      $value = array(':system' => $id, ':privateAdmin' => '2', ':privateAll' => '0', ':privateOwn' => '1');
+    } else {
+      $query = "SELECT * FROM wos_password WHERE system=:system && private=:privateAll || system=:system && private=:privateOwn";
+      $value = array(':system' => $id, ':privateAll' => '0', ':privateOwn' => '1');
     }
-
-    /**
-     * Methode zum speichern von Lizenzen
-     * @param $id
-     * @param type $post
-     * @return void
-     */
-    public function updatePassword($id, $post)
-    {
-        $db = new Database('SMT-ADMIN');
-
-        foreach ($post as $key => $value) {
-            if ($value != '') {
-                $query = "UPDATE wos_password SET $key=:value WHERE id=:id";
-                $nvalue = array(':value' => $value, ':id' => $id);
-            }
-
-            $db->getQuery($query, $nvalue);
-        }
-    }
-
-    /**
-     * Methode zum auslesen eines Eintrags zu einem Systen
-     * @param type int $id
-     * @return Exception
-     */
-
-    public function getSystemPassword($id)
-    {
-        $db = new Database('SMT-ADMIN');
-        $session = Session::getInstance();
-
-        if ($session->get('sysadmin') == 1) {
-            $query = "SELECT * FROM wos_password WHERE system=:system && private=:privateAdmin || system=:system && private=:privateAll || system=:system && private=:privateOwn";
-            $value = array(':system' => $id, ':privateAdmin' => '2', ':privateAll' => '0', ':privateOwn' => '1');
-        } else {
-            $query = "SELECT * FROM wos_password WHERE system=:system && private=:privateAll || system=:system && private=:privateOwn";
-            $value = array(':system' => $id, ':privateAll' => '0', ':privateOwn' => '1');
-        }
-
-        return $db->getQuery($query, $value, True);
-    }
+    
+    return $db->getQuery($query, $value, True);
+  }
 }
