@@ -43,10 +43,11 @@ class Notifier
    * @param int $server_id
    * @param boolean $status_old
    * @param boolean $status_new
+   * @param String $error
    *
    * @return boolean
    */
-  public function notify($server_id, $status_old, $status_new)
+  public function notify($server_id, $status_old, $status_new, $error = "")
   {
     $db = new Database('SMT-MONITOR');
     $server = new Server('SMT-ADMIN');
@@ -93,7 +94,7 @@ class Notifier
     }
     
     if ($this->server['telegram'] == 'yes' && $status_new == 'off' && $session->get('telegram_api_key') != '') {
-      $error_message = "SMT Meldung: {$value['0']['label']} -> {$value['0']['ip']}:{$value['0']['port']} - - {$this->server['system']} hat Probleme";
+      $error_message = "SMT Meldung: {$value['0']['label']} -> {$value['0']['ip']}:{$value['0']['port']} - - {$this->server['system']} hat Probleme -- ".$error;
       urlencode($error_message);
       
       $val = explode(',', $session->get('telegram_chat_id'));

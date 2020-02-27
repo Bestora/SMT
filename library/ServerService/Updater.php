@@ -100,8 +100,8 @@ class Updater
       }
       
       if (isset($status)) {
-        $not->notify($this->server_id, $this->server['status'], $status);
-        $not->add_log($this->server_id, 'updater', $not->parse_msg($status, 'email_subject', $this->server), 'sys');
+        $not->notify($this->server_id, $this->server['status'], $status, $this->error);
+        $not->add_log($this->server_id, 'updater', $not->parse_msg($status, 'email_subject', $this->server)."\n".$this->error, 'sys');
       }
       
       $db->getQuery($query, $value);
@@ -120,7 +120,7 @@ class Updater
   {
     $errno = 0;
     $starttime = microtime(true);
-    
+
     $fp = @fsockopen($this->server['ip'], $this->server['port'], $errno, $this->error, 5);
     
     $status = ($fp === false) ? false : true;
